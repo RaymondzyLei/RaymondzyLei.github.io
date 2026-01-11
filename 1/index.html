@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>残月个人主页</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    
+    <meta name="keywords" content="残月个人主页">
+    <meta name="description" content="残月个人主页">
+<style>
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 页面主体样式 */
+body {
+    font-family: 'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+    background: #e0e5ec url('bg.jpg') no-repeat center center fixed;  /* 背景色作为备用 */
+    background-size: cover;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* 背景层 */
+.anime-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: -3;
+    filter: blur(0px);
+}
+
+/* 半透明背景遮罩 */
+.anime-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(224, 229, 236, 0.15);
+    z-index: -2;
+}
+
+/* 主容器 */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 头部区域样式 */
+.header {
+    text-align: center;
+    margin-bottom: 50px;
+    background: rgba(224, 229, 236, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    padding: 40px 20px;
+    box-shadow: 
+        10px 10px 20px rgba(163, 177, 198, 0.5),
+        -10px -10px 20px rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 拟态头像样式 */
+.avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    background: rgba(224, 229, 236, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #000000; /* 黑色文字 */
+    box-shadow: 
+        8px 8px 15px rgba(163, 177, 198, 0.5),
+        -8px -8px 15px rgba(255, 255, 255, 0.6);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 头像图片样式 */
+.avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 
+        inset 3px 3px 5px rgba(163, 177, 198, 0.3),
+        inset -3px -3px 5px rgba(255, 255, 255, 0.4);
+}
+
+/* 姓名标题样式 */
+.name {
+    font-size: 2.5em;
+    color: #000000; /* 黑色文字 */
+    margin-bottom: 10px;
+    font-weight: bold;
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.1),
+        -1px -1px 2px rgba(255, 255, 255, 0.3);
+}
+
+/* QQ信息样式 */
+.qq-info {
+    font-size: 1em;
+    color: #333333; /* 深灰色文字 */
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+/* 描述文字样式 */
+.description {
+    font-size: 1.2em;
+    color: #333333; /* 深灰色文字 */
+    margin-bottom: 20px;
+}
+
+/* 导航菜单容器 */
+.nav-menu {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+/* 导航菜单项 */
+.nav-item {
+    background: rgba(224, 229, 236, 0.7);
+    backdrop-filter: blur(5px);
+    padding: 12px 25px;
+    border-radius: 50px;
+    text-decoration: none;
+    color: #000000; /* 黑色文字 */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 
+        5px 5px 10px rgba(163, 177, 198, 0.5),
+        -5px -5px 10px rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 导航菜单项悬停效果 */
+.nav-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 
+        8px 8px 15px rgba(163, 177, 198, 0.5),
+        -8px -8px 15px rgba(255, 255, 255, 0.6);
+    color: #333333; /* 深灰色悬停效果 */
+}
+
+/* 内容区域网格布局 */
+.content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+/* 拟态卡片样式 */
+.card {
+    background: rgba(224, 229, 236, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 
+        8px 8px 15px rgba(163, 177, 198, 0.5),
+        -8px -8px 15px rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 卡片悬停效果 */
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        12px 12px 20px rgba(163, 177, 198, 0.5),
+        -12px -12px 20px rgba(255, 255, 255, 0.6);
+}
+
+/* 卡片标题样式 */
+.card-title {
+    font-size: 1.5em;
+    color: #000000; /* 黑色标题 */
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 卡片内容文字样式 */
+.card-content {
+    color: #5a5a5a;
+    line-height: 1.6;
+}
+
+/* 社交链接容器 */
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 40px 0;
+    width: 100%;
+    text-align: center;
+}
+
+/* 社交链接图标样式 */
+.social-link {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(224, 229, 236, 0.7);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #000000; /* 黑色图标 */
+    font-size: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 
+        5px 5px 10px rgba(163, 177, 198, 0.5),
+        -5px -5px 10px rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 社交链接悬停效果 */
+.social-link:hover {
+    transform: translateY(-3px) scale(1.1);
+    color: #333333; /* 深灰色悬停效果 */
+}
+
+/* 页脚样式 */
+.footer {
+    text-align: center;
+    padding: 30px;
+    background: rgba(224, 229, 236, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    color: #333333; /* 深灰色文字 */
+    box-shadow: 
+        8px 8px 15px rgba(163, 177, 198, 0.5),
+        -8px -8px 15px rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 樱花飘落效果样式 */
+.sakura {
+    position: fixed;
+    top: -10px;
+    z-index: 999;
+    color: #ffb6c1;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.8;
+    font-size: 1.2em;
+    will-change: transform;
+    animation: falling linear forwards;
+}
+
+@keyframes falling {
+    to {
+        transform: translateY(calc(100vh + 20px));
+    }
+}
+
+/* 响应式设计 - 移动端适配 */
+@media (max-width: 768px) {
+    /* 小屏幕容器调整 */
+    .container {
+        padding: 15px;
+    }
+    
+    /* 小屏幕头部和卡片调整 */
+    .header, .card, .footer {
+        padding: 25px 15px;
+        border-radius: 15px;
+        text-align: center; /* 添加居中文本 */
+    }
+    
+    /* 小屏幕导航菜单间距调整 */
+    .nav-menu {
+        gap: 15px;
+        justify-content: center;
+    }
+    
+    /* 小屏幕导航项尺寸调整 */
+    .nav-item {
+        padding: 10px 20px;
+    }
+    
+    /* 内容区域调整为单列 */
+    .content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    /* 卡片内容居中 */
+    .card-content {
+        text-align: center;
+    }
+    
+    /* 卡片标题居中 */
+    .card-title {
+        justify-content: center;
+    }
+    
+    /* 社交链接调整为更紧凑的布局 */
+    .social-links {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    /* 头像尺寸调整 */
+    .avatar {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+    }
+    
+    /* 名称字体大小调整 */
+    .name {
+        font-size: 2em;
+    }
+    
+    /* 描述文字调整 */
+    .description {
+        font-size: 1em;
+    }
+}
+</style>
+</head>
+<body>
+    <!-- 背景 -->
+    <div class="anime-background"></div>
+    
+    <!-- 背景 -->
+    <div class="anime-bg"></div>
+    
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 头部区域 -->
+        <header class="header">
+        <div class="avatar">
+        <img src="http://q2.qlogo.cn/headimg_dl?dst_uin=1771245847&spec=100" alt="头像">
+        </div>
+            <h1 class="name" id="nickname">残月</h1>
+            <p class="qq-info" id="qq-info">一言: <span id="qq-number"></span></p>
+            <p class="description">残月个人主页</p>
+            
+            <nav class="nav-menu">
+                <a href="#about" class="nav-item">🎀 关于</a>
+                <a href="#contact" class="nav-item">💌 联系</a>
+                
+            </nav>
+        </header>
+
+        <!-- 内容区域 -->
+        <main class="content">
+            <!-- 关于我 -->
+            <section id="about" class="card">
+                <h2 class="card-title">🎀 关于</h2>
+                <div class="card-content">
+                    <p>介绍</p>
+                    <br>
+                    <p>🌟 兴趣爱好：编程、游戏</p>
+                    <p>💖 最爱颜色：蓝色系</p>
+                    <p>🎵 喜欢音乐：Tiktik</p>
+                    <p>🎮 常玩游戏：王者荣耀</p>
+                </div>
+            </section>
+
+            <!-- 我的技能 -->
+            <section class="card">
+                <h2 class="card-title">✨ 技能</h2>
+                <div class="card-content">
+                    <p>🎨 <strong>设计技能：</strong> Photoshop Illustrator Figma</p>
+                    <br>
+                    <p>💻 <strong>编程语言：</strong> HTML CSS JavaScript Python</p>
+                    <br>
+                    <p>🎮 <strong>游戏技能：</strong> 王者荣耀 </p>
+                    <br>
+                    <p>🌸 <strong>其他特长：</strong>无</p>
+                </div>
+            </section>
+
+            
+
+            <!-- 最近动态 -->
+            <section class="card">
+                <h2 class="card-title">📝 最近动态</h2>
+                <div class="card-content">
+                    <p>🎉 <strong>2025.01.15</strong> - 完成了新的个人主页设计</p>
+                    <br>
+                    <p>🎨 <strong>2025.01.10</strong> - 搭建拟态影视制作</p>
+                    <br>
+                    <p>🎮 <strong>2025.01.05</strong> - 搭建残月工具箱小程序</p>
+                    <br>
+                    <p>📚 <strong>2025.01.01</strong> - 新年快乐 </p>
+                </div>
+            </section>
+
+            <!-- 联系方式 -->
+            <section id="contact" class="card">
+                <h2 class="card-title">💌 联系</h2>
+                <div class="card-content">
+                    <p>想要和我交流或者技术问题吗？欢迎通过以下方式联系我：</p>
+                    <br>
+                    <p>📧 邮箱：待添加</p>
+                    <p>💬 QQ：<span id="contact-qq">待添加</span></p>
+                    <p>🐦 微博：待添加</p>
+                    <p>📱 微信：加好友请备注来源哦~</p>
+                </div>
+            </section>
+        </main>
+
+        <!-- 社交链接 -->
+        <div class="social-links">
+            <a href="https://" target="_blank" class="social-link" title="待添加">友情链接</a>
+            <a href="https://" target="_blank" class="social-link" title="待添加">待添加</a>
+            <a href="https://" target="_blank" class="social-link" title="待添加">待添加</a>
+        </div>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>💖 Copyright © 2025 <span id="footer-nickname"></span> All Rights Reserved💖</p>
+            <p>🌸 感谢您的访问，祝您每天都充满美好心情🌸</p>
+            <br>
+            <p><small>本网站均来收集于互联网，请勿用于任何商业用途，仅供学习交流<a href="/" target="_blank" style="color: #d63384;"></a></small></p>
+        </footer>
+    </div>
+
+<script>
+// 配置
+const QQ_NUMBER = '花有重开日 人无再少年';
+const FIXED_NICKNAME = "残月";
+
+// 更新页面
+function updateQQNumber() {
+    document.getElementById('qq-number').textContent = QQ_NUMBER;
+    document.getElementById('contact-qq').textContent = QQ_NUMBER;
+    document.getElementById('nickname').textContent = FIXED_NICKNAME;
+    document.getElementById('footer-nickname').textContent = FIXED_NICKNAME;
+}
+
+// 页面加载完成后执行
+window.addEventListener('load', function() {
+    updateQQNumber();
+});
+
+// 创建樱花飘落效果
+function createSakura() {
+    const sakura = document.createElement('div');
+    sakura.innerHTML = '🌸';
+    sakura.classList.add('sakura');
+    
+    // 随机位置
+    const startPositionX = Math.random() * window.innerWidth;
+    sakura.style.left = startPositionX + 'px';
+    
+    // 随机动画持续时间 (5-15秒)
+    const animationDuration = Math.random() * 10 + 5;
+    sakura.style.animationDuration = animationDuration + 's';
+    
+    // 随机大小
+    const size = Math.random() * 0.8 + 0.5;
+    sakura.style.fontSize = size + 'em';
+    
+    // 随机透明度
+    sakura.style.opacity = Math.random() * 0.5 + 0.3;
+    
+    // 随机旋转
+    const rotation = Math.random() * 360;
+    sakura.style.transform = `rotate(${rotation}deg)`;
+    
+    // 随机延迟
+    sakura.style.animationDelay = Math.random() * 5 + 's';
+    
+    // 随机摇摆效果
+    const sway = Math.random() * 100 - 50;
+    sakura.style.setProperty('--sway', sway + 'px');
+    
+    document.body.appendChild(sakura);
+    
+    // 动画结束后移除元素
+    setTimeout(() => {
+        sakura.remove();
+    }, animationDuration * 1000);
+}
+
+// 页面加载完成后开始创建樱花
+window.addEventListener('load', function() {
+    // 初始创建一些樱花
+    for (let i = 0; i < 15; i++) {
+        setTimeout(createSakura, Math.random() * 3000);
+    }
+    
+    // 每隔一段时间创建新的樱花
+    setInterval(createSakura, 800);
+});
+</script>
+</body>
+</html>
