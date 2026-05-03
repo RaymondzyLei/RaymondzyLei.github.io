@@ -1,21 +1,15 @@
-# 名称：你可以自己改
 name: Deploy to GitHub Pages
 
-# 触发条件：推送到 main 分支就自动部署
-# 如果你的默认分支是 master，把 main 改成 master
 on:
   push:
     branches: [ main ]
-  # 允许手动触发部署
   workflow_dispatch:
 
-# 权限：必须给 Pages 写入权限
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# 确保同一时间只运行一个部署任务
 concurrency:
   group: pages
   cancel-in-progress: true
@@ -28,38 +22,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout 代码
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: 设置 Node.js
+      # 先安装 pnpm → 再设置 Node（顺序非常重要）
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24  # 用你项目的 Node 版本
-          cache: 'pnpm'    # 自动缓存 pnpm 依赖，加速构建
+          node-version: 24
+          cache: 'pnpm'
 
-      - name: 安装 pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 10  # 可指定 pnpm 版本
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
-      - name: 安装依赖
-        run: pnpm install --frozen-lockfile  # 严格按 lockfile 安装
+      - name: Build
+        run: pnpm build
 
-      - name: 构建项目
-        run: pnpm build  # 必须和你本地打包命令一致
-
-      - name: 配置 GitHub Pages
+      - name: Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: 上传构建产物
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # 这里是重点！改成你项目打包后的输出文件夹
-          # Vue: dist | React: build | Vite: dist | Astro: dist
-          path: './dist'
+          path: './dist'  # 这里改成你打包后的目录：dist / build / out 等
 
-      - name: 部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
