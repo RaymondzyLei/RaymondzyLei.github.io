@@ -1,0 +1,163 @@
+import React from 'react';
+import { useTranslation } from 'react-i18next';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
+import Paper from '@mui/material/Paper';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import { styled } from '@mui/material/styles';
+import { projectsData } from '../data/projects';
+
+const StyledProjectCard = styled(Card)(({ theme }) => ({
+  height: '100%',
+  display: 'flex',
+  flexDirection: 'column',
+  transition: theme.transitions.create(['transform', 'boxShadow', 'borderColor'], {
+    duration: theme.transitions.duration.standard,
+  }),
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: '-100%',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(124, 58, 237, 0.05)',
+    transition: theme.transitions.create('left', {
+      duration: theme.transitions.duration.standard,
+    }),
+  },
+  '&:hover': {
+    transform: 'translateY(-12px)',
+    boxShadow: theme.shadows[16],
+    '&::before': {
+      left: '100%',
+    },
+  },
+}));
+
+export const Portfolio: React.FC = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Box
+      id="portfolio"
+      component="section"
+      sx={{
+        py: 8,
+      }}
+    >
+      <Container maxWidth="lg">
+        <Typography
+          variant="h3"
+          component="h2"
+          sx={{
+            mb: 6,
+            fontWeight: 'bold',
+            textAlign: 'center',
+            color: 'text.primary',
+          }}
+        >
+          {t('portfolio.title')}
+        </Typography>
+
+        <Grid container spacing={3} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' } }}>
+          {projectsData.map((project) => (
+            <Box key={project.id}>
+              <StyledProjectCard>
+                <Paper
+                  sx={{
+                    height: 200,
+                    backgroundColor: 'primary.main',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'primary.contrastText',
+                    fontSize: '3rem',
+                  }}
+                >
+                  P{project.id}
+                </Paper>
+
+                <CardContent sx={{ flexGrow: 1 }}>
+                  <Typography
+                    gutterBottom
+                    variant="h6"
+                    component="h3"
+                    sx={{
+                      fontWeight: 600,
+                      color: 'text.primary',
+                    }}
+                  >
+                    {project.title}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      color: 'text.secondary',
+                      mb: 2,
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    {project.description}
+                  </Typography>
+                  <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+                    {project.technologies.map((tech) => (
+                      <Chip
+                        key={tech}
+                        label={tech}
+                        size="small"
+                        variant="outlined"
+                        sx={{
+                          borderColor: 'primary.main',
+                          color: 'primary.main',
+                        }}
+                      />
+                    ))}
+                  </Stack>
+                </CardContent>
+
+                <CardActions>
+                  {project.githubUrl && (
+                    <Button
+                      size="small"
+                      startIcon={<GitHubIcon />}
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ color: 'primary.main' }}
+                    >
+                      {t('portfolio.viewCode')}
+                    </Button>
+                  )}
+                  {project.demoUrl && (
+                    <Button
+                      size="small"
+                      startIcon={<OpenInNewIcon />}
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      sx={{ color: 'primary.main' }}
+                    >
+                      {t('portfolio.viewDemo')}
+                    </Button>
+                  )}
+                </CardActions>
+              </StyledProjectCard>
+            </Box>
+          ))}
+        </Grid>
+      </Container>
+    </Box>
+  );
+};

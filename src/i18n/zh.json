@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "about": "关于",
+    "skills": "技能",
+    "qualifications": "资历",
+    "academic": "学术",
+    "portfolio": "作品集",
+    "contact": "联系"
+  },
+  "hero": {
+    "title": "你好，我是",
+    "subtitle": "学生 & 开发者",
+    "bio": "欢迎来到我的个人主页。我对学习和创建令人惊叹的事物充满热情。",
+    "cta": "联系我"
+  },
+  "about": {
+    "title": "关于我",
+    "description": "我是一名专注的学生，热衷于技术和持续学习。我喜欢探索新技术并将其应用于解决实际问题。"
+  },
+  "skills": {
+    "title": "技能",
+    "languages": "编程语言",
+    "frameworks": "框架库",
+    "tools": "开发工具"
+  },
+  "qualifications": {
+    "title": "资历"
+  },
+  "academic": {
+    "title": "学术成就"
+  },
+  "portfolio": {
+    "title": "作品集",
+    "viewDemo": "查看演示",
+    "viewCode": "查看代码"
+  },
+  "contact": {
+    "title": "联系我",
+    "name": "名字",
+    "email": "邮箱",
+    "message": "消息",
+    "send": "发送消息",
+    "nameError": "名字是必需的",
+    "emailError": "需要有效的邮箱",
+    "messageError": "消息是必需的"
+  }
+}
