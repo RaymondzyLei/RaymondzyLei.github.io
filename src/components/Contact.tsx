@@ -59,6 +59,83 @@ export const Contact: React.FC = () => {
                   color: 'text.primary',
                 }}
               >
+                Connect With Me
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'text.secondary',
+                  mb: 3,
+                  lineHeight: 1.6,
+                }}
+              >
+                Feel free to reach out through any of these channels. I'm always happy to connect
+                and discuss opportunities.
+              </Typography>
+
+              <Stack spacing={2}>
+                {socialLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <Box
+                      key={link.name}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                      }}
+                    >
+                      <IconButton
+                        component="a"
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          color: 'primary.main',
+                          '&:hover': {
+                            backgroundColor: 'primary.main',
+                            color: 'background.paper',
+                          },
+                        }}
+                      >
+                        <Icon />
+                      </IconButton>
+                      <Box>
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            fontWeight: 600,
+                            color: 'text.primary',
+                          }}
+                        >
+                          {link.name}
+                        </Typography>
+                        <Typography
+                          variant="caption"
+                          sx={{
+                            color: 'text.secondary',
+                          }}
+                        >
+                          {link.label}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  );
+                })}
+              </Stack>
+            </ContactPaper>
+          </Box>
+
+          <Box>
+            <ContactPaper sx={{ p: 3, height: '100%' }}>
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 600,
+                  mb: 2,
+                  color: 'text.primary',
+                }}
+              >
                 Useful Links
               </Typography>
               <Typography
@@ -107,83 +184,6 @@ export const Contact: React.FC = () => {
                       >
                         {Icon ? <Icon /> : <FolderIcon />}
                       </Box>
-                      <Box>
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            fontWeight: 600,
-                            color: 'text.primary',
-                          }}
-                        >
-                          {link.name}
-                        </Typography>
-                        <Typography
-                          variant="caption"
-                          sx={{
-                            color: 'text.secondary',
-                          }}
-                        >
-                          {link.label}
-                        </Typography>
-                      </Box>
-                    </Box>
-                  );
-                })}
-              </Stack>
-            </ContactPaper>
-          </Box>
-
-          <Box>
-            <ContactPaper sx={{ p: 3, height: '100%' }}>
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 600,
-                  mb: 2,
-                  color: 'text.primary',
-                }}
-              >
-                Connect With Me
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: 'text.secondary',
-                  mb: 3,
-                  lineHeight: 1.6,
-                }}
-              >
-                Feel free to reach out through any of these channels. I'm always happy to connect
-                and discuss opportunities.
-              </Typography>
-
-              <Stack spacing={2}>
-                {socialLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <Box
-                      key={link.name}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2,
-                      }}
-                    >
-                      <IconButton
-                        component="a"
-                        href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          color: 'primary.main',
-                          '&:hover': {
-                            backgroundColor: 'primary.main',
-                            color: 'background.paper',
-                          },
-                        }}
-                      >
-                        <Icon />
-                      </IconButton>
                       <Box>
                         <Typography
                           variant="body2"
