@@ -27,7 +27,8 @@
     "title": "资历"
   },
   "academic": {
-    "title": "学术成就"
+    "title": "学术成就",
+    "download": "下载文件"
   },
   "portfolio": {
     "title": "作品集",

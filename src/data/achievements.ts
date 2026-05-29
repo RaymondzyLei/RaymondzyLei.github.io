@@ -5,6 +5,10 @@ export interface Achievement {
   date: string;
   category: string;
   details?: string;
+  file?: {
+    path: string;
+    label?: string;
+  };
 }
 
 export const achievementsData: Achievement[] = [
@@ -15,6 +19,10 @@ export const achievementsData: Achievement[] = [
     date: 'Spring 2026',
     category: 'Competition',
     details: 'The 2nd Session, First-Year Undergraduate Period',
+    file: {
+      path: '/files/cacc-final-certificate.pdf',
+      label: '证书',
+    },
   },
   {
     id: '2',
@@ -23,6 +31,10 @@ export const achievementsData: Achievement[] = [
     date: 'Fall 2025',
     category: 'Competition',
     details: 'The 2nd Session, First-Year Undergraduate Period',
+    file: {
+      path: '/files/cacc-regional-certificate.pdf',
+      label: '证书',
+    },
   },
   {
     id: '3',

@@ -13,6 +13,8 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import DownloadIcon from '@mui/icons-material/Download';
+import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { achievementsData } from '../data/achievements';
 
@@ -113,15 +115,36 @@ export const Academic: React.FC = () => {
                               {achievement.details}
                             </Typography>
                           )}
-                          <Chip
-                            label={category}
-                            size="small"
-                            sx={{
-                              mt: 1,
-                              backgroundColor: 'primary.main',
-                              color: 'primary.contrastText',
-                            }}
-                          />
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}>
+                            <Chip
+                              label={category}
+                              size="small"
+                              sx={{
+                                backgroundColor: 'primary.main',
+                                color: 'primary.contrastText',
+                              }}
+                            />
+                            {achievement.file && (
+                              <Button
+                                size="small"
+                                startIcon={<DownloadIcon />}
+                                href={achievement.file.path}
+                                download={achievement.file.label ?? true}
+                                variant="outlined"
+                                sx={{
+                                  borderColor: 'primary.main',
+                                  color: 'primary.main',
+                                  textTransform: 'none',
+                                  '&:hover': {
+                                    backgroundColor: 'primary.main',
+                                    color: 'primary.contrastText',
+                                  },
+                                }}
+                              >
+                                {achievement.file.label || t('academic.download')}
+                              </Button>
+                            )}
+                          </Box>
                         </CardContent>
                       </AchievementCard>
                     </Box>
