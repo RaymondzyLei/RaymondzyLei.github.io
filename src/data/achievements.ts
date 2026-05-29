@@ -21,7 +21,7 @@ export const achievementsData: Achievement[] = [
     details: 'The 2nd Session, First-Year Undergraduate Period',
     file: {
       path: '/files/cacc-final-certificate.pdf',
-      label: '证书',
+      label: 'Cert.',
     },
   },
   {
@@ -33,7 +33,7 @@ export const achievementsData: Achievement[] = [
     details: 'The 2nd Session, First-Year Undergraduate Period',
     file: {
       path: '/files/cacc-regional-certificate.pdf',
-      label: '证书',
+      label: 'Cert.',
     },
   },
   {
@@ -43,6 +43,10 @@ export const achievementsData: Achievement[] = [
     date: 'Senior 2, 2024',
     category: 'Competition',
     details: 'The 41st Session, Senior High School Period',
+    file: {
+      path: '/files/cpho-2024-certificate.pdf',
+      label: 'Cert.',
+    },
   },
   {
     id: '4',
