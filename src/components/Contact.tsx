@@ -11,19 +11,21 @@ import { styled } from '@mui/material/styles';
 import FolderIcon from '@mui/icons-material/Folder';
 import { socialLinks } from '../data/social';
 import { contactLinks } from '../data/contact';
+import { useTilt } from '../hooks/useTilt';
 
 const ContactPaper = styled(Paper)(({ theme }) => ({
-  transition: theme.transitions.create(['transform', 'boxShadow'], {
+  transition: theme.transitions.create(['boxShadow'], {
     duration: theme.transitions.duration.standard,
   }),
   '&:hover': {
-    transform: 'translateY(-4px)',
     boxShadow: theme.shadows[8],
   },
 }));
 
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
+  const connectTiltRef = useTilt();
+  const linksTiltRef = useTilt();
 
   return (
     <Box
@@ -50,7 +52,7 @@ export const Contact: React.FC = () => {
 
         <Grid container spacing={4} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
           <Box>
-            <ContactPaper sx={{ p: 3, height: '100%' }}>
+            <ContactPaper ref={connectTiltRef} sx={{ p: 3, height: '100%' }}>
               <Typography
                 variant="h6"
                 sx={{
@@ -127,7 +129,7 @@ export const Contact: React.FC = () => {
           </Box>
 
           <Box>
-            <ContactPaper sx={{ p: 3, height: '100%' }}>
+            <ContactPaper ref={linksTiltRef} sx={{ p: 3, height: '100%' }}>
               <Typography
                 variant="h6"
                 sx={{
