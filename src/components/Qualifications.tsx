@@ -14,18 +14,72 @@ import SchoolIcon from '@mui/icons-material/School';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/material/styles';
-import { timelineData } from '../data/timeline';
+import { timelineData, type TimelineItem as TimelineDataItem } from '../data/timeline';
+import { useTilt } from '../hooks/useTilt';
 
 const TimelineCard = styled(Paper)(({ theme }) => ({
-  transition: theme.transitions.create(['transform', 'boxShadow', 'borderLeft'], {
+  transition: theme.transitions.create(['boxShadow', 'borderLeft'], {
     duration: theme.transitions.duration.standard,
   }),
   borderLeft: `4px solid ${theme.palette.primary.main}`,
   '&:hover': {
-    transform: 'translateX(8px)',
     boxShadow: theme.shadows[8],
   },
 }));
+
+const DesktopTimelineItem: React.FC<{ item: TimelineDataItem }> = ({ item }) => {
+  const tiltRef = useTilt();
+  return (
+    <TimelineCard ref={tiltRef} sx={{ p: 2 }}>
+      <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
+        {item.title}
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
+        {item.institution}
+      </Typography>
+      <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mt: 0.5 }}>
+        {item.date}
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+        {item.description}
+      </Typography>
+    </TimelineCard>
+  );
+};
+
+const MobileTimelineItem: React.FC<{ item: TimelineDataItem }> = ({ item }) => {
+  const theme = useTheme();
+  const tiltRef = useTilt();
+  return (
+    <Paper
+      ref={tiltRef}
+      sx={{
+        p: 3,
+        borderTop: `4px solid ${theme.palette.primary.main}`,
+        transition: theme.transitions.create(['boxShadow']),
+        '&:hover': {
+          boxShadow: theme.shadows[8],
+        },
+      }}
+    >
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+        <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
+        <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+          {item.date}
+        </Typography>
+      </Box>
+      <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
+        {item.title}
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
+        {item.institution}
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+        {item.description}
+      </Typography>
+    </Paper>
+  );
+};
 
 export const Qualifications: React.FC = () => {
   const { t } = useTranslation();
@@ -57,47 +111,7 @@ export const Qualifications: React.FC = () => {
         {isMobile ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {timelineData.map((item) => (
-              <Paper
-                key={item.id}
-                sx={{
-                  p: 3,
-                  borderTop: `4px solid ${theme.palette.primary.main}`,
-                  transition: theme.transitions.create(['transform', 'boxShadow']),
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: theme.shadows[8],
-                  },
-                }}
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                  <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
-                  <Typography
-                    variant="caption"
-                    sx={{ color: 'text.disabled' }}
-                  >
-                    {item.date}
-                  </Typography>
-                </Box>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  sx={{ fontWeight: 600, color: 'primary.main' }}
-                >
-                  {item.title}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}
-                >
-                  {item.institution}
-                </Typography>
-                <Typography
-                  variant="body2"
-                  sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}
-                >
-                  {item.description}
-                </Typography>
-              </Paper>
+              <MobileTimelineItem key={item.id} item={item} />
             ))}
           </Box>
         ) : (
@@ -111,20 +125,7 @@ export const Qualifications: React.FC = () => {
                   {index < timelineData.length - 1 && <TimelineConnector />}
                 </TimelineSeparator>
                 <TimelineContent sx={{ py: 2 }}>
-                  <TimelineCard sx={{ p: 2 }}>
-                    <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
-                      {item.title}
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
-                      {item.institution}
-                    </Typography>
-                    <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mt: 0.5 }}>
-                      {item.date}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
-                      {item.description}
-                    </Typography>
-                  </TimelineCard>
+                  <DesktopTimelineItem item={item} />
                 </TimelineContent>
               </TimelineItem>
             ))}

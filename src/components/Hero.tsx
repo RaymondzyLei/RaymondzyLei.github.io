@@ -9,6 +9,7 @@ import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import { socialLinks } from '../data/social';
+import { useTilt } from '../hooks/useTilt';
 
 const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
   transition: theme.transitions.create(['transform', 'boxShadow'], {
@@ -24,7 +25,7 @@ const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
 const StyledButton = styled(Button)(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
-  transition: theme.transitions.create(['all'], {
+  transition: theme.transitions.create(['boxShadow'], {
     duration: theme.transitions.duration.standard,
   }),
   '&::before': {
@@ -46,7 +47,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
     height: '300px',
   },
   '&:hover': {
-    transform: 'translateY(-3px)',
     boxShadow: theme.shadows[8],
   },
 }));
@@ -63,6 +63,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 
 export const Hero: React.FC = () => {
   const { t } = useTranslation();
+  const ctaTiltRef = useTilt<HTMLButtonElement>();
   const handleContactClick = () => {
     const element = document.getElementById('contact');
     if (element) {
@@ -161,6 +162,7 @@ export const Hero: React.FC = () => {
                 })}
               </Stack>
               <StyledButton
+                ref={ctaTiltRef}
                 variant="contained"
                 size="large"
                 onClick={handleContactClick}

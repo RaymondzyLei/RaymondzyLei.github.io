@@ -18,6 +18,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import LanguageIcon from '@mui/icons-material/Language';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { styled } from '@mui/material/styles';
+import { BackgroundOrbs } from './BackgroundOrbs';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -214,6 +215,8 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       >
         <Box sx={{ p: 2 }}>{navContent}</Box>
       </Drawer>
+
+      <BackgroundOrbs />
 
       <Box component="main" sx={{ flex: 1, width: '100%' }}>
         {children}

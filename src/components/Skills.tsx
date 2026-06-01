@@ -7,16 +7,16 @@ import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { getSkillsByCategory } from '../data/skills';
+import { getSkillsByCategory, type Skill } from '../data/skills';
+import { useTilt } from '../hooks/useTilt';
 
 const SkillPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
-  transition: theme.transitions.create(['transform', 'boxShadow', 'borderLeft'], {
+  transition: theme.transitions.create(['boxShadow', 'borderLeft'], {
     duration: theme.transitions.duration.standard,
   }),
   borderLeft: `4px solid ${theme.palette.primary.main}`,
   '&:hover': {
-    transform: 'translateX(8px)',
     boxShadow: theme.shadows[8],
   },
 }));
@@ -30,6 +30,40 @@ const SkillChip = styled(Chip)(({ theme }) => ({
     boxShadow: theme.shadows[4],
   },
 }));
+
+const SkillCategory: React.FC<{ label: string; skills: Skill[] }> = ({ label, skills }) => {
+  const tiltRef = useTilt();
+  return (
+    <SkillPaper ref={tiltRef}>
+      <Typography
+        variant="h6"
+        sx={{
+          mb: 2,
+          fontWeight: 600,
+          color: 'primary.main',
+        }}
+      >
+        {label}
+      </Typography>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+        {skills.map((skill) => (
+          <SkillChip
+            key={skill.id}
+            label={skill.name}
+            sx={{
+              backgroundColor: 'primary.main',
+              color: 'primary.contrastText',
+              fontWeight: 500,
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+              },
+            }}
+          />
+        ))}
+      </Box>
+    </SkillPaper>
+  );
+};
 
 export const Skills: React.FC = () => {
   const { t } = useTranslation();
@@ -64,39 +98,13 @@ export const Skills: React.FC = () => {
         </Typography>
 
         <Stack spacing={4}>
-          {categories.map(({ key, label }) => {
-            const categorySkills = getSkillsByCategory(key as any);
-            return (
-              <SkillPaper key={key}>
-                <Typography
-                  variant="h6"
-                  sx={{
-                    mb: 2,
-                    fontWeight: 600,
-                    color: 'primary.main',
-                  }}
-                >
-                  {label}
-                </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                  {categorySkills.map((skill) => (
-                    <SkillChip
-                      key={skill.id}
-                      label={skill.name}
-                      sx={{
-                        backgroundColor: 'primary.main',
-                        color: 'primary.contrastText',
-                        fontWeight: 500,
-                        '&:hover': {
-                          backgroundColor: 'primary.dark',
-                        },
-                      }}
-                    />
-                  ))}
-                </Box>
-              </SkillPaper>
-            );
-          })}
+          {categories.map(({ key, label }) => (
+            <SkillCategory
+              key={key}
+              label={label}
+              skills={getSkillsByCategory(key)}
+            />
+          ))}
         </Stack>
       </Container>
     </Box>

@@ -16,15 +16,15 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
-import { achievementsData } from '../data/achievements';
+import { achievementsData, type Achievement } from '../data/achievements';
+import { useTilt } from '../hooks/useTilt';
 
 const AchievementCard = styled(Card)(({ theme }) => ({
-  transition: theme.transitions.create(['transform', 'boxShadow', 'borderTop'], {
+  transition: theme.transitions.create(['boxShadow', 'borderTop'], {
     duration: theme.transitions.duration.standard,
   }),
   borderTop: `4px solid ${theme.palette.primary.main}`,
   '&:hover': {
-    transform: 'translateY(-4px)',
     boxShadow: theme.shadows[8],
   },
 }));
@@ -38,6 +38,69 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
   },
 }));
 
+const AchievementCardView: React.FC<{ achievement: Achievement; category: string }> = ({
+  achievement,
+  category,
+}) => {
+  const { t } = useTranslation();
+  const tiltRef = useTilt();
+  return (
+    <AchievementCard ref={tiltRef}>
+      <CardHeader
+        title={achievement.title}
+        subheader={achievement.date}
+        titleTypographyProps={{
+          variant: 'h6',
+          sx: { fontWeight: 600 },
+        }}
+        subheaderTypographyProps={{
+          sx: { color: 'text.secondary' },
+        }}
+      />
+      <CardContent>
+        <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+          {achievement.description}
+        </Typography>
+        {achievement.details && (
+          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
+            {achievement.details}
+          </Typography>
+        )}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}>
+          <Chip
+            label={category}
+            size="small"
+            sx={{
+              backgroundColor: 'primary.main',
+              color: 'primary.contrastText',
+            }}
+          />
+          {achievement.file && (
+            <Button
+              size="small"
+              startIcon={<DownloadIcon />}
+              href={achievement.file.path}
+              download={achievement.file.label ?? true}
+              variant="outlined"
+              sx={{
+                borderColor: 'primary.main',
+                color: 'primary.main',
+                textTransform: 'none',
+                '&:hover': {
+                  backgroundColor: 'primary.main',
+                  color: 'primary.contrastText',
+                },
+              }}
+            >
+              {achievement.file.label || t('academic.download')}
+            </Button>
+          )}
+        </Box>
+      </CardContent>
+    </AchievementCard>
+  );
+};
+
 export const Academic: React.FC = () => {
   const { t } = useTranslation();
 
@@ -49,7 +112,7 @@ export const Academic: React.FC = () => {
       acc[achievement.category].push(achievement);
       return acc;
     },
-    {} as Record<string, typeof achievementsData>
+    {} as Record<string, Achievement[]>
   );
 
   return (
@@ -88,65 +151,7 @@ export const Academic: React.FC = () => {
                 <Stack spacing={2}>
                   {achievements.map((achievement) => (
                     <Box key={achievement.id}>
-                      <AchievementCard>
-                        <CardHeader
-                          title={achievement.title}
-                          subheader={achievement.date}
-                          titleTypographyProps={{
-                            variant: 'h6',
-                            sx: { fontWeight: 600 },
-                          }}
-                          subheaderTypographyProps={{
-                            sx: { color: 'text.secondary' },
-                          }}
-                        />
-                        <CardContent>
-                          <Typography
-                            variant="body2"
-                            sx={{ mb: 1, color: 'text.secondary' }}
-                          >
-                            {achievement.description}
-                          </Typography>
-                          {achievement.details && (
-                            <Typography
-                              variant="caption"
-                              sx={{ color: 'text.disabled', display: 'block' }}
-                            >
-                              {achievement.details}
-                            </Typography>
-                          )}
-                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}>
-                            <Chip
-                              label={category}
-                              size="small"
-                              sx={{
-                                backgroundColor: 'primary.main',
-                                color: 'primary.contrastText',
-                              }}
-                            />
-                            {achievement.file && (
-                              <Button
-                                size="small"
-                                startIcon={<DownloadIcon />}
-                                href={achievement.file.path}
-                                download={achievement.file.label ?? true}
-                                variant="outlined"
-                                sx={{
-                                  borderColor: 'primary.main',
-                                  color: 'primary.main',
-                                  textTransform: 'none',
-                                  '&:hover': {
-                                    backgroundColor: 'primary.main',
-                                    color: 'primary.contrastText',
-                                  },
-                                }}
-                              >
-                                {achievement.file.label || t('academic.download')}
-                              </Button>
-                            )}
-                          </Box>
-                        </CardContent>
-                      </AchievementCard>
+                      <AchievementCardView achievement={achievement} category={category} />
                     </Box>
                   ))}
                 </Stack>
