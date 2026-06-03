@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { InitColorSchemeScript } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,9 +13,15 @@ import { Portfolio } from './components/Portfolio';
 import { Contact } from './components/Contact';
 
 function App() {
-  const [reducedMotion] = useState(
+  const [reducedMotion, setReducedMotion] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => setReducedMotion(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
   const lenisOptions = reducedMotion
     ? { duration: 0, smoothWheel: false }
     : { lerp: 0.1 };
