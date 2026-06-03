@@ -69,12 +69,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
   const [backToTopOpacity, setBackToTopOpacity] = useState(0);
   const lenis = useLenis();
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   useLenis((lenis) => {
     setBackToTopOpacity(Math.min(lenis.scroll / 300, 1));
   });
 
   const handleBackToTop = () => {
-    lenis?.scrollTo(0, { duration: 1.2 });
+    lenis?.scrollTo(0, { duration: reducedMotion ? 0 : 1.2 });
   };
 
   const sections: Section[] = [
