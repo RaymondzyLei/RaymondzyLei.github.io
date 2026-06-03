@@ -10,6 +10,7 @@ import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import { socialLinks } from '../data/social';
 import { useTilt } from '../hooks/useTilt';
+import { useLenis } from 'lenis/react';
 
 const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
   transition: theme.transitions.create(['transform', 'boxShadow'], {
@@ -64,10 +65,11 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 export const Hero: React.FC = () => {
   const { t } = useTranslation();
   const ctaTiltRef = useTilt<HTMLButtonElement>();
+  const lenis = useLenis();
   const handleContactClick = () => {
     const element = document.getElementById('contact');
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      lenis?.scrollTo(element);
     }
   };
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useColorScheme } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -18,6 +18,7 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import LanguageIcon from '@mui/icons-material/Language';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { alpha, styled } from '@mui/material/styles';
+import { useLenis } from 'lenis/react';
 import { BackgroundOrbs } from './BackgroundOrbs';
 
 interface LayoutProps {
@@ -67,18 +68,13 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langAnchor, setLangAnchor] = useState<null | HTMLElement>(null);
   const [backToTopOpacity, setBackToTopOpacity] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setBackToTopOpacity(Math.min(scrollY / 300, 1));
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const lenis = useLenis();
+  useLenis((lenis) => {
+    setBackToTopOpacity(Math.min(lenis.scroll / 300, 1));
+  });
 
   const handleBackToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    lenis?.scrollTo(0, { duration: 1.2 });
   };
 
   const sections: Section[] = [
@@ -115,7 +111,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      lenis?.scrollTo(element);
     }
   };
 
