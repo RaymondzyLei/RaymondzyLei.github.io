@@ -8,7 +8,7 @@ export interface Skill {
 export const skillsData: Skill[] = [
   // Languages
   { id: '1', name: 'C++', category: 'languages', proficiency: 90 },
-  { id: '1', name: 'Rust', category: 'languages', proficiency: 90 },
+  { id: '2', name: 'Rust', category: 'languages', proficiency: 90 },
   { id: '3', name: 'Python', category: 'languages', proficiency: 85 },
   { id: '4', name: 'JS/TS', category: 'languages', proficiency: 80 },
   { id: '5', name: 'HTML/CSS', category: 'languages', proficiency: 95 },
