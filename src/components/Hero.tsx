@@ -4,7 +4,6 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
@@ -52,7 +51,12 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
+const StyledSocialLink = styled('a')(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.primary.main,
+  textDecoration: 'none',
   transition: theme.transitions.create(['transform', 'color'], {
     duration: theme.transitions.duration.shorter,
   }),
@@ -90,7 +94,7 @@ export const Hero: React.FC = () => {
           <Stack spacing={2} sx={{ alignItems: { xs: 'center', md: 'flex-start' }, textAlign: { xs: 'center', md: 'left' }, width: '100%', order: { xs: 2, md: 1 } }}>
               <Typography
                 variant="h4"
-                component="h1"
+                component="h2"
                 sx={{
                   fontWeight: 'bold',
                   color: 'text.primary',
@@ -134,32 +138,16 @@ export const Hero: React.FC = () => {
                   const Icon = link.icon;
                   const rotateDirection = index % 2 === 0 ? '15deg' : '-15deg';
                   return (
-                    <Box
+                    <StyledSocialLink
                       key={link.name}
-                      component="a"
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      sx={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'primary.main',
-                        '--rotate-direction': rotateDirection,
-                      } as React.CSSProperties}
+                      style={{ '--rotate-direction': rotateDirection } as React.CSSProperties}
+                      aria-label={link.label}
                     >
-                      <StyledIconButton
-                        sx={{
-                          color: 'inherit',
-                          '&:hover': {
-                            backgroundColor: 'transparent',
-                          },
-                        }}
-                        aria-label={link.label}
-                      >
-                        <Icon />
-                      </StyledIconButton>
-                    </Box>
+                      <Icon />
+                    </StyledSocialLink>
                   );
                 })}
               </Stack>
