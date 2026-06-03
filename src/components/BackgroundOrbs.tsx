@@ -98,7 +98,9 @@ export const BackgroundOrbs: React.FC = () => {
 
         const el = wrappersRef.current[i].current;
         if (el) {
-          el.style.transform = `translate3d(${orb.x}px, ${orb.y + scrollOffset * orb.scrollFactor}px, 0)`;
+          const targetY = orb.y + scrollOffset * orb.scrollFactor;
+          const clampedY = Math.max(0, Math.min(maxY, targetY));
+          el.style.transform = `translate3d(${orb.x}px, ${clampedY}px, 0)`;
         }
       }
 
