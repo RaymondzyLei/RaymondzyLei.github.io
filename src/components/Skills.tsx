@@ -6,12 +6,15 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { getSkillsByCategory, type Skill } from '../data/skills';
 import { useTilt } from '../hooks/useTilt';
 
 const SkillPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
   transition: theme.transitions.create(['boxShadow', 'borderLeft'], {
     duration: theme.transitions.duration.standard,
   }),
@@ -80,7 +83,6 @@ export const Skills: React.FC = () => {
       component="section"
       sx={{
         py: 8,
-        backgroundColor: 'action.hover',
       }}
     >
       <Container maxWidth="md">

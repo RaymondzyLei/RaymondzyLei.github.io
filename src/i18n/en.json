@@ -13,10 +13,8 @@
     "bio": "Welcome to my homepage. I'm passionate about learning and building amazing things.",
     "cta": "Get in touch"
   },
-  "about": {
-    "title": "About Me",
-    "description": "I'm a dedicated student with a passion for technology and continuous learning. I love exploring new technologies and applying them to solve real-world problems."
-  },
+  "_TODO_about_title": "About Me",
+  "_TODO_about_description": "I'm a dedicated student with a passion for technology and continuous learning. I love exploring new technologies and applying them to solve real-world problems.",
   "skills": {
     "title": "Skills",
     "languages": "Languages",
@@ -41,8 +39,8 @@
     "email": "Email",
     "message": "Message",
     "send": "Send Message",
-    "nameError": "Name is required",
-    "emailError": "Valid email is required",
-    "messageError": "Message is required"
+    "_TODO_nameError": "Name is required",
+    "_TODO_emailError": "Valid email is required",
+    "_TODO_messageError": "Message is required"
   }
 }

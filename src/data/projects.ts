@@ -8,6 +8,7 @@ export interface Project {
   demoUrl?: string;
 }
 
+// TODO: add real projects
 export const projectsData: Project[] = [
   // {
   //   id: '1',

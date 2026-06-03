@@ -7,6 +7,7 @@ let theme = createTheme({
         primary: {
           main: '#7c3aed',
         },
+        // TODO: secondary palette currently mirrors primary; pick a real accent when needed
         secondary: {
           main: '#7c3aed',
         },
@@ -25,6 +26,7 @@ let theme = createTheme({
         primary: {
           main: '#a78bfa',
         },
+        // TODO: secondary palette currently mirrors primary; pick a real accent when needed
         secondary: {
           main: '#a78bfa',
         },

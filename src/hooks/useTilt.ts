@@ -20,8 +20,7 @@ export function useTilt<T extends HTMLElement = HTMLDivElement>(
     if (!el) return;
 
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (mq.matches) return;
-
+    let active = !mq.matches;
     let rafId = 0;
     let targetX = 0;
     let targetY = 0;
@@ -53,6 +52,7 @@ export function useTilt<T extends HTMLElement = HTMLDivElement>(
     };
 
     const onMove = (e: MouseEvent) => {
+      if (!active) return;
       const rect = el.getBoundingClientRect();
       const nx = (e.clientX - rect.left) / rect.width - 0.5;
       const ny = (e.clientY - rect.top) / rect.height - 0.5;
@@ -62,6 +62,7 @@ export function useTilt<T extends HTMLElement = HTMLDivElement>(
     };
 
     const onLeave = () => {
+      if (!active) return;
       targetX = 0;
       targetY = 0;
       start();
@@ -70,9 +71,20 @@ export function useTilt<T extends HTMLElement = HTMLDivElement>(
     el.addEventListener('mousemove', onMove);
     el.addEventListener('mouseleave', onLeave);
 
+    const onMqChange = (e: MediaQueryListEvent) => {
+      active = !e.matches;
+      if (!active) {
+        if (rafId) cancelAnimationFrame(rafId);
+        rafId = 0;
+        el.style.transform = '';
+      }
+    };
+    mq.addEventListener('change', onMqChange);
+
     return () => {
       el.removeEventListener('mousemove', onMove);
       el.removeEventListener('mouseleave', onLeave);
+      mq.removeEventListener('change', onMqChange);
       if (rafId) cancelAnimationFrame(rafId);
       el.style.transform = '';
     };

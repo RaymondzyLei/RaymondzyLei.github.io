@@ -25,3 +25,8 @@ dist-ssr
 
 # Playwright MCP test artifacts
 .playwright-mcp/
+
+# Editor / backup files
+*.bak
+*.tsxbak
+*.orig

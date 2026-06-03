@@ -1,11 +1,12 @@
 {
-  "name": "template",
+  "name": "raymondzylei-homepage",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "typecheck": "tsc -b",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -17,10 +18,10 @@
     "@mui/lab": "9.0.0-beta.2",
     "@mui/material": "^9.0.0",
     "i18next": "^26.0.8",
+    "lenis": "^1.3.23",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
-    "react-i18next": "^17.0.6",
-    "react-router-dom": "^7.14.2"
+    "react-i18next": "^17.0.6"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

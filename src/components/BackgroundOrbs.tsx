@@ -31,7 +31,7 @@ interface OrbData {
   y: number;
   vx: number;
   vy: number;
-  parallax: number;
+  scrollFactor: number;
 }
 
 const getInitialOrbs = (): OrbData[] => {
@@ -40,8 +40,8 @@ const getInitialOrbs = (): OrbData[] => {
   const maxX = Math.max(0, w - ORB_SIZE);
   const maxY = Math.max(0, h - ORB_SIZE);
   return [
-    { x: 0.1 * maxX, y: 0.15 * maxY, vx: 0.5, vy: 0.35, parallax: 1.0 },
-    { x: 0.65 * maxX, y: 0.5 * maxY, vx: -0.4, vy: 0.55, parallax: -0.6 },
+    { x: 0.1 * maxX, y: 0.15 * maxY, vx: 0.5, vy: 0.35, scrollFactor: 0.12 },
+    { x: 0.65 * maxX, y: 0.5 * maxY, vx: -0.4, vy: 0.55, scrollFactor: 0.18 },
   ];
 };
 
@@ -60,8 +60,6 @@ export const BackgroundOrbs: React.FC = () => {
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const isCoarse = window.matchMedia('(pointer: coarse)').matches;
-
     const onResize = () => {
       const newMaxX = Math.max(0, window.innerWidth - ORB_SIZE);
       const newMaxY = Math.max(0, window.innerHeight - ORB_SIZE);
@@ -73,28 +71,11 @@ export const BackgroundOrbs: React.FC = () => {
     window.addEventListener('resize', onResize);
 
     let rafId = 0;
-    let pendingMx = 0;
-    let pendingMy = 0;
-    let currentMx = 0;
-    let currentMy = 0;
-
-    const onMove = (e: MouseEvent) => {
-      pendingMx = (e.clientX / window.innerWidth - 0.5) * 2;
-      pendingMy = (e.clientY / window.innerHeight - 0.5) * 2;
-    };
-
-    if (!isCoarse) {
-      window.addEventListener('mousemove', onMove);
-    }
 
     const animate = () => {
-      currentMx += (pendingMx - currentMx) * 0.1;
-      currentMy += (pendingMy - currentMy) * 0.1;
-      const mxPx = currentMx * 20;
-      const myPx = currentMy * 20;
-
       const maxX = Math.max(0, window.innerWidth - ORB_SIZE);
       const maxY = Math.max(0, window.innerHeight - ORB_SIZE);
+      const scrollOffset = -window.scrollY;
 
       for (let i = 0; i < orbsRef.current.length; i++) {
         const orb = orbsRef.current[i];
@@ -117,7 +98,9 @@ export const BackgroundOrbs: React.FC = () => {
 
         const el = wrappersRef.current[i].current;
         if (el) {
-          el.style.transform = `translate3d(${orb.x + mxPx * orb.parallax}px, ${orb.y + myPx * orb.parallax}px, 0)`;
+          const targetY = orb.y + scrollOffset * orb.scrollFactor;
+          const clampedY = Math.max(0, Math.min(maxY, targetY));
+          el.style.transform = `translate3d(${orb.x}px, ${clampedY}px, 0)`;
         }
       }
 
@@ -127,7 +110,6 @@ export const BackgroundOrbs: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(rafId);
-      window.removeEventListener('mousemove', onMove);
       window.removeEventListener('resize', onResize);
     };
   }, []);

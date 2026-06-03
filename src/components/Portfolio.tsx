@@ -13,7 +13,7 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { projectsData, type Project } from '../data/projects';
 import { useTilt } from '../hooks/useTilt';
 
@@ -21,6 +21,9 @@ const StyledProjectCard = styled(Card)(({ theme }) => ({
   height: '100%',
   display: 'flex',
   flexDirection: 'column',
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
   transition: theme.transitions.create(['boxShadow', 'borderColor'], {
     duration: theme.transitions.duration.standard,
   }),
