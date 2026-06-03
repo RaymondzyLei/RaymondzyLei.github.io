@@ -12,8 +12,11 @@ export interface ContactLink {
 }
 
 export const contactLinks: ContactLink[] = [
+  // TODO: replace with real link
   { name: 'Portfolio Website', url: '#', label: 'View my latest work', icon: WebIcon },
   { name: 'GitHub Repositories', url: 'https://github.com/RaymondzyLei?tab=repositories', label: 'Open source projects', icon: CodeIcon },
+  // TODO: replace with real link
   { name: 'Blog', url: '#', label: 'Articles and tutorials', icon: ArticleIcon },
+  // TODO: replace with real link
   { name: 'Resume Download', url: '#', label: 'Get my latest resume', icon: DescriptionIcon },
 ];

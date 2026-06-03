@@ -13,10 +13,8 @@
     "bio": "欢迎来到我的个人主页。我对学习和创建令人惊叹的事物充满热情。",
     "cta": "联系我"
   },
-  "about": {
-    "title": "关于我",
-    "description": "我是一名专注的学生，热衷于技术和持续学习。我喜欢探索新技术并将其应用于解决实际问题。"
-  },
+  "_TODO_about_title": "关于我",
+  "_TODO_about_description": "我是一名专注的学生，热衷于技术和持续学习。我喜欢探索新技术并将其应用于解决实际问题。",
   "skills": {
     "title": "技能",
     "languages": "编程语言",
@@ -41,8 +39,8 @@
     "email": "邮箱",
     "message": "消息",
     "send": "发送消息",
-    "nameError": "名字是必需的",
-    "emailError": "需要有效的邮箱",
-    "messageError": "消息是必需的"
+    "_TODO_nameError": "名字是必需的",
+    "_TODO_emailError": "需要有效的邮箱",
+    "_TODO_messageError": "消息是必需的"
   }
 }

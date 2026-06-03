@@ -58,6 +58,7 @@ export const achievementsData: Achievement[] = [
   },
   {
     id: '5',
+    // TODO: fill when available
     title: 'None',
     description: '',
     date: '',
@@ -66,6 +67,7 @@ export const achievementsData: Achievement[] = [
   },
   {
     id: '6',
+    // TODO: fill when available
     title: 'None',
     description: '',
     date: '',
@@ -74,6 +76,7 @@ export const achievementsData: Achievement[] = [
   },
   {
     id: '7',
+    // TODO: fill when available
     title: 'None',
     description: '',
     date: '',

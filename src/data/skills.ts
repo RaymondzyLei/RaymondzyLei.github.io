@@ -14,6 +14,7 @@ export const skillsData: Skill[] = [
   { id: '5', name: 'HTML/CSS', category: 'languages', proficiency: 95 },
 
   // Frameworks
+  // TODO: list frameworks/libraries
   // { id: '5', name: 'React', category: 'frameworks', proficiency: 90 },
   // { id: '6', name: 'Vue.js', category: 'frameworks', proficiency: 75 },
   // { id: '7', name: 'Node.js', category: 'frameworks', proficiency: 85 },
