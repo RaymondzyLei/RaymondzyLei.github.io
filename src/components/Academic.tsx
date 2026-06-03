@@ -84,7 +84,7 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
               size="small"
               startIcon={<DownloadIcon />}
               href={achievement.file.path}
-              download={achievement.file.label ?? true}
+              download={achievement.file.path.split('/').pop() || true}
               variant="outlined"
               sx={{
                 borderColor: 'primary.main',
