@@ -13,11 +13,14 @@ import Paper from '@mui/material/Paper';
 import SchoolIcon from '@mui/icons-material/School';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { timelineData, type TimelineItem as TimelineDataItem } from '../data/timeline';
 import { useTilt } from '../hooks/useTilt';
 
 const TimelineCard = styled(Paper)(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
   transition: theme.transitions.create(['boxShadow', 'borderLeft'], {
     duration: theme.transitions.duration.standard,
   }),
@@ -55,6 +58,9 @@ const MobileTimelineItem: React.FC<{ item: TimelineDataItem }> = ({ item }) => {
       ref={tiltRef}
       sx={{
         p: 3,
+        backgroundColor: alpha(theme.palette.background.paper, 0.6),
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
         borderTop: `4px solid ${theme.palette.primary.main}`,
         transition: theme.transitions.create(['boxShadow']),
         '&:hover': {

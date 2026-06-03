@@ -7,13 +7,16 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import FolderIcon from '@mui/icons-material/Folder';
 import { socialLinks } from '../data/social';
 import { contactLinks } from '../data/contact';
 import { useTilt } from '../hooks/useTilt';
 
 const ContactPaper = styled(Paper)(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
   transition: theme.transitions.create(['boxShadow'], {
     duration: theme.transitions.duration.standard,
   }),
@@ -33,7 +36,6 @@ export const Contact: React.FC = () => {
       component="section"
       sx={{
         py: 8,
-        backgroundColor: 'action.hover',
       }}
     >
       <Container maxWidth="md">

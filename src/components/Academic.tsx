@@ -15,11 +15,14 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import DownloadIcon from '@mui/icons-material/Download';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
 
 const AchievementCard = styled(Card)(({ theme }) => ({
+  backgroundColor: alpha(theme.palette.background.paper, 0.6),
+  backdropFilter: 'blur(10px)',
+  WebkitBackdropFilter: 'blur(10px)',
   transition: theme.transitions.create(['boxShadow', 'borderTop'], {
     duration: theme.transitions.duration.standard,
   }),
@@ -30,9 +33,13 @@ const AchievementCard = styled(Card)(({ theme }) => ({
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
+  backgroundColor: 'transparent',
   transition: theme.transitions.create(['boxShadow', 'backgroundColor'], {
     duration: theme.transitions.duration.standard,
   }),
+  '&:before': {
+    backgroundColor: 'transparent',
+  },
   '&:hover': {
     boxShadow: theme.shadows[4],
   },
@@ -121,7 +128,6 @@ export const Academic: React.FC = () => {
       component="section"
       sx={{
         py: 8,
-        backgroundColor: 'action.hover',
       }}
     >
       <Container maxWidth="md">

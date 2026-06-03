@@ -17,7 +17,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import LanguageIcon from '@mui/icons-material/Language';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { styled } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { BackgroundOrbs } from './BackgroundOrbs';
 
 interface LayoutProps {
@@ -144,7 +144,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         position="sticky"
         elevation={0}
         sx={{
-          backgroundColor: 'background.paper',
+          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.6),
+          backdropFilter: 'blur(10px)',
+          WebkitBackdropFilter: 'blur(10px)',
           borderBottom: '1px solid',
           borderBottomColor: 'divider',
         }}
