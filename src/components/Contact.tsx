@@ -5,18 +5,17 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import FolderIcon from '@mui/icons-material/Folder';
 import { socialLinks } from '../data/social';
 import { contactLinks } from '../data/contact';
 import { useTilt } from '../hooks/useTilt';
+import { glass } from '../theme';
+import { LiquidGlassButton } from './LiquidGlassButton';
 
 const ContactPaper = styled(Paper)(({ theme }) => ({
-  backgroundColor: alpha(theme.palette.background.paper, 0.6),
-  backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)',
+  ...glass(theme),
   transition: theme.transitions.create(['boxShadow'], {
     duration: theme.transitions.duration.standard,
   }),
@@ -89,21 +88,11 @@ export const Contact: React.FC = () => {
                         gap: 2,
                       }}
                     >
-                      <IconButton
-                        component="a"
+                      <LiquidGlassButton
+                        icon={<Icon />}
+                        label={link.label}
                         href={link.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                          color: 'primary.main',
-                          '&:hover': {
-                            backgroundColor: 'primary.main',
-                            color: 'background.paper',
-                          },
-                        }}
-                      >
-                        <Icon />
-                      </IconButton>
+                      />
                       <Box>
                         <Typography
                           variant="body2"

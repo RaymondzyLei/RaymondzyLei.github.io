@@ -26,6 +26,9 @@ dist-ssr
 # Playwright MCP test artifacts
 .playwright-mcp/
 
+# Claude Code local config
+.claude/
+
 # Editor / backup files
 *.bak
 *.tsxbak

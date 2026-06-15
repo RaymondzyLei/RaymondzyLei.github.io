@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles';
 import { socialLinks } from '../data/social';
 import { useTilt } from '../hooks/useTilt';
 import { useLenis } from 'lenis/react';
+import { LiquidGlassButton } from './LiquidGlassButton';
 
 const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
   transition: theme.transitions.create(['transform', 'boxShadow'], {
@@ -51,20 +52,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-const StyledSocialLink = styled('a')(({ theme }) => ({
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: theme.palette.primary.main,
-  textDecoration: 'none',
-  transition: theme.transitions.create(['transform', 'color'], {
-    duration: theme.transitions.duration.shorter,
-  }),
-  '&:hover': {
-    transform: 'scale(1.5) rotate(var(--rotate-direction, 15deg))',
-    backgroundColor: 'transparent',
-  },
-}));
+
 
 export const Hero: React.FC = () => {
   const { t } = useTranslation();
@@ -134,20 +122,15 @@ export const Hero: React.FC = () => {
                 {t('hero.bio')}
               </Typography>
               <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', mt: 2 }}>
-                {socialLinks.map((link, index) => {
+                {socialLinks.map((link) => {
                   const Icon = link.icon;
-                  const rotateDirection = index % 2 === 0 ? '15deg' : '-15deg';
                   return (
-                    <StyledSocialLink
+                    <LiquidGlassButton
                       key={link.name}
+                      icon={<Icon />}
+                      label={link.label}
                       href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{ '--rotate-direction': rotateDirection } as React.CSSProperties}
-                      aria-label={link.label}
-                    >
-                      <Icon />
-                    </StyledSocialLink>
+                    />
                   );
                 })}
               </Stack>

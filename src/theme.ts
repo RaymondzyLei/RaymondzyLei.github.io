@@ -1,4 +1,26 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
+import type { CSSProperties } from 'react';
+import { createTheme, responsiveFontSizes, alpha } from '@mui/material/styles';
+import type { Theme } from '@mui/material/styles';
+
+export const glass = (theme: Theme): CSSProperties => ({
+  backgroundColor: alpha(
+    theme.palette.mode === 'dark'
+      ? theme.palette.background.default
+      : theme.palette.background.paper,
+    0.65,
+  ),
+  backdropFilter: 'blur(20px) saturate(180%)',
+  WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+  border: '1px solid',
+  borderColor: alpha(
+    theme.palette.common.white,
+    theme.palette.mode === 'dark' ? 0.12 : 0.5,
+  ),
+  boxShadow:
+    theme.palette.mode === 'dark'
+      ? 'inset 0 1px 0 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.35)'
+      : 'inset 0 1px 0 0 rgba(255,255,255,0.6), 0 8px 32px rgba(124,58,237,0.08)',
+});
 
 let theme = createTheme({
   colorSchemes: {
@@ -45,7 +67,7 @@ let theme = createTheme({
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
   },
   shape: {
-    borderRadius: 8,
+    borderRadius: 24,
   },
 });
 

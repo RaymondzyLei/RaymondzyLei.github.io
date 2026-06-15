@@ -6,15 +6,14 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
 import Paper from '@mui/material/Paper';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { getSkillsByCategory, type Skill } from '../data/skills';
 import { useTilt } from '../hooks/useTilt';
+import { glass } from '../theme';
 
 const SkillPaper = styled(Paper)(({ theme }) => ({
+  ...glass(theme),
   padding: theme.spacing(3),
-  backgroundColor: alpha(theme.palette.background.paper, 0.6),
-  backdropFilter: 'blur(10px)',
-  WebkitBackdropFilter: 'blur(10px)',
   transition: theme.transitions.create(['boxShadow', 'borderLeft'], {
     duration: theme.transitions.duration.standard,
   }),

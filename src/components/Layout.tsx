@@ -17,9 +17,10 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import LanguageIcon from '@mui/icons-material/Language';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { alpha, styled } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { useLenis } from 'lenis/react';
 import { BackgroundOrbs } from './BackgroundOrbs';
+import { glass } from '../theme';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -140,13 +141,11 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       <AppBar
         position="sticky"
         elevation={0}
-        sx={{
-          backgroundColor: (theme) => alpha(theme.palette.background.paper, 0.6),
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
+        sx={(theme) => ({
+          ...glass(theme),
           borderBottom: '1px solid',
           borderBottomColor: 'divider',
-        }}
+        })}
       >
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
