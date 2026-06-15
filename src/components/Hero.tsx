@@ -9,6 +9,7 @@ import Avatar from '@mui/material/Avatar';
 import { styled } from '@mui/material/styles';
 import { socialLinks } from '../data/social';
 import { useTilt } from '../hooks/useTilt';
+import { useReveal } from '../hooks/useReveal';
 import { useLenis } from 'lenis/react';
 import { LiquidGlassButton } from './LiquidGlassButton';
 
@@ -57,6 +58,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 export const Hero: React.FC = () => {
   const { t } = useTranslation();
   const ctaTiltRef = useTilt<HTMLButtonElement>();
+  const { ref: heroRef, isVisible: heroVisible } = useReveal();
   const lenis = useLenis();
   const handleContactClick = () => {
     const element = document.getElementById('contact');
@@ -68,6 +70,7 @@ export const Hero: React.FC = () => {
   return (
     <Box
       id="hero"
+      ref={heroRef}
       component="section"
       sx={{
         py: { xs: 8, md: 12 },
@@ -75,6 +78,10 @@ export const Hero: React.FC = () => {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '90vh',
+        opacity: heroVisible ? 1 : 0,
+        transform: heroVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
+        transition: 'opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)',
+        willChange: 'opacity, transform',
       }}
     >
       <Container maxWidth="md">
