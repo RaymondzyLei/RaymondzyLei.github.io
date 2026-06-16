@@ -10,7 +10,7 @@ interface UseRevealOptions {
 export const useReveal = (options: UseRevealOptions = {}) => {
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const { ref, inView } = useInView({
-    threshold: options.threshold ?? 0.1,
+    threshold: options.threshold ?? 0.2,
     rootMargin: options.rootMargin ?? '0px 0px 0px 0px',
     triggerOnce: options.triggerOnce ?? true,
   });
