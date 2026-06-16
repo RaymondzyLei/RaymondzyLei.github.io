@@ -145,7 +145,7 @@ const ProjectCardCell: React.FC<{ project: Project; index: number }> = ({ projec
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
         transition:
-          'opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)',
+          'opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1), transform 1000ms cubic-bezier(0.22, 1, 0.36, 1)',
         transitionDelay: `${index * 100}ms`,
         willChange: 'opacity, transform',
       }}
@@ -169,7 +169,7 @@ export const Portfolio: React.FC = () => {
         opacity: sectionVisible ? 1 : 0,
         transform: sectionVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
         transition:
-          'opacity 600ms cubic-bezier(0.22, 1, 0.36, 1), transform 600ms cubic-bezier(0.22, 1, 0.36, 1)',
+          'opacity 1000ms cubic-bezier(0.22, 1, 0.36, 1), transform 1000ms cubic-bezier(0.22, 1, 0.36, 1)',
         willChange: 'opacity, transform',
       }}
     >
