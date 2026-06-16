@@ -1,3 +1,9 @@
+// Achievement cards inside <Accordion> are intentionally NOT staggered via
+// useReveal: AccordionDetails stays mounted (height 0 when collapsed) so the
+// IntersectionObserver fires `inView: true` while the panel is hidden, and
+// the cards are already `isVisible` by the time the user expands the panel.
+// Staggering them on scroll would either re-fire on expansion (flash) or
+// never fire at all. Section-level reveal on the outer Box is enough.
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Container from '@mui/material/Container';
@@ -18,6 +24,7 @@ import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
+import { useReveal } from '../hooks/useReveal';
 import { glass } from '../theme';
 
 const AchievementCard = styled(Card)(({ theme }) => ({
@@ -106,6 +113,7 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
 
 export const Academic: React.FC = () => {
   const { t } = useTranslation();
+  const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
 
   const groupedByCategory = achievementsData.reduce(
     (acc, achievement) => {
@@ -121,9 +129,15 @@ export const Academic: React.FC = () => {
   return (
     <Box
       id="academic"
+      ref={sectionRef}
       component="section"
       sx={{
         py: 8,
+        opacity: sectionVisible ? 1 : 0,
+        transform: sectionVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
+        transition:
+          'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
+        willChange: 'opacity, transform',
       }}
     >
       <Container maxWidth="md">

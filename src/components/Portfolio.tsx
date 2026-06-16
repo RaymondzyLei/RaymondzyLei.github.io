@@ -16,6 +16,7 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { styled } from '@mui/material/styles';
 import { projectsData, type Project } from '../data/projects';
 import { useTilt } from '../hooks/useTilt';
+import { useReveal } from '../hooks/useReveal';
 import { glass } from '../theme';
 
 const StyledProjectCard = styled(Card)(({ theme }) => ({
@@ -135,15 +136,41 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
   );
 };
 
+const ProjectCardCell: React.FC<{ project: Project; index: number }> = ({ project, index }) => {
+  const { ref: revealRef, isVisible } = useReveal();
+  return (
+    <Box
+      ref={revealRef}
+      sx={{
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
+        transition:
+          'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
+        transitionDelay: `${index * 100}ms`,
+        willChange: 'opacity, transform',
+      }}
+    >
+      <ProjectCardView project={project} />
+    </Box>
+  );
+};
+
 export const Portfolio: React.FC = () => {
   const { t } = useTranslation();
+  const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
 
   return (
     <Box
       id="portfolio"
+      ref={sectionRef}
       component="section"
       sx={{
         py: 8,
+        opacity: sectionVisible ? 1 : 0,
+        transform: sectionVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
+        transition:
+          'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
+        willChange: 'opacity, transform',
       }}
     >
       <Container maxWidth="lg">
@@ -161,10 +188,8 @@ export const Portfolio: React.FC = () => {
         </Typography>
 
         <Grid container spacing={3} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' } }}>
-          {projectsData.map((project) => (
-            <Box key={project.id}>
-              <ProjectCardView project={project} />
-            </Box>
+          {projectsData.map((project, index) => (
+            <ProjectCardCell key={project.id} project={project} index={index} />
           ))}
         </Grid>
       </Container>

@@ -11,6 +11,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { socialLinks } from '../data/social';
 import { contactLinks } from '../data/contact';
 import { useTilt } from '../hooks/useTilt';
+import { useReveal } from '../hooks/useReveal';
 import { glass } from '../theme';
 import { LiquidGlassButton } from './LiquidGlassButton';
 
@@ -24,17 +25,31 @@ const ContactPaper = styled(Paper)(({ theme }) => ({
   },
 }));
 
+const revealSx = (isVisible: boolean, delayMs: number) => ({
+  opacity: isVisible ? 1 : 0,
+  transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
+  transition:
+    'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
+  transitionDelay: `${delayMs}ms`,
+  willChange: 'opacity, transform',
+});
+
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
   const connectTiltRef = useTilt();
   const linksTiltRef = useTilt();
+  const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
+  const { ref: connectCellRef, isVisible: connectVisible } = useReveal();
+  const { ref: linksCellRef, isVisible: linksVisible } = useReveal();
 
   return (
     <Box
       id="contact"
+      ref={sectionRef}
       component="section"
       sx={{
         py: 8,
+        ...revealSx(sectionVisible, 0),
       }}
     >
       <Container maxWidth="md">
@@ -52,7 +67,7 @@ export const Contact: React.FC = () => {
         </Typography>
 
         <Grid container spacing={4} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
-          <Box>
+          <Box ref={connectCellRef} sx={revealSx(connectVisible, 0)}>
             <ContactPaper ref={connectTiltRef} sx={{ p: 3, height: '100%' }}>
               <Typography
                 variant="h6"
@@ -119,7 +134,7 @@ export const Contact: React.FC = () => {
             </ContactPaper>
           </Box>
 
-          <Box>
+          <Box ref={linksCellRef} sx={revealSx(linksVisible, 100)}>
             <ContactPaper ref={linksTiltRef} sx={{ p: 3, height: '100%' }}>
               <Typography
                 variant="h6"

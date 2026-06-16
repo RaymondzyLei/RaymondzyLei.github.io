@@ -35,7 +35,8 @@ src/
 ├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + Layout 包裹各区块
 ├── theme.ts          # MUI 主题：亮/暗双色方案、紫色主色调、`glass(theme)` 液态玻璃 helper、`shape.borderRadius: 24`
 ├── hooks/
-│   └── useTilt.ts    # 3D 倾斜 hook（rAF 插值，最大 ±5°，订阅 matchMedia change 响应式）
+│   ├── useTilt.ts    # 3D 倾斜 hook（rAF 插值，最大 ±5°，订阅 matchMedia change 响应式）
+│   └── useReveal.ts  # scroll-reveal hook（基于 react-intersection-observer 的 useInView + MUI useMediaQuery 减弱动效）
 ├── i18n/
 │   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage
 │   ├── en.json       # 英文翻译
@@ -138,6 +139,9 @@ sx={(theme) => ({ ...glass(theme), ... })}
 - **背景光球**：固定 2 个（紫色 + 蓝色），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。
 - **移动端（`pointer: coarse`）自动退化**：3D 倾斜不触发（无 mousemove）；视差改为滚动驱动所以移动端也工作。
 - **所有动效尊重 `prefers-reduced-motion: reduce`**：`useTilt` 订阅 `change` 事件动态启停（关闭时清 transform、取消 rAF）；`BackgroundOrbs` 通过 CSS 媒体查询关闭 keyframe；Lenis 配置 `duration: 0`；`handleBackToTop` 用 `useMediaQuery` 决定 `duration: 0` 还是 `1.2`。
+- **Scroll-reveal（`useReveal`）**：6 个 section + 区块内卡片错位渐现。opacity 0→1 + translateY(24px)→0，缓动 `cubic-bezier(0.22, 1, 0.36, 1)`，1200ms。`useReveal` 包装 `react-intersection-observer` 的 `useInView`（threshold 0.2、rootMargin `'0px 0px 0px 0px'`、triggerOnce true）+ MUI `useMediaQuery`；`prefers-reduced-motion: reduce` 时直接 `isVisible: true` 无 observer。错位 stagger：同区块卡片 `transitionDelay: ${index * 100}ms`，由组件自己写（在 sx 里），hook 不传 delay。
+- **transform 写入隔离**：`useTilt`（写 `rotate3d`）和 `useReveal`（写 `translate3d`）**不允许挂在同一 DOM 元素**。reveal 写外层 wrapper Box，tilt 写内层卡片 DOM。
+- **Academic Accordion 特殊处理**：accordion 内的 `AchievementCardView` **不** stagger。`<AccordionDetails>` 折叠时 `height: 0` 但 DOM 存在，IntersectionObserver 立即 fire `inView: true`，展开时卡片已 visible，再 stagger 反而闪烁。仅 `Academic` 区块整体渐现。
 - **LiquidGlassButton 动效**：hover `transform: scale(1.08)` + 加深 inset highlight；active `scale(0.96)`；`focus-visible` 焦点环 `outline: 2px solid primary.main; outline-offset: 4px`；`@media (pointer: coarse)` 禁用 scale；`prefers-reduced-motion: reduce` 时 transition 全部清零。**不挂 useTilt**（与 scale transform 冲突）。
 
 ## 占位数据约定
@@ -154,7 +158,7 @@ sx={(theme) => ({ ...glass(theme), ... })}
 
 `tsconfig.app.json` 启用了 `strict`、`noUnusedLocals`、`noUnusedParameters`、`verbatimModuleSyntax`。常见踩坑：
 
-- **循环里需要 ref 必须抽子组件**：`useTilt()`（或任何 hook）只能在组件顶层调用，不能写在 `.map()` 里。要给循环渲染的每张卡片抽一个子组件（如 `SkillCategory`、`AchievementCardView`、`ProjectCardView`、`DesktopTimelineItem` / `MobileTimelineItem`）。
+- **循环里需要 ref 必须抽子组件**：`useTilt()` / `useReveal()`（或任何 hook）只能在组件顶层调用，不能写在 `.map()` 里。要给循环渲染的每张卡片抽一个子组件（如 `SkillCategory`、`AchievementCardView`、`ProjectCardView`、`ProjectCardCell`、`DesktopTimelineItem` / `MobileTimelineItem`）。
 - **`useRef<T>(null)` 实际返回 `RefObject<T | null>`**：泛型 hook 想暴露 `RefObject<T>` 给消费者（这样能直接 `<Component ref={ref} />` 透传到任意元素类型），需要在 return 处加 `return ref as RefObject<T>` 断言。
 - **同名类型冲突**：`TimelineItem` 在 `@mui/lab` 和 `../data/timeline` 都存在，用 `import type { TimelineItem as TimelineDataItem } from '../data/timeline'` 别名区分。
 - **OS 级媒体查询用 `useState` + `useEffect` 订阅 `change` 事件**（不要用 `useState(() => mq.matches)` 一次性捕获）。模式：
