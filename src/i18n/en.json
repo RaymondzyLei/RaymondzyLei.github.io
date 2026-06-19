@@ -42,5 +42,11 @@
     "_TODO_nameError": "Name is required",
     "_TODO_emailError": "Valid email is required",
     "_TODO_messageError": "Message is required"
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page Not Found",
+    "description": "The page you're looking for doesn't exist or has been moved.",
+    "home": "Back to Home"
   }
 }

@@ -24,6 +24,7 @@ import { glass } from '../theme';
 
 interface LayoutProps {
   children: React.ReactNode;
+  isNotFound?: boolean;
 }
 
 interface Section {
@@ -61,7 +62,7 @@ const StyledNavButton = styled(Button)(({ theme }) => ({
   },
 }));
 
-export const Layout: React.FC<LayoutProps> = ({ children }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) => {
   const { t, i18n } = useTranslation();
   const { mode, setMode } = useColorScheme();
   const theme = useTheme();
@@ -122,7 +123,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       {sections.map((section) => (
         <StyledNavButton
           key={section.id}
-          onClick={() => handleNavClick(section.id)}
+          {...(isNotFound
+            ? { component: 'a', href: '/' }
+            : { onClick: () => handleNavClick(section.id) })}
           sx={{
             color: 'text.primary',
             textTransform: 'none',
@@ -150,7 +153,9 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
         <Toolbar>
           <Box sx={{ flexGrow: 1 }}>
             <Button
-              onClick={() => handleNavClick('hero')}
+              {...(isNotFound
+                ? { component: 'a', href: '/' }
+                : { onClick: () => handleNavClick('hero') })}
               sx={{
                 fontSize: '1.5rem',
                 fontWeight: 'bold',

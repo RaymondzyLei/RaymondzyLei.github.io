@@ -11,10 +11,14 @@ import { Qualifications } from './components/Qualifications';
 import { Academic } from './components/Academic';
 import { Portfolio } from './components/Portfolio';
 import { Contact } from './components/Contact';
+import { NotFound } from './components/NotFound';
 
 function App() {
   const [reducedMotion, setReducedMotion] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+  const [isNotFound] = useState(
+    () => typeof window !== 'undefined' && window.location.pathname !== '/'
   );
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -32,13 +36,19 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <ReactLenis root options={lenisOptions}>
-          <Layout>
-            <Hero />
-            <Skills />
-            <Qualifications />
-            <Academic />
-            <Portfolio />
-            <Contact />
+          <Layout isNotFound={isNotFound}>
+            {isNotFound ? (
+              <NotFound />
+            ) : (
+              <>
+                <Hero />
+                <Skills />
+                <Qualifications />
+                <Academic />
+                <Portfolio />
+                <Contact />
+              </>
+            )}
           </Layout>
         </ReactLenis>
       </ThemeProvider>
