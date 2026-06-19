@@ -48,5 +48,11 @@
     "title": "页面未找到",
     "description": "您访问的页面不存在或已被移动。",
     "home": "返回首页"
+  },
+  "redirect": {
+    "title": "内容已迁移",
+    "description": "您访问的页面已迁移至 {{url}}。{{seconds}} 秒后自动跳转...",
+    "goNow": "立即前往",
+    "backHome": "返回首页"
   }
 }

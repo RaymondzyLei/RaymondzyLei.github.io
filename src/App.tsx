@@ -12,13 +12,12 @@ import { Academic } from './components/Academic';
 import { Portfolio } from './components/Portfolio';
 import { Contact } from './components/Contact';
 import { NotFound } from './components/NotFound';
+import { RedirectPage } from './components/RedirectPage';
+import { REDIRECTS } from './data/redirects';
 
 function App() {
   const [reducedMotion, setReducedMotion] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  );
-  const [isNotFound] = useState(
-    () => typeof window !== 'undefined' && window.location.pathname !== '/'
   );
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -30,6 +29,12 @@ function App() {
     ? { duration: 0, smoothWheel: false }
     : { lerp: 0.1 };
 
+  const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+  const isNotFound = pathname !== '/';
+  const redirectRule = isNotFound
+    ? REDIRECTS.find((r) => r.path === pathname) ?? null
+    : null;
+
   return (
     <>
       <InitColorSchemeScript defaultMode="light" />
@@ -37,7 +42,9 @@ function App() {
         <CssBaseline />
         <ReactLenis root options={lenisOptions}>
           <Layout isNotFound={isNotFound}>
-            {isNotFound ? (
+            {redirectRule ? (
+              <RedirectPage rule={redirectRule} />
+            ) : isNotFound ? (
               <NotFound />
             ) : (
               <>

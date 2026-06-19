@@ -48,5 +48,11 @@
     "title": "Page Not Found",
     "description": "The page you're looking for doesn't exist or has been moved.",
     "home": "Back to Home"
+  },
+  "redirect": {
+    "title": "This content has moved",
+    "description": "The page you visited has been relocated to {{url}}. Redirecting in {{seconds}}...",
+    "goNow": "Go Now",
+    "backHome": "Back to Home"
   }
 }
