@@ -12,6 +12,6 @@ export interface RedirectRule {
  * 可用于内容迁移、短链接等场景
  */
 export const REDIRECTS: RedirectRule[] = [
-  // 短链接示例
   { path: '/google', targetUrl: 'https://www.google.com', label: 'Google 搜索' },
+  { path: '/the-book-of-answers', targetUrl: 'https://answers.raymondzylei.me', label: '答案之书' },
 ];
