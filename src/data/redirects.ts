@@ -7,8 +7,11 @@ export interface RedirectRule {
   label?: string;
 }
 
-/** TODO: 在此填写需要重定向的路径和目标 URL */
+/**
+ * TODO: 在此填写需要重定向的路径和目标 URL
+ * 可用于内容迁移、短链接等场景
+ */
 export const REDIRECTS: RedirectRule[] = [
-  // 示例：
-  // { path: '/old-blog', targetUrl: 'https://new-site.com/blog', label: '博客' },
+  // 短链接示例
+  { path: '/google', targetUrl: 'https://www.google.com', label: 'Google 搜索' },
 ];

@@ -50,8 +50,8 @@
     "home": "返回首页"
   },
   "redirect": {
-    "title": "内容已迁移",
-    "description": "您访问的页面已迁移至 {{url}}。{{seconds}} 秒后自动跳转...",
+    "title": "即将跳转...",
+    "description": "即将在 {{seconds}} 秒后跳转到 {{url}}...",
     "goNow": "立即前往",
     "backHome": "返回首页"
   }

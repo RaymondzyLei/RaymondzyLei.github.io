@@ -50,8 +50,8 @@
     "home": "Back to Home"
   },
   "redirect": {
-    "title": "This content has moved",
-    "description": "The page you visited has been relocated to {{url}}. Redirecting in {{seconds}}...",
+    "title": "Redirecting...",
+    "description": "You are being redirected to {{url}} in {{seconds}}s...",
     "goNow": "Go Now",
     "backHome": "Back to Home"
   }
