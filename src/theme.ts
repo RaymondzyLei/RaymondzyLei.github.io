@@ -18,7 +18,7 @@ export const glass = (theme: Theme): CSSProperties => ({
   ),
   boxShadow:
     theme.palette.mode === 'dark'
-      ? 'inset 0 1px 0 0 rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.35)'
+      ? 'inset 0 1px 0 0 rgba(255,255,255,0.08)'
       : 'inset 0 1px 0 0 rgba(255,255,255,0.6), 0 8px 32px rgba(124,58,237,0.08)',
 });
 
@@ -53,8 +53,8 @@ let theme = createTheme({
           main: '#a78bfa',
         },
         background: {
-          default: '#1e1b4b',
-          paper: '#2e2b5f',
+          default: '#0d0d0d',
+          paper: '#1a1a1a',
         },
         text: {
           primary: '#ffffff',

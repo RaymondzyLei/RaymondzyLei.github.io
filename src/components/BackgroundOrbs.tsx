@@ -116,11 +116,11 @@ export const BackgroundOrbs: React.FC = () => {
 
   const orb1Color = alpha(
     isDark ? theme.palette.primary.light : theme.palette.primary.main,
-    isDark ? 0.24 : 0.32
+    isDark ? 0.30 : 0.32
   );
   const orb2Color = alpha(
     isDark ? theme.palette.info.light : theme.palette.info.main,
-    isDark ? 0.2 : 0.26
+    isDark ? 0.26 : 0.26
   );
 
   return (

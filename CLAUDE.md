@@ -70,7 +70,7 @@ src/
 
 ## 主题
 
-MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。主色为紫色（亮色模式 `#7c3aed`，暗色模式 `#a78bfa`）。`secondary` 当前与 `primary` 同色（TODO 标记，待未来选个真正的副色）。组件使用 MUI 的 `styled()` API 自定义样式，不使用 CSS 文件。
+MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。主色为紫色（亮色模式 `#7c3aed`，暗色模式 `#a78bfa`），暗色背景为经典黑色（default `#0d0d0d` / paper `#1a1a1a`）。`secondary` 当前与 `primary` 同色（TODO 标记，待未来选个真正的副色）。组件使用 MUI 的 `styled()` API 自定义样式，不使用 CSS 文件。
 
 `shape.borderRadius: 24`（iOS 26 风格），全局级联到所有 Paper / Card / Accordion / Chip / IconButton；圆形元素（avatar、background orbs）不受影响。
 
@@ -108,7 +108,7 @@ import { glass } from '../theme';
 sx={(theme) => ({ ...glass(theme), ... })}
 ```
 
-`glass(theme)` 返回：alpha 0.65 背景（暗色用 `background.default` 让光球透出）+ `blur(20px) saturate(180%)` + 1px rim border（亮色白 alpha 0.5 / 暗色白 alpha 0.12）+ 顶部 inner highlight inset（亮色白 alpha 0.6 / 暗色白 alpha 0.08）+ 软 shadow。
+`glass(theme)` 返回：alpha 0.65 背景（暗色用 `background.default` 让光球透出）+ `blur(20px) saturate(180%)` + 1px rim border（亮色白 alpha 0.5 / 暗色白 alpha 0.12）+ 顶部 inner highlight inset（亮色白 alpha 0.6 / 暗色白 alpha 0.08）；亮色模式额外带紫色软投影 `0 8px 32px rgba(124,58,237,0.08)`（暗色模式省略，黑色投影在黑色背景上不可见）。
 
 当前用法：Layout AppBar sx、SkillPaper、TimelineCard ×2、AchievementCard、StyledProjectCard、ContactPaper。hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `backgroundColor`（会破坏透明）**。
 
