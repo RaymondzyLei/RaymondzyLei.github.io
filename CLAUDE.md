@@ -50,14 +50,17 @@ src/
 │   ├── Qualifications.tsx      # 教育经历时间线（桌面端交替布局，移动端卡片）
 │   ├── Academic.tsx            # 学术成就/竞赛（按类别折叠面板）
 │   ├── Portfolio.tsx           # 项目卡片网格
-│   └── Contact.tsx             # 联系信息 + LiquidGlassButton 社交行 + 有用链接
+│   ├── Contact.tsx             # 联系信息 + LiquidGlassButton 社交行 + 有用链接
+│   ├── NotFound.tsx            # 404 页面（毛玻璃卡片 + 返回首页链接）
+│   └── RedirectPage.tsx        # 重定向中间页（3 秒倒计时自动跳转）
 └── data/
     ├── skills.ts       # 技能数据及按类别查询函数
     ├── timeline.ts     # 教育经历时间线数据
     ├── achievements.ts # 竞赛/学术成就数据
     ├── projects.ts     # 项目作品数据（占位中，TODO 标记）
     ├── social.ts       # 社交媒体链接
-    └── contact.ts      # 联系页面链接（部分占位 url: '#'）
+    ├── contact.ts      # 联系页面链接（部分占位 url: '#'）
+    └── redirects.ts    # 短链接重定向规则（如 /google、/the-book-of-answers）
 ```
 
 ## 国际化
@@ -182,7 +185,7 @@ sx={(theme) => ({ ...glass(theme), ... })}
   - `actions/deploy-pages@v4` 配 `enablement: true` 才能在 PR 上部署（GitHub 默认禁止）
 - 自定义域名 `raymondzylei.me`（在 `CNAME` 文件中配置）
 - 构建输出到 `dist/` 目录
-- `vite.config.ts` 显式声明 `base: '/'`（自定义域名部署需要根相对路径）
+- `vite.config.ts` 显式声明 `base: '/'`（自定义域名部署需要根相对路径），含自定义插件在构建后将 `index.html` 复制为 `404.html`（GitHub Pages SPA fallback）
 
 ## 仓库约定
 
