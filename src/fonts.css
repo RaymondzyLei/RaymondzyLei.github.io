@@ -1,0 +1,45 @@
+html {
+  font-size: 18px;
+}
+
+/* Ubuntu Mono font family */
+@font-face {
+  font-family: 'Ubuntu Mono';
+  src: url('/font/ubuntu/UbuntuMono-R.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ubuntu Mono';
+  src: url('/font/ubuntu/UbuntuMono-RI.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ubuntu Mono';
+  src: url('/font/ubuntu/UbuntuMono-B.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Ubuntu Mono';
+  src: url('/font/ubuntu/UbuntuMono-BI.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Playfair Display Bold Italic — for Hero name */
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('/font/playfair-display/PlayfairDisplay-BoldItalic.ttf') format('truetype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}

@@ -64,7 +64,7 @@ let theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace',
   },
   shape: {
     borderRadius: 24,

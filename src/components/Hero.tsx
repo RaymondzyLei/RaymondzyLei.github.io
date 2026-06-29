@@ -101,7 +101,9 @@ export const Hero: React.FC = () => {
                 variant="h2"
                 component="h1"
                 sx={{
+                  fontFamily: '"Playfair Display", serif',
                   fontWeight: 'bold',
+                  fontStyle: 'italic',
                   color: 'primary.main',
                 }}
               >
