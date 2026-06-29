@@ -64,7 +64,13 @@ let theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace',
+    fontFamily: '"Neo Sans Pro", "SmileySans", sans-serif',
+    h1: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
+    h2: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
+    h3: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
+    h4: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
+    h5: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
+    h6: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
   },
   shape: {
     borderRadius: 24,

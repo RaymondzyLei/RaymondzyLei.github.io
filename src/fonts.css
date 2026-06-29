@@ -2,7 +2,17 @@ html {
   font-size: 18px;
 }
 
-/* Ubuntu Mono font family */
+/* ===== Smiley Sans — CJK (Chinese) font ===== */
+@font-face {
+  font-family: 'SmileySans';
+  src: url('/font/smiley-sans/SmileySans-Oblique.ttf.woff2') format('woff2'),
+       url('/font/smiley-sans/SmileySans-Oblique.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ===== Ubuntu Mono — headings ===== */
 @font-face {
   font-family: 'Ubuntu Mono';
   src: url('/font/ubuntu/UbuntuMono-R.ttf') format('truetype');
@@ -35,7 +45,104 @@ html {
   font-display: swap;
 }
 
-/* Playfair Display Bold Italic — for Hero name */
+/* ===== Neo Sans Pro — Latin (English) font ===== */
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProLight.OTF') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProLightIt.OTF') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProRegular.OTF') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProItalic.OTF') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProMedium.OTF') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProMedIt.OTF') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProBold.OTF') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProBoldIt.OTF') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProUltra.OTF') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProUltIt.OTF') format('opentype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProBlack.OTF') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Neo Sans Pro';
+  src: url('/font/neo-sans-pro/NeoSansProBlackIt.OTF') format('opentype');
+  font-weight: 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* ===== Playfair Display Bold Italic — Hero name ===== */
 @font-face {
   font-family: 'Playfair Display';
   src: url('/font/playfair-display/PlayfairDisplay-BoldItalic.ttf') format('truetype');
