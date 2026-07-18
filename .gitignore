@@ -36,6 +36,9 @@ dist-ssr
 
 # Smoke-test screenshot artifacts
 homepage-smoke.png
+resume-page.png
+*-smoke.png
+*-page.png
 
 # Environment variables
 .env*
