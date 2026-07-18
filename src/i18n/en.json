@@ -44,6 +44,10 @@
   },
   "contact": {
     "title": "Contact Me",
+    "connectTitle": "Connect With Me",
+    "connectDesc": "Feel free to reach out through any of these channels. I'm always happy to connect and discuss opportunities.",
+    "linksTitle": "Useful Links",
+    "linksDesc": "Here are some of my selected projects and articles you might find interesting.",
     "name": "Name",
     "email": "Email",
     "message": "Message",
@@ -51,6 +55,44 @@
     "_TODO_nameError": "Name is required",
     "_TODO_emailError": "Valid email is required",
     "_TODO_messageError": "Message is required"
+  },
+  "data": {
+    "social": {
+      "github": {
+        "name": "GitHub",
+        "label": "https://github.com/RaymondzyLei"
+      },
+      "x": {
+        "name": "X",
+        "label": "https://x.com/RaymondzyLei"
+      },
+      "email-school": {
+        "name": "Email (School)",
+        "label": "raymond.lei@mail.ustc.edu.cn"
+      },
+      "email-personal": {
+        "name": "Email (Personal)",
+        "label": "raymond.zy.lei@outlook.com"
+      }
+    },
+    "contact": {
+      "portfolio-website": {
+        "name": "Portfolio Website",
+        "label": "View my latest work"
+      },
+      "github-repos": {
+        "name": "GitHub Repositories",
+        "label": "Open source projects"
+      },
+      "blog": {
+        "name": "Blog",
+        "label": "Articles and tutorials"
+      },
+      "resume-download": {
+        "name": "Resume Download",
+        "label": "Get my latest resume"
+      }
+    }
   },
   "notFound": {
     "code": "404",

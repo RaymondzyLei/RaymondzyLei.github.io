@@ -44,6 +44,10 @@
   },
   "contact": {
     "title": "联系我",
+    "connectTitle": "与我联系",
+    "connectDesc": "欢迎通过以下任何渠道与我联系，我随时乐意为您解答并探讨合作机会。",
+    "linksTitle": "实用链接",
+    "linksDesc": "以下是我的一些精选项目和文章，您可能会感兴趣。",
     "name": "名字",
     "email": "邮箱",
     "message": "消息",
@@ -51,6 +55,44 @@
     "_TODO_nameError": "名字是必需的",
     "_TODO_emailError": "需要有效的邮箱",
     "_TODO_messageError": "消息是必需的"
+  },
+  "data": {
+    "social": {
+      "github": {
+        "name": "GitHub",
+        "label": "https://github.com/RaymondzyLei"
+      },
+      "x": {
+        "name": "X",
+        "label": "https://x.com/RaymondzyLei"
+      },
+      "email-school": {
+        "name": "邮箱（学校）",
+        "label": "raymond.lei@mail.ustc.edu.cn"
+      },
+      "email-personal": {
+        "name": "邮箱（个人）",
+        "label": "raymond.zy.lei@outlook.com"
+      }
+    },
+    "contact": {
+      "portfolio-website": {
+        "name": "个人主页",
+        "label": "查看我的最新作品"
+      },
+      "github-repos": {
+        "name": "GitHub 仓库",
+        "label": "开源项目"
+      },
+      "blog": {
+        "name": "博客",
+        "label": "文章与教程"
+      },
+      "resume-download": {
+        "name": "简历下载",
+        "label": "获取我的最新简历"
+      }
+    }
   },
   "notFound": {
     "code": "404",

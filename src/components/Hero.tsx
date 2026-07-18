@@ -148,9 +148,9 @@ export const Hero: React.FC = () => {
                 const Icon = link.icon;
                 return (
                   <LiquidGlassButton
-                    key={link.name}
+                    key={link.id}
                     icon={<Icon />}
-                    label={link.label}
+                    label={t(`data.social.${link.id}.label`)}
                     href={link.url}
                   />
                 );

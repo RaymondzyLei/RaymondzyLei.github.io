@@ -61,7 +61,7 @@ export const Contact: React.FC = () => {
                   color: 'text.primary',
                 }}
               >
-                Connect With Me
+                {t('contact.connectTitle')}
               </Typography>
               <Typography
                 variant="body2"
@@ -71,8 +71,7 @@ export const Contact: React.FC = () => {
                   lineHeight: 1.6,
                 }}
               >
-                Feel free to reach out through any of these channels. I'm always happy to connect
-                and discuss opportunities.
+                {t('contact.connectDesc')}
               </Typography>
 
               <Stack spacing={2}>
@@ -80,14 +79,18 @@ export const Contact: React.FC = () => {
                   const Icon = link.icon;
                   return (
                     <Box
-                      key={link.name}
+                      key={link.id}
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
                         gap: 2,
                       }}
                     >
-                      <LiquidGlassButton icon={<Icon />} label={link.label} href={link.url} />
+                      <LiquidGlassButton
+                        icon={<Icon />}
+                        label={t(`data.social.${link.id}.label`)}
+                        href={link.url}
+                      />
                       <Box>
                         <Typography
                           variant="body2"
@@ -96,7 +99,7 @@ export const Contact: React.FC = () => {
                             color: 'text.primary',
                           }}
                         >
-                          {link.name}
+                          {t(`data.social.${link.id}.name`)}
                         </Typography>
                         <Typography
                           variant="caption"
@@ -104,7 +107,7 @@ export const Contact: React.FC = () => {
                             color: 'text.secondary',
                           }}
                         >
-                          {link.label}
+                          {t(`data.social.${link.id}.label`)}
                         </Typography>
                       </Box>
                     </Box>
@@ -124,7 +127,7 @@ export const Contact: React.FC = () => {
                   color: 'text.primary',
                 }}
               >
-                Useful Links
+                {t('contact.linksTitle')}
               </Typography>
               <Typography
                 variant="body2"
@@ -134,7 +137,7 @@ export const Contact: React.FC = () => {
                   lineHeight: 1.6,
                 }}
               >
-                Here are some of my selected projects and articles you might find interesting.
+                {t('contact.linksDesc')}
               </Typography>
 
               <Stack spacing={2}>
@@ -142,7 +145,7 @@ export const Contact: React.FC = () => {
                   const Icon = link.icon;
                   return (
                     <Box
-                      key={link.name}
+                      key={link.id}
                       component="a"
                       href={link.url}
                       sx={{
@@ -180,7 +183,7 @@ export const Contact: React.FC = () => {
                             color: 'text.primary',
                           }}
                         >
-                          {link.name}
+                          {t(`data.contact.${link.id}.name`)}
                         </Typography>
                         <Typography
                           variant="caption"
@@ -188,7 +191,7 @@ export const Contact: React.FC = () => {
                             color: 'text.secondary',
                           }}
                         >
-                          {link.label}
+                          {t(`data.contact.${link.id}.label`)}
                         </Typography>
                       </Box>
                     </Box>

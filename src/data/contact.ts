@@ -2,21 +2,18 @@ import WebIcon from '@mui/icons-material/Web';
 import CodeIcon from '@mui/icons-material/Code';
 import ArticleIcon from '@mui/icons-material/Article';
 import DescriptionIcon from '@mui/icons-material/Description';
-import type { BaseLink } from './types';
+import type { SvgIconProps } from '@mui/material';
+import type { ComponentType } from 'react';
 
-export type ContactLink = BaseLink;
+export interface ContactLink {
+  id: string;
+  url: string;
+  icon?: ComponentType<SvgIconProps>;
+}
 
 export const contactLinks: ContactLink[] = [
-  // TODO: replace with real link
-  { name: 'Portfolio Website', url: '#', label: 'View my latest work', icon: WebIcon },
-  {
-    name: 'GitHub Repositories',
-    url: 'https://github.com/RaymondzyLei?tab=repositories',
-    label: 'Open source projects',
-    icon: CodeIcon,
-  },
-  // TODO: replace with real link
-  { name: 'Blog', url: '#', label: 'Articles and tutorials', icon: ArticleIcon },
-  // TODO: replace with real link
-  { name: 'Resume Download', url: '#', label: 'Get my latest resume', icon: DescriptionIcon },
+  { id: 'portfolio-website', url: '#', icon: WebIcon },
+  { id: 'github-repos', url: 'https://github.com/RaymondzyLei?tab=repositories', icon: CodeIcon },
+  { id: 'blog', url: '#', icon: ArticleIcon },
+  { id: 'resume-download', url: '#', icon: DescriptionIcon },
 ];
