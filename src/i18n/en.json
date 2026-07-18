@@ -149,7 +149,11 @@
         "institution": "Guangzhou No.6 Middle School",
         "date": "2023 - 2025",
         "description": "Completed high school curriculum with outstanding academic performance in Physics and Mathematics.\nRanked among the top students in science-related subjects."
-      }
+      },
+    },
+    "redirects": {
+      "google": { "label": "Google" },
+      "the-book-of-answers": { "label": "The Book of Answers" }
     }
   },
   "notFound": {
