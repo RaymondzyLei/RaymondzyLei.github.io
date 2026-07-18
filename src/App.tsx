@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, lazy, Suspense } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { InitColorSchemeScript } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,13 +11,18 @@ import { Qualifications } from './components/Qualifications';
 import { Academic } from './components/Academic';
 import { Portfolio } from './components/Portfolio';
 import { Contact } from './components/Contact';
-import { NotFound } from './components/NotFound';
-import { RedirectPage } from './components/RedirectPage';
-import { REDIRECTS } from './data/redirects';
+import { resolveRoute } from './routing';
+
+const NotFound = lazy(() =>
+  import('./components/NotFound').then((m) => ({ default: m.NotFound })),
+);
+const RedirectPage = lazy(() =>
+  import('./components/RedirectPage').then((m) => ({ default: m.RedirectPage })),
+);
 
 function App() {
   const [reducedMotion, setReducedMotion] = useState(
-    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   );
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -25,15 +30,11 @@ function App() {
     mq.addEventListener('change', onChange);
     return () => mq.removeEventListener('change', onChange);
   }, []);
-  const lenisOptions = reducedMotion
-    ? { duration: 0, smoothWheel: false }
-    : { lerp: 0.1 };
+  const lenisOptions = reducedMotion ? { duration: 0, smoothWheel: false } : { lerp: 0.1 };
 
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const isNotFound = pathname !== '/';
-  const redirectRule = isNotFound
-    ? REDIRECTS.find((r) => r.path === pathname) ?? null
-    : null;
+  const route = resolveRoute(pathname);
+  const isNotFound = route.type !== 'home';
 
   return (
     <>
@@ -42,20 +43,22 @@ function App() {
         <CssBaseline />
         <ReactLenis root options={lenisOptions}>
           <Layout isNotFound={isNotFound}>
-            {redirectRule ? (
-              <RedirectPage rule={redirectRule} />
-            ) : isNotFound ? (
-              <NotFound />
-            ) : (
-              <>
-                <Hero />
-                <Skills />
-                <Qualifications />
-                <Academic />
-                <Portfolio />
-                <Contact />
-              </>
-            )}
+            <Suspense fallback={null}>
+              {route.type === 'redirect' ? (
+                <RedirectPage rule={route.rule} />
+              ) : route.type === 'notFound' ? (
+                <NotFound />
+              ) : (
+                <>
+                  <Hero />
+                  <Skills />
+                  <Qualifications />
+                  <Academic />
+                  <Portfolio />
+                  <Contact />
+                </>
+              )}
+            </Suspense>
           </Layout>
         </ReactLenis>
       </ThemeProvider>
