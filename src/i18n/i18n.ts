@@ -6,7 +6,7 @@ import zhTranslations from './zh.json';
 const SUPPORTED_LANGUAGES = ['en', 'zh'] as const;
 type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
-const isSupportedLanguage = (value: string | null): value is SupportedLanguage =>
+export const isSupportedLanguage = (value: string | null): value is SupportedLanguage =>
   value !== null && (SUPPORTED_LANGUAGES as readonly string[]).includes(value);
 
 const resources = {
