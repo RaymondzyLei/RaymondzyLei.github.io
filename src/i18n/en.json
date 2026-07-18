@@ -16,9 +16,11 @@
   },
   "hero": {
     "title": "Hi, I'm",
+    "name": "RaymondzyLei",
     "subtitle": "Student & Developer",
     "bio": "Welcome to my homepage. I'm passionate about learning and building amazing things.",
-    "cta": "Get in touch"
+    "cta": "Get in touch",
+    "avatarAlt": "Avatar"
   },
   "_TODO_about_title": "About Me",
   "_TODO_about_description": "I'm a dedicated student with a passion for technology and continuous learning. I love exploring new technologies and applying them to solve real-world problems.",

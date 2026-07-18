@@ -120,7 +120,7 @@ export const Hero: React.FC = () => {
                 color: 'primary.main',
               }}
             >
-              RaymondzyLei
+              {t('hero.name')}
             </Typography>
             <Typography
               variant="h5"
@@ -174,7 +174,7 @@ export const Hero: React.FC = () => {
           </Stack>
           <AnimatedAvatar
             src="/avatar.jpg"
-            alt="Avatar"
+            alt={t('hero.avatarAlt')}
             sx={{
               width: { xs: 200, md: 320 },
               height: { xs: 200, md: 320 },
