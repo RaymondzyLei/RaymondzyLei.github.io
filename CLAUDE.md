@@ -40,14 +40,17 @@ src/
 ├── theme.ts          # MUI 主题：亮/暗双色方案、紫色主色调、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 24`
 ├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、REDIRECTS 命中→redirect、其余→notFound
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
+├── theme.test.ts      # glass() helper 单元测试（亮/暗模式）
 ├── styles/
-│   └── reveal.ts     # 共享 scroll-reveal 样式片段 `revealSx(isVisible, delayMs)`（6 区块 + 卡片错位复用）
+│   ├── reveal.ts      # 共享 scroll-reveal 样式片段
+│   └── reveal.test.ts # revealSx() 单元测试 `revealSx(isVisible, delayMs)`（6 区块 + 卡片错位复用）
 ├── hooks/
 │   ├── useTilt.ts        # 3D 倾斜 hook（rAF 插值，最大 ±5°，订阅 matchMedia change 响应式）
 │   ├── useReveal.ts      # scroll-reveal hook（react-intersection-observer useInView + MUI useMediaQuery 减弱动效）
 │   └── useHashScroll.ts  # hash 深链接：getHashTarget() + useHashScroll()（监听 hashchange + lenis.scrollTo，无效 hash 忽略）
 ├── i18n/
-│   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage
+│   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage，export isSupportedLanguage 类型守卫
+│   ├── i18n.test.ts  # isSupportedLanguage 单元测试（en/zh → true, null/空/未知 → false）
 │   ├── en.json       # 英文翻译
 │   └── zh.json       # 中文翻译
 ├── components/
@@ -213,5 +216,5 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - `.gitignore` 防 `*.bak` / `*.tsxbak` / `*.orig` / `.playwright-mcp/` / `.claude/`（Claude Code 本地配置如 plans/）等产物
 - `.gitattributes`：`* text=auto eol=lf`（统一 LF 行尾，Windows 开发不会被 CRLF 污染）
 - 代码风格用 Prettier（`.prettierrc`：单引号、分号、2 空格、`trailingComma: all`、`printWidth: 100`），`pnpm run format` 格式化；ESLint 末尾接 `eslint-config-prettier` 关闭冲突规则
-- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试（如 `routing.test.ts`）
+- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`reveal.test.ts`、`useHashScroll.test.ts`
 - 包管理只用 pnpm（不混用 npm / yarn）
