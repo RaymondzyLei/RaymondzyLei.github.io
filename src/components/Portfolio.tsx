@@ -53,21 +53,37 @@ const StyledProjectCard = styled(Card)(({ theme }) => ({
 const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
   const { t } = useTranslation();
   const tiltRef = useTilt();
+  const prefix = `data.projects.${project.id}`;
+  const img = project.imageUrl;
   return (
     <StyledProjectCard ref={tiltRef}>
-      <Paper
-        sx={{
-          height: 200,
-          backgroundColor: 'primary.main',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'primary.contrastText',
-          fontSize: '3rem',
-        }}
-      >
-        P{project.id}
-      </Paper>
+      {img ? (
+        <Box
+          component="img"
+          src={img}
+          alt={t(`${prefix}.title`)}
+          sx={{
+            width: '100%',
+            height: 200,
+            objectFit: 'cover',
+            display: 'block',
+          }}
+        />
+      ) : (
+        <Paper
+          sx={{
+            height: 200,
+            backgroundColor: 'primary.main',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'primary.contrastText',
+            fontSize: '3rem',
+          }}
+        >
+          P{project.id}
+        </Paper>
+      )}
 
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography
@@ -79,7 +95,7 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
             color: 'text.primary',
           }}
         >
-          {project.title}
+          {t(`${prefix}.title`)}
         </Typography>
         <Typography
           variant="body2"
@@ -89,7 +105,7 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
             lineHeight: 1.6,
           }}
         >
-          {project.description}
+          {t(`${prefix}.description`)}
         </Typography>
         <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
           {project.technologies.map((tech) => (

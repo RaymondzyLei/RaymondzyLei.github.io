@@ -151,6 +151,12 @@
         "description": "Completed high school curriculum with outstanding academic performance in Physics and Mathematics.\nRanked among the top students in science-related subjects."
       }
     },
+    "projects": {
+      "1": {
+        "title": "USTC Course Arrangement Tool",
+        "description": "A course selection and scheduling tool that solves the pain points of USTC's official system — helping students browse courses intuitively and plan their timetables with ease."
+      }
+    },
     "redirects": {
       "google": { "label": "Google" },
       "the-book-of-answers": { "label": "The Book of Answers" }

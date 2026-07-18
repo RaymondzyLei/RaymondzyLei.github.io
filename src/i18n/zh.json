@@ -151,6 +151,12 @@
         "description": "完成高中学业，物理与数学成绩优异。\n理科综合成绩名列前茅。"
       }
     },
+    "projects": {
+      "1": {
+        "title": "USTC 选课工具",
+        "description": "为学生提供丰富的选课、排课功能，解决选课过程中教务系统难以使用、选课结果不直观等困难。"
+      }
+    },
     "redirects": {
       "google": { "label": "Google 搜索" },
       "the-book-of-answers": { "label": "答案之书" }

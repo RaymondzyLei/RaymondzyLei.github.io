@@ -1,13 +1,23 @@
 export interface Project {
   id: string;
-  title: string;
-  description: string;
-  technologies: string[];
-  /** Currently unused (Portfolio renders a placeholder color block); reserved for project thumbnails. */
+  /** Path relative to public/, e.g. '/projects/class-arrange.png'. When set, replaces the colored placeholder. */
   imageUrl?: string;
+  technologies: string[];
   githubUrl?: string;
   demoUrl?: string;
 }
 
-// TODO: add real projects
-export const projectsData: Project[] = [];
+/**
+ * Title & description rendered via i18n keys:
+ *   data.projects.<id>.title
+ *   data.projects.<id>.description
+ */
+export const projectsData: Project[] = [
+  {
+    id: '1',
+    imageUrl: '/projects/class-arrange.png',
+    technologies: ['React', 'TypeScript'],
+    githubUrl: 'https://github.com/RaymondzyLei/class-arrange',
+    demoUrl: 'https://class-arrange.raymondzylei.me',
+  },
+];
