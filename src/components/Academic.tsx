@@ -4,13 +4,12 @@
 // the cards are already `isVisible` by the time the user expands the panel.
 // Staggering them on scroll would either re-fire on expansion (flash) or
 // never fire at all. Section-level reveal on the outer Box is enough.
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Accordion from '@mui/material/Accordion';
@@ -25,18 +24,8 @@ import { styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
-import { glass } from '../theme';
-
-const AchievementCard = styled(Card)(({ theme }) => ({
-  ...glass(theme),
-  transition: theme.transitions.create(['boxShadow', 'borderTop'], {
-    duration: theme.transitions.duration.standard,
-  }),
-  borderTop: `4px solid ${theme.palette.primary.main}`,
-  '&:hover': {
-    boxShadow: theme.shadows[8],
-  },
-}));
+import { revealSx } from '../styles/reveal';
+import { GlassCard } from './GlassCard';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -58,7 +47,7 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
   const { t } = useTranslation();
   const tiltRef = useTilt();
   return (
-    <AchievementCard ref={tiltRef}>
+    <GlassCard accent="top" ref={tiltRef}>
       <CardHeader
         title={achievement.title}
         subheader={achievement.date}
@@ -76,7 +65,9 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
             {achievement.details}
           </Typography>
         )}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}
+        >
           <Chip
             label={category}
             size="small"
@@ -107,7 +98,7 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
           )}
         </Box>
       </CardContent>
-    </AchievementCard>
+    </GlassCard>
   );
 };
 
@@ -115,15 +106,19 @@ export const Academic: React.FC = () => {
   const { t } = useTranslation();
   const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
 
-  const groupedByCategory = achievementsData.reduce(
-    (acc, achievement) => {
-      if (!acc[achievement.category]) {
-        acc[achievement.category] = [];
-      }
-      acc[achievement.category].push(achievement);
-      return acc;
-    },
-    {} as Record<string, Achievement[]>
+  const groupedByCategory = useMemo(
+    () =>
+      achievementsData.reduce(
+        (acc, achievement) => {
+          if (!acc[achievement.category]) {
+            acc[achievement.category] = [];
+          }
+          acc[achievement.category].push(achievement);
+          return acc;
+        },
+        {} as Record<string, Achievement[]>,
+      ),
+    [],
   );
 
   return (
@@ -133,11 +128,7 @@ export const Academic: React.FC = () => {
       component="section"
       sx={{
         py: 8,
-        opacity: sectionVisible ? 1 : 0,
-        transform: sectionVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
-        transition:
-          'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
-        willChange: 'opacity, transform',
+        ...revealSx(sectionVisible),
       }}
     >
       <Container maxWidth="md">
@@ -159,9 +150,7 @@ export const Academic: React.FC = () => {
             <StyledAccordion key={category}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
-                <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {category}
-                </Typography>
+                <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>{category}</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Stack spacing={2}>
