@@ -17,6 +17,9 @@ const NotFound = lazy(() => import('./components/NotFound').then((m) => ({ defau
 const RedirectPage = lazy(() =>
   import('./components/RedirectPage').then((m) => ({ default: m.RedirectPage })),
 );
+const ResumePage = lazy(() =>
+  import('./components/ResumePage').then((m) => ({ default: m.ResumePage })),
+);
 
 function App() {
   const [reducedMotion, setReducedMotion] = useState(
@@ -40,24 +43,28 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <ReactLenis root options={lenisOptions}>
-          <Layout isNotFound={isNotFound}>
-            <Suspense fallback={null}>
-              {route.type === 'redirect' ? (
-                <RedirectPage rule={route.rule} />
-              ) : route.type === 'notFound' ? (
-                <NotFound />
-              ) : (
-                <>
-                  <Hero />
-                  <Skills />
-                  <Qualifications />
-                  <Academic />
-                  <Portfolio />
-                  <Contact />
-                </>
-              )}
-            </Suspense>
-          </Layout>
+          <Suspense fallback={null}>
+            {route.type === 'resume' ? (
+              <ResumePage />
+            ) : (
+              <Layout isNotFound={isNotFound}>
+                {route.type === 'redirect' ? (
+                  <RedirectPage rule={route.rule} />
+                ) : route.type === 'notFound' ? (
+                  <NotFound />
+                ) : (
+                  <>
+                    <Hero />
+                    <Skills />
+                    <Qualifications />
+                    <Academic />
+                    <Portfolio />
+                    <Contact />
+                  </>
+                )}
+              </Layout>
+            )}
+          </Suspense>
         </ReactLenis>
       </ThemeProvider>
     </>

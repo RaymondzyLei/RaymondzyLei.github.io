@@ -6,6 +6,10 @@ describe('resolveRoute', () => {
     expect(resolveRoute('/')).toEqual({ type: 'home' });
   });
 
+  it('returns resume for "/resume"', () => {
+    expect(resolveRoute('/resume')).toEqual({ type: 'resume' });
+  });
+
   it('returns redirect for a path listed in REDIRECTS', () => {
     const result = resolveRoute('/google');
     expect(result.type).toBe('redirect');

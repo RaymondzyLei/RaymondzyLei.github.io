@@ -15,5 +15,5 @@ export const contactLinks: ContactLink[] = [
   { id: 'portfolio-website', url: '#', icon: WebIcon },
   { id: 'github-repos', url: 'https://github.com/RaymondzyLei?tab=repositories', icon: CodeIcon },
   { id: 'blog', url: '#', icon: ArticleIcon },
-  { id: 'resume-download', url: '#', icon: DescriptionIcon },
+  { id: 'resume-download', url: '/resume', icon: DescriptionIcon },
 ];
