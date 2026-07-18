@@ -22,25 +22,27 @@ const DesktopTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> =
   item,
   index,
 }) => {
+  const { t } = useTranslation();
   const tiltRef = useTilt();
   const { ref: revealRef, isVisible } = useReveal();
+  const p = `data.timeline.${item.id}`;
   return (
     <Box ref={revealRef} sx={revealSx(isVisible, index * 100)}>
       <GlassCard accent="left" ref={tiltRef} sx={{ p: 2 }}>
         <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {item.title}
+          {t(`${p}.title`)}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
-          {item.institution}
+          {t(`${p}.institution`)}
         </Typography>
         <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mt: 0.5 }}>
-          {item.date}
+          {t(`${p}.date`)}
         </Typography>
         <Typography
           variant="body2"
           sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}
         >
-          {item.description}
+          {t(`${p}.description`)}
         </Typography>
       </GlassCard>
     </Box>
@@ -51,28 +53,30 @@ const MobileTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> = 
   item,
   index,
 }) => {
+  const { t } = useTranslation();
   const tiltRef = useTilt();
   const { ref: revealRef, isVisible } = useReveal();
+  const p = `data.timeline.${item.id}`;
   return (
     <Box ref={revealRef} sx={revealSx(isVisible, index * 100)}>
       <GlassCard accent="top" ref={tiltRef} sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
           <Typography variant="caption" sx={{ color: 'text.disabled' }}>
-            {item.date}
+            {t(`${p}.date`)}
           </Typography>
         </Box>
         <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {item.title}
+          {t(`${p}.title`)}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
-          {item.institution}
+          {t(`${p}.institution`)}
         </Typography>
         <Typography
           variant="body2"
           sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}
         >
-          {item.description}
+          {t(`${p}.description`)}
         </Typography>
       </GlassCard>
     </Box>

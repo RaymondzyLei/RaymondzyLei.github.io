@@ -136,6 +136,20 @@
       "5": { "title": "", "description": "", "date": "", "details": "" },
       "6": { "title": "", "description": "", "date": "", "details": "" },
       "7": { "title": "", "description": "", "date": "", "details": "" }
+    },
+    "timeline": {
+      "1": {
+        "title": "计算机科学与技术 工学学士",
+        "institution": "中国科学技术大学（USTC），少年班学院",
+        "date": "2025 年至今",
+        "description": "本科一年级在读，具备扎实的计算机科学相关基础课程基础。\n积极参加学科竞赛并自主学习前沿计算机科学知识。"
+      },
+      "2": {
+        "title": "高中教育",
+        "institution": "广州市第六中学",
+        "date": "2023 - 2025",
+        "description": "完成高中学业，物理与数学成绩优异。\n理科综合成绩名列前茅。"
+      }
     }
   },
   "notFound": {
