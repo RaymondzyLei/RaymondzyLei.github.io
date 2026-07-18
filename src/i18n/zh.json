@@ -92,6 +92,50 @@
         "name": "简历下载",
         "label": "获取我的最新简历"
       }
+    },
+    "achievements": {
+      "category": {
+        "Competition": "竞赛",
+        "Academic Award": "学术奖项",
+        "Research": "科研",
+        "Scholarship": "奖学金"
+      },
+      "empty": {
+        "title": "",
+        "description": "",
+        "date": "",
+        "details": ""
+      },
+      "1": {
+        "title": "中国算法能力大赛决赛二等奖",
+        "description": "国家级，中国",
+        "date": "2026 年春",
+        "details": "第二届，本科一年级期间",
+        "certLabel": "证书"
+      },
+      "2": {
+        "title": "中国算法能力大赛区域赛二等奖",
+        "description": "国家级，中国",
+        "date": "2025 年秋",
+        "details": "第二届，本科一年级期间",
+        "certLabel": "证书"
+      },
+      "3": {
+        "title": "全国中学生物理竞赛一等奖",
+        "description": "省级，中国",
+        "date": "2024 年，高二",
+        "details": "第 41 届，高中期间",
+        "certLabel": "证书"
+      },
+      "4": {
+        "title": "全国中学生数学竞赛三等奖",
+        "description": "初赛，中国",
+        "date": "2024 年，高二",
+        "details": "2024 届，高中期间"
+      },
+      "5": { "title": "", "description": "", "date": "", "details": "" },
+      "6": { "title": "", "description": "", "date": "", "details": "" },
+      "7": { "title": "", "description": "", "date": "", "details": "" }
     }
   },
   "notFound": {

@@ -92,6 +92,50 @@
         "name": "Resume Download",
         "label": "Get my latest resume"
       }
+    },
+    "achievements": {
+      "category": {
+        "Competition": "Competition",
+        "Academic Award": "Academic Award",
+        "Research": "Research",
+        "Scholarship": "Scholarship"
+      },
+      "empty": {
+        "title": "",
+        "description": "",
+        "date": "",
+        "details": ""
+      },
+      "1": {
+        "title": "Second Prize, China Algorithm Capability Competition (Final Contest)",
+        "description": "National Level, China",
+        "date": "Spring 2026",
+        "details": "The 2nd Session, First-Year Undergraduate Period",
+        "certLabel": "Cert."
+      },
+      "2": {
+        "title": "Second Prize, China Algorithm Capability Competition (Regional Contest)",
+        "description": "National Level, China",
+        "date": "Fall 2025",
+        "details": "The 2nd Session, First-Year Undergraduate Period",
+        "certLabel": "Cert."
+      },
+      "3": {
+        "title": "First Prize, Chinese Physics Olympiad",
+        "description": "Provincial Level, China",
+        "date": "Senior 2, 2024",
+        "details": "The 41st Session, Senior High School Period",
+        "certLabel": "Cert."
+      },
+      "4": {
+        "title": "Third Prize, Chinese Mathematical Olympiad",
+        "description": "Preliminary Round, China",
+        "date": "Senior 2, 2024",
+        "details": "The 2024 Session, Senior High School Period"
+      },
+      "5": { "title": "", "description": "", "date": "", "details": "" },
+      "6": { "title": "", "description": "", "date": "", "details": "" },
+      "7": { "title": "", "description": "", "date": "", "details": "" }
     }
   },
   "notFound": {

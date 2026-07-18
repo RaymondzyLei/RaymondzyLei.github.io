@@ -46,11 +46,18 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
 }) => {
   const { t } = useTranslation();
   const tiltRef = useTilt();
+  const prefix = `data.achievements.${achievement.id}`;
+  const title = t(`${prefix}.title`);
+  const description = t(`${prefix}.description`);
+  const date = t(`${prefix}.date`);
+  const details = t(`${prefix}.details`, '');
+  const certLabel = t(`${prefix}.certLabel`, '');
+
   return (
     <GlassCard accent="top" ref={tiltRef}>
       <CardHeader
-        title={achievement.title}
-        subheader={achievement.date}
+        title={title}
+        subheader={date}
         slotProps={{
           title: { variant: 'h6', sx: { fontWeight: 600 } },
           subheader: { sx: { color: 'text.secondary' } },
@@ -58,18 +65,18 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
       />
       <CardContent>
         <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
-          {achievement.description}
+          {description}
         </Typography>
-        {achievement.details && (
+        {details && (
           <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {achievement.details}
+            {details}
           </Typography>
         )}
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}
         >
           <Chip
-            label={category}
+            label={t(`data.achievements.category.${category}`)}
             size="small"
             sx={{
               backgroundColor: 'primary.main',
@@ -93,7 +100,7 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
                 },
               }}
             >
-              {achievement.file.label || t('academic.download')}
+              {certLabel || t('academic.download')}
             </Button>
           )}
         </Box>
@@ -150,7 +157,9 @@ export const Academic: React.FC = () => {
             <StyledAccordion key={category}>
               <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
-                <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>{category}</Typography>
+                <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
+                  {t(`data.achievements.category.${category}`)}
+                </Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <Stack spacing={2}>

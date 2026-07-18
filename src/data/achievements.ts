@@ -1,86 +1,28 @@
 export interface Achievement {
   id: string;
-  title: string;
-  description: string;
-  date: string;
   category: string;
-  details?: string;
   file?: {
     path: string;
-    label?: string;
   };
 }
 
+/**
+ * Achievement cards are rendered via i18n keys:
+ *   data.achievements.<id>.title
+ *   data.achievements.<id>.description
+ *   data.achievements.<id>.date
+ *   data.achievements.<id>.details    (optional)
+ *   data.achievements.<id>.certLabel  (optional, for download button)
+ *
+ * Category labels: data.achievements.category.<category>
+ * Empty placeholder: data.achievements.empty.title, .description, .date, .details
+ */
 export const achievementsData: Achievement[] = [
-  {
-    id: '1',
-    title: 'Second Prize, China Algorithm Capability Competition(Final Contest)',
-    description: 'National Level, China',
-    date: 'Spring 2026',
-    category: 'Competition',
-    details: 'The 2nd Session, First-Year Undergraduate Period',
-    file: {
-      path: '/files/cacc-final-certificate.pdf',
-      label: 'Cert.',
-    },
-  },
-  {
-    id: '2',
-    title: 'Second Prize, China Algorithm Capability Competition(Regional Contest)',
-    description: 'National Level, China',
-    date: 'Fall 2025',
-    category: 'Competition',
-    details: 'The 2nd Session, First-Year Undergraduate Period',
-    file: {
-      path: '/files/cacc-regional-certificate.pdf',
-      label: 'Cert.',
-    },
-  },
-  {
-    id: '3',
-    title: 'First Prize, Chinese Physics Olympiad',
-    description: 'Provincial Level, China',
-    date: 'Senior 2, 2024',
-    category: 'Competition',
-    details: 'The 41st Session, Senior High School Period',
-    file: {
-      path: '/files/cpho-2024-certificate.pdf',
-      label: 'Cert.',
-    },
-  },
-  {
-    id: '4',
-    title: 'Third Prize, Chinese Mathematical Olympiad',
-    description: 'Preliminary Round, China',
-    date: 'Senior 2, 2024',
-    category: 'Competition',
-    details: 'The 2024 Session, Senior High School Period',
-  },
-  {
-    id: '5',
-    // TODO: fill when available
-    title: 'None',
-    description: '',
-    date: '',
-    category: 'Academic Award',
-    details: '',
-  },
-  {
-    id: '6',
-    // TODO: fill when available
-    title: 'None',
-    description: '',
-    date: '',
-    category: 'Research',
-    details: '',
-  },
-  {
-    id: '7',
-    // TODO: fill when available
-    title: 'None',
-    description: '',
-    date: '',
-    category: 'Scholarship',
-    details: '',
-  },
+  { id: '1', category: 'Competition', file: { path: '/files/cacc-final-certificate.pdf' } },
+  { id: '2', category: 'Competition', file: { path: '/files/cacc-regional-certificate.pdf' } },
+  { id: '3', category: 'Competition', file: { path: '/files/cpho-2024-certificate.pdf' } },
+  { id: '4', category: 'Competition' },
+  { id: '5', category: 'Academic Award' },
+  { id: '6', category: 'Research' },
+  { id: '7', category: 'Scholarship' },
 ];
