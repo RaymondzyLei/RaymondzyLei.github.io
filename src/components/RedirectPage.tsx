@@ -5,32 +5,13 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
-import { styled } from '@mui/material/styles';
 import LinkIcon from '@mui/icons-material/Link';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
-import { glass } from '../theme';
+import { revealSx } from '../styles/reveal';
+import { GlassCard } from './GlassCard';
 import type { RedirectRule } from '../data/redirects';
-
-const RedirectPaper = styled(Paper)(({ theme }) => ({
-  ...glass(theme),
-  transition: theme.transitions.create(['boxShadow'], {
-    duration: theme.transitions.duration.standard,
-  }),
-  '&:hover': {
-    boxShadow: theme.shadows[8],
-  },
-}));
-
-const revealSx = (isVisible: boolean) => ({
-  opacity: isVisible ? 1 : 0,
-  transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
-  transition:
-    'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
-  willChange: 'opacity, transform',
-});
 
 interface RedirectPageProps {
   rule: RedirectRule;
@@ -70,7 +51,7 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
       }}
     >
       <Container maxWidth="sm">
-        <RedirectPaper ref={tiltRef} sx={{ p: { xs: 4, md: 6 }, textAlign: 'center' }}>
+        <GlassCard ref={tiltRef} sx={{ p: { xs: 4, md: 6 }, textAlign: 'center' }}>
           <Box
             sx={{
               width: 80,
@@ -153,7 +134,7 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
               {t('redirect.backHome')}
             </Button>
           </Stack>
-        </RedirectPaper>
+        </GlassCard>
       </Container>
     </Box>
   );

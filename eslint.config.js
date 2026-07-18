@@ -17,7 +17,7 @@ export default defineConfig([
       reactRefresh.configs.vite,
     ],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 2022,
       globals: globals.browser,
     },
   },
@@ -27,8 +27,7 @@ export default defineConfig([
         'error',
         {
           name: 'scrollTo',
-          message:
-            'Use lenis?.scrollTo instead of window.scrollTo (see CLAUDE.md)',
+          message: 'Use lenis?.scrollTo instead of window.scrollTo (see CLAUDE.md)',
         },
       ],
       'no-console': 'warn',

@@ -12,15 +12,19 @@ export const glass = (theme: Theme): CSSProperties => ({
   backdropFilter: 'blur(20px) saturate(180%)',
   WebkitBackdropFilter: 'blur(20px) saturate(180%)',
   border: '1px solid',
-  borderColor: alpha(
-    theme.palette.common.white,
-    theme.palette.mode === 'dark' ? 0.12 : 0.5,
-  ),
+  borderColor: alpha(theme.palette.common.white, theme.palette.mode === 'dark' ? 0.12 : 0.5),
   boxShadow:
     theme.palette.mode === 'dark'
       ? 'inset 0 1px 0 0 rgba(255,255,255,0.08)'
       : 'inset 0 1px 0 0 rgba(255,255,255,0.6), 0 8px 32px rgba(124,58,237,0.08)',
 });
+
+const HEADING_FONT = '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace';
+const BODY_FONT = '"Neo Sans Pro", "SmileySans", sans-serif';
+const headingTypography = { fontFamily: HEADING_FONT };
+
+/** Hero display name font (Playfair Display bold italic). */
+export const DISPLAY_FONT = '"Playfair Display", serif';
 
 let theme = createTheme({
   colorSchemes: {
@@ -64,13 +68,13 @@ let theme = createTheme({
     },
   },
   typography: {
-    fontFamily: '"Neo Sans Pro", "SmileySans", sans-serif',
-    h1: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
-    h2: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
-    h3: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
-    h4: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
-    h5: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
-    h6: { fontFamily: '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace' },
+    fontFamily: BODY_FONT,
+    h1: headingTypography,
+    h2: headingTypography,
+    h3: headingTypography,
+    h4: headingTypography,
+    h5: headingTypography,
+    h6: headingTypography,
   },
   shape: {
     borderRadius: 24,

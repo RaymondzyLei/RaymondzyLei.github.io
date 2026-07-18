@@ -13,9 +13,7 @@ import { Portfolio } from './components/Portfolio';
 import { Contact } from './components/Contact';
 import { resolveRoute } from './routing';
 
-const NotFound = lazy(() =>
-  import('./components/NotFound').then((m) => ({ default: m.NotFound })),
-);
+const NotFound = lazy(() => import('./components/NotFound').then((m) => ({ default: m.NotFound })));
 const RedirectPage = lazy(() =>
   import('./components/RedirectPage').then((m) => ({ default: m.RedirectPage })),
 );

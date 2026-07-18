@@ -2,6 +2,7 @@ export interface Skill {
   id: string;
   name: string;
   category: 'languages' | 'frameworks' | 'tools';
+  /** Currently not rendered; reserved for future proficiency visualization. */
   proficiency?: number;
 }
 

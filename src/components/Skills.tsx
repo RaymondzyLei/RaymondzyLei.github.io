@@ -5,24 +5,12 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Chip from '@mui/material/Chip';
-import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
 import { getSkillsByCategory, type Skill } from '../data/skills';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
-import { glass } from '../theme';
-
-const SkillPaper = styled(Paper)(({ theme }) => ({
-  ...glass(theme),
-  padding: theme.spacing(3),
-  transition: theme.transitions.create(['boxShadow', 'borderLeft'], {
-    duration: theme.transitions.duration.standard,
-  }),
-  borderLeft: `4px solid ${theme.palette.primary.main}`,
-  '&:hover': {
-    boxShadow: theme.shadows[8],
-  },
-}));
+import { revealSx } from '../styles/reveal';
+import { GlassCard } from './GlassCard';
 
 const SkillChip = styled(Chip)(({ theme }) => ({
   transition: theme.transitions.create(['all'], {
@@ -42,18 +30,8 @@ const SkillCategory: React.FC<{ label: string; skills: Skill[]; index: number }>
   const tiltRef = useTilt();
   const { ref: revealRef, isVisible } = useReveal();
   return (
-    <Box
-      ref={revealRef}
-      sx={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
-        transition:
-          'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
-        transitionDelay: `${index * 100}ms`,
-        willChange: 'opacity, transform',
-      }}
-    >
-      <SkillPaper ref={tiltRef}>
+    <Box ref={revealRef} sx={revealSx(isVisible, index * 100)}>
+      <GlassCard accent="left" ref={tiltRef} sx={{ p: 3 }}>
         <Typography
           variant="h6"
           sx={{
@@ -80,7 +58,7 @@ const SkillCategory: React.FC<{ label: string; skills: Skill[]; index: number }>
             />
           ))}
         </Box>
-      </SkillPaper>
+      </GlassCard>
     </Box>
   );
 };
@@ -102,11 +80,7 @@ export const Skills: React.FC = () => {
       component="section"
       sx={{
         py: 8,
-        opacity: sectionVisible ? 1 : 0,
-        transform: sectionVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
-        transition:
-          'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
-        willChange: 'opacity, transform',
+        ...revealSx(sectionVisible),
       }}
     >
       <Container maxWidth="md">

@@ -1,13 +1,11 @@
 import GitHub from '@mui/icons-material/GitHub';
 import XIcon from '@mui/icons-material/X';
 import EmailIcon from '@mui/icons-material/Email';
-import type { SvgIconProps } from '@mui/material';
+import type { BaseLink } from './types';
 
-export interface SocialLink {
-  name: string;
-  url: string;
-  icon: React.ComponentType<SvgIconProps>;
-  label: string;
+export interface SocialLink extends BaseLink {
+  // Social links always carry an icon (strengthen BaseLink's optional field).
+  icon: NonNullable<BaseLink['icon']>;
 }
 
 export const socialLinks: SocialLink[] = [

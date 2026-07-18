@@ -10,7 +10,7 @@ interface UseTiltOptions {
  * Smoothly interpolates via requestAnimationFrame. No-op when prefers-reduced-motion is set.
  */
 export function useTilt<T extends HTMLElement = HTMLDivElement>(
-  options?: UseTiltOptions
+  options?: UseTiltOptions,
 ): RefObject<T> {
   const ref = useRef<T>(null);
   const max = options?.maxAngle ?? 5;

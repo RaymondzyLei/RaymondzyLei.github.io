@@ -33,3 +33,9 @@ dist-ssr
 *.bak
 *.tsxbak
 *.orig
+
+# Smoke-test screenshot artifacts
+homepage-smoke.png
+
+# Environment variables
+.env*

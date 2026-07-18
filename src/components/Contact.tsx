@@ -4,35 +4,15 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
 import FolderIcon from '@mui/icons-material/Folder';
 import { socialLinks } from '../data/social';
 import { contactLinks } from '../data/contact';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
-import { glass } from '../theme';
+import { revealSx } from '../styles/reveal';
+import { GlassCard } from './GlassCard';
 import { LiquidGlassButton } from './LiquidGlassButton';
-
-const ContactPaper = styled(Paper)(({ theme }) => ({
-  ...glass(theme),
-  transition: theme.transitions.create(['boxShadow'], {
-    duration: theme.transitions.duration.standard,
-  }),
-  '&:hover': {
-    boxShadow: theme.shadows[8],
-  },
-}));
-
-const revealSx = (isVisible: boolean, delayMs: number) => ({
-  opacity: isVisible ? 1 : 0,
-  transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
-  transition:
-    'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
-  transitionDelay: `${delayMs}ms`,
-  willChange: 'opacity, transform',
-});
 
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
@@ -66,9 +46,13 @@ export const Contact: React.FC = () => {
           {t('contact.title')}
         </Typography>
 
-        <Grid container spacing={4} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}>
+        <Grid
+          container
+          spacing={4}
+          sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}
+        >
           <Box ref={connectCellRef} sx={revealSx(connectVisible, 0)}>
-            <ContactPaper ref={connectTiltRef} sx={{ p: 3, height: '100%' }}>
+            <GlassCard ref={connectTiltRef} sx={{ p: 3, height: '100%' }}>
               <Typography
                 variant="h6"
                 sx={{
@@ -103,11 +87,7 @@ export const Contact: React.FC = () => {
                         gap: 2,
                       }}
                     >
-                      <LiquidGlassButton
-                        icon={<Icon />}
-                        label={link.label}
-                        href={link.url}
-                      />
+                      <LiquidGlassButton icon={<Icon />} label={link.label} href={link.url} />
                       <Box>
                         <Typography
                           variant="body2"
@@ -131,11 +111,11 @@ export const Contact: React.FC = () => {
                   );
                 })}
               </Stack>
-            </ContactPaper>
+            </GlassCard>
           </Box>
 
           <Box ref={linksCellRef} sx={revealSx(linksVisible, 100)}>
-            <ContactPaper ref={linksTiltRef} sx={{ p: 3, height: '100%' }}>
+            <GlassCard ref={linksTiltRef} sx={{ p: 3, height: '100%' }}>
               <Typography
                 variant="h6"
                 sx={{
@@ -215,7 +195,7 @@ export const Contact: React.FC = () => {
                   );
                 })}
               </Stack>
-            </ContactPaper>
+            </GlassCard>
           </Box>
         </Grid>
       </Container>
