@@ -5,7 +5,14 @@
     "qualifications": "资历",
     "academic": "学术",
     "portfolio": "作品集",
-    "contact": "联系"
+    "contact": "联系",
+    "langEn": "English",
+    "langZh": "中文"
+  },
+  "layout": {
+    "logo": "作品集",
+    "changeLanguage": "切换语言",
+    "toggleTheme": "切换暗色模式"
   },
   "hero": {
     "title": "你好，我是",

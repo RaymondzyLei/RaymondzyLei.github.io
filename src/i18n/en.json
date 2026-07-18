@@ -5,7 +5,14 @@
     "qualifications": "Qualifications",
     "academic": "Academic",
     "portfolio": "Portfolio",
-    "contact": "Contact"
+    "contact": "Contact",
+    "langEn": "English",
+    "langZh": "中文"
+  },
+  "layout": {
+    "logo": "Portfolio",
+    "changeLanguage": "Change Language",
+    "toggleTheme": "Toggle dark mode"
   },
   "hero": {
     "title": "Hi, I'm",

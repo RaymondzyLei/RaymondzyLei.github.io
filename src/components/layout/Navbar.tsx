@@ -135,7 +135,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
                 '&:hover': { backgroundColor: 'transparent' },
               }}
             >
-              Portfolio
+              {t('layout.logo')}
             </Button>
           </Box>
 
@@ -143,7 +143,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
 
           <Stack direction="row" spacing={1} sx={{ ml: 2 }}>
             <LanguageMenu />
-            <IconButton onClick={handleModeChange} size="small" title="Toggle dark mode">
+            <IconButton onClick={handleModeChange} size="small" title={t('layout.toggleTheme')}>
               {mode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
             </IconButton>
 
