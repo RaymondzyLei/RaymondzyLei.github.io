@@ -8,6 +8,7 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
 
 /**
  * Standalone resume preview page (/resume).
@@ -15,9 +16,8 @@ import EmailIcon from '@mui/icons-material/Email';
  * Deliberately decoupled from the home page: NOT wrapped in <Layout>, so no
  * Navbar / background orbs / back-to-top / Lenis reveal. Hardcoded light
  * theme (white paper, dark ink) — ignores useColorScheme so it always looks
- * like a printed résumé. Content is English placeholder text for layout
- * testing; the user will replace it. Print via browser (Ctrl+P) uses the
- * inline @media print rules below.
+ * like a printed résumé. Content mirrors resume.typ (the source of truth);
+ * print via browser (Ctrl+P) uses the inline @media print rules below.
  */
 
 // Hardcoded light palette — no theme dependency.
@@ -46,73 +46,85 @@ const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   </Typography>
 );
 
-const ExperienceItem: React.FC<{
-  company: string;
-  type: string;
-  position: string;
-  period: string;
-  description: string;
-}> = ({ company, type, position, period, description }) => (
-  <Box sx={{ borderLeft: `2px solid ${LINE}`, pl: 2, mb: 2.5 }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-      <Box>
-        <Typography component="span" sx={{ fontWeight: 700, color: INK, fontSize: '1rem' }}>
-          {company}
-        </Typography>
-        <Typography component="span" sx={{ color: SUB, fontSize: '0.85rem', ml: 1 }}>
-          {type}
-        </Typography>
-      </Box>
-      <Typography sx={{ color: SUB, fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{period}</Typography>
-    </Box>
-    <Typography sx={{ color: INK, fontSize: '0.9rem', fontWeight: 500, mt: 0.25 }}>{position}</Typography>
-    <Typography sx={{ color: SUB, fontSize: '0.85rem', lineHeight: 1.6, mt: 0.5 }}>{description}</Typography>
-  </Box>
-);
-
 const EducationItem: React.FC<{
   institution: string;
+  location: string;
   degree: string;
   period: string;
-}> = ({ institution, degree, period }) => (
-  <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', mb: 1.5 }}>
-    <Box>
-      <Typography sx={{ fontWeight: 700, color: INK, fontSize: '0.95rem' }}>{institution}</Typography>
-      <Typography sx={{ color: SUB, fontSize: '0.85rem' }}>{degree}</Typography>
+  bullets: string[];
+}> = ({ institution, location, degree, period, bullets }) => (
+  <Box sx={{ mb: 2.5 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 2 }}>
+      <Box>
+        <Typography component="span" sx={{ fontWeight: 700, color: INK, fontSize: '1rem' }}>
+          {institution}
+        </Typography>
+        <Typography component="span" sx={{ color: SUB, fontSize: '0.85rem', ml: 1 }}>
+          {location}
+        </Typography>
+      </Box>
+      <Typography sx={{ color: SUB, fontSize: '0.8rem', whiteSpace: 'nowrap' }}>
+        {period}
+      </Typography>
     </Box>
-    <Typography sx={{ color: SUB, fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{period}</Typography>
+    <Typography sx={{ color: INK, fontSize: '0.9rem', mt: 0.25 }}>{degree}</Typography>
+    <Box component="ul" sx={{ m: 0, pl: 3, mt: 0.5 }}>
+      {bullets.map((b) => (
+        <Box
+          component="li"
+          key={b}
+          sx={{ color: SUB, fontSize: '0.85rem', lineHeight: 1.6, mt: 0.25 }}
+        >
+          {b}
+        </Box>
+      ))}
+    </Box>
   </Box>
 );
 
-const ProjectCard: React.FC<{
-  name: string;
-  description: string;
-  tags: string[];
-}> = ({ name, description, tags }) => (
-  <Box
-    sx={{
-      border: `1px solid ${LINE}`,
-      borderRadius: 1.5,
-      p: 2,
-    }}
-  >
-    <Typography sx={{ fontWeight: 700, color: INK, fontSize: '0.95rem', mb: 0.5 }}>{name}</Typography>
-    <Typography sx={{ color: SUB, fontSize: '0.8rem', lineHeight: 1.5, mb: 1 }}>{description}</Typography>
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75 }}>
-      {tags.map((tag) => (
+const AwardItem: React.FC<{
+  title: string;
+  level: string;
+  date: string;
+  details: string;
+}> = ({ title, level, date, details }) => (
+  <Box sx={{ borderLeft: `2px solid ${LINE}`, pl: 2, mb: 2 }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 2 }}>
+      <Typography sx={{ fontWeight: 700, color: INK, fontSize: '0.95rem' }}>{title}</Typography>
+      <Typography sx={{ color: SUB, fontSize: '0.8rem', whiteSpace: 'nowrap' }}>{date}</Typography>
+    </Box>
+    <Typography sx={{ color: SUB, fontSize: '0.85rem', mt: 0.25 }}>{level}</Typography>
+    {details && (
+      <Typography sx={{ color: SUB, fontSize: '0.8rem', mt: 0.25 }}>{details}</Typography>
+    )}
+  </Box>
+);
+
+const SkillGroup: React.FC<{ label: string; items: { text: string; strong?: boolean }[] }> = ({
+  label,
+  items,
+}) => (
+  <Box sx={{ mb: 1.5 }}>
+    <Typography sx={{ fontWeight: 700, color: INK, fontSize: '0.85rem', mb: 0.75 }}>
+      {label}
+    </Typography>
+    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+      {items.map((item) => (
         <Typography
-          key={tag}
+          key={item.text}
           component="span"
           sx={{
-            fontSize: '0.7rem',
-            color: SUB,
-            border: `1px solid ${LINE}`,
+            fontSize: '0.8rem',
+            fontWeight: item.strong ? 700 : 400,
+            bgcolor: item.strong ? CHIP_BG : 'transparent',
+            color: item.strong ? CHIP_INK : INK,
+            border: `1px solid ${item.strong ? CHIP_BG : LINE}`,
             borderRadius: 999,
-            px: 1,
-            py: 0.25,
+            px: 1.5,
+            py: 0.5,
           }}
         >
-          {tag}
+          {item.text}
         </Typography>
       ))}
     </Box>
@@ -181,17 +193,28 @@ export const ResumePage: React.FC = () => {
         }}
       >
         {/* Header */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 3 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+            gap: 3,
+          }}
+        >
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 800, color: INK, lineHeight: 1.1 }}>
-              RaymondzyLei
+              Lei Zhangyue
             </Typography>
-            <Typography sx={{ color: SUB, fontSize: '1.05rem', mt: 0.5 }}>Student & Developer</Typography>
-            <Typography sx={{ color: SUB, fontSize: '0.85rem', mt: 0.25 }}>Hefei, China</Typography>
+            <Typography sx={{ color: SUB, fontSize: '1.05rem', mt: 0.5 }}>
+              Student & Developer
+            </Typography>
+            <Typography sx={{ color: SUB, fontSize: '0.85rem', mt: 0.25 }}>
+              Hefei, Anhui, China
+            </Typography>
           </Box>
           <Avatar
             src="/avatar.jpg"
-            alt="RaymondzyLei"
+            alt="Lei Zhangyue"
             variant="rounded"
             sx={{ width: 96, height: 96, flexShrink: 0 }}
           />
@@ -200,13 +223,22 @@ export const ResumePage: React.FC = () => {
         {/* Contact icons */}
         <Box className="no-print" sx={{ display: 'flex', gap: 1.5, mt: 2.5 }}>
           <IconButton
-            href="mailto:raymond.zy.lei@outlook.com"
+            href="mailto:raymond.lei@mail.ustc.edu.cn"
             target="_blank"
             rel="noopener noreferrer"
             size="small"
             sx={{ border: `1px solid ${LINE}`, borderRadius: '50%', color: INK }}
           >
             <EmailIcon sx={{ fontSize: 20 }} />
+          </IconButton>
+          <IconButton
+            href="tel:+8615918530509"
+            target="_blank"
+            rel="noopener noreferrer"
+            size="small"
+            sx={{ border: `1px solid ${LINE}`, borderRadius: '50%', color: INK }}
+          >
+            <PhoneIcon sx={{ fontSize: 20 }} />
           </IconButton>
           <IconButton
             href="https://github.com/RaymondzyLei"
@@ -223,29 +255,11 @@ export const ResumePage: React.FC = () => {
         <section>
           <SectionTitle>About</SectionTitle>
           <Typography sx={{ color: INK, fontSize: '0.9rem', lineHeight: 1.7 }}>
-            A dedicated first-year undergraduate student at USTC passionate about computer science,
-            algorithms, and building tools that solve real problems. Active in academic competitions
-            and always eager to learn cutting-edge technologies.
+            First-year undergraduate at the School of the Gifted Young College, USTC, with a solid
+            academic foundation in computer science and strong self-directed learning capabilities.
+            Hold a profound curiosity for cutting-edge science and technology, and eager to apply
+            theoretical knowledge to solve real-world problems.
           </Typography>
-        </section>
-
-        {/* Experience */}
-        <section>
-          <SectionTitle>Experience</SectionTitle>
-          <ExperienceItem
-            company="Placeholder Lab"
-            type="· Internship"
-            position="Software Engineer Intern"
-            period="Summer 2026"
-            description="Worked on placeholder projects involving React, TypeScript, and developer tooling. This is placeholder text — replace with your real experience."
-          />
-          <ExperienceItem
-            company="Open Source"
-            type="· Contributor"
-            position="Course Arrangement Tool"
-            period="2025 - Present"
-            description="Built a course selection and scheduling tool for USTC students. Placeholder description — replace with your real experience."
-          />
         </section>
 
         {/* Education */}
@@ -253,80 +267,78 @@ export const ResumePage: React.FC = () => {
           <SectionTitle>Education</SectionTitle>
           <EducationItem
             institution="University of Science and Technology of China (USTC)"
-            degree="B.Eng. in Computer Science and Technology"
+            location="Hefei, Anhui, China"
+            degree="B.Eng. in Computer Science and Technology, School of the Gifted Young College"
             period="2025 - Present"
+            bullets={[
+              'Currently a first-year undergraduate student with a solid academic foundation in computer science-related basic courses',
+              'Active in academic competitions and independent learning of cutting-edge computer science knowledge',
+            ]}
           />
           <EducationItem
             institution="Guangzhou No.6 Middle School"
+            location="Guangzhou, Guangdong, China"
             degree="Senior High School Education"
             period="2023 - 2025"
+            bullets={[
+              'Completed high school curriculum with outstanding academic performance in Physics and Mathematics',
+              'Ranked among the top students in science-related subjects',
+            ]}
           />
+        </section>
+
+        {/* Awards & Achievements */}
+        <section>
+          <SectionTitle>Awards & Achievements</SectionTitle>
+          <AwardItem
+            title="Second Prize, China Algorithm Capability Competition (Final Contest)"
+            level="National Level, China"
+            date="Spring 2026"
+            details="The 2nd Session, First-Year Undergraduate Period"
+          />
+          <AwardItem
+            title="Second Prize, China Algorithm Capability Competition (Regional Contest)"
+            level="National Level, China"
+            date="Fall 2025"
+            details="The 2nd Session, First-Year Undergraduate Period"
+          />
+          <AwardItem
+            title="First Prize, Chinese Physics Olympiad"
+            level="Provincial Level, China"
+            date="Senior 2, 2024"
+            details="The 41st Session, Senior High School Period"
+          />
+          <AwardItem
+            title="Third Prize, Chinese Mathematical Olympiad"
+            level="Preliminary Round, China"
+            date="Senior 2, 2024"
+            details="The 2024 Session, Senior High School Period"
+          />
+        </section>
+
+        {/* Academic Profile */}
+        <section>
+          <SectionTitle>Academic Profile</SectionTitle>
+          <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
+            <Box component="li" sx={{ color: INK, fontSize: '0.9rem', lineHeight: 1.6 }}>
+              Overall GPA 3.72/4.30, Major Ranking 27/147
+            </Box>
+          </Box>
         </section>
 
         {/* Skills */}
         <section>
           <SectionTitle>Skills</SectionTitle>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {['C++', 'Rust', 'Python', 'JS/TS', 'HTML/CSS', 'React', 'Git', 'Docker'].map((skill) => (
-              <Typography
-                key={skill}
-                component="span"
-                sx={{
-                  bgcolor: CHIP_BG,
-                  color: CHIP_INK,
-                  fontSize: '0.8rem',
-                  fontWeight: 500,
-                  borderRadius: 999,
-                  px: 1.5,
-                  py: 0.5,
-                }}
-              >
-                {skill}
-              </Typography>
-            ))}
-          </Box>
-        </section>
-
-        {/* Projects */}
-        <section>
-          <SectionTitle>Projects</SectionTitle>
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, 1fr)' },
-              gap: 2,
-            }}
-          >
-            <ProjectCard
-              name="USTC Course Arrangement Tool"
-              description="A course selection and scheduling tool. Placeholder — replace with your real project description."
-              tags={['React', 'TypeScript']}
-            />
-            <ProjectCard
-              name="Placeholder Project"
-              description="Another placeholder project for layout testing. Replace with your real project."
-              tags={['Placeholder', 'Tag']}
-            />
-          </Box>
-        </section>
-
-        {/* Awards */}
-        <section>
-          <SectionTitle>Awards</SectionTitle>
-          <ExperienceItem
-            company="Second Prize, China Algorithm Capability Competition"
-            type="· National Level"
-            position="Final Contest"
-            period="Spring 2026"
-            description="Placeholder award — replace with your real awards."
+          <SkillGroup
+            label="Programming Languages"
+            items={[
+              { text: 'C++', strong: true },
+              { text: 'Python', strong: true },
+              { text: 'Rust' },
+              { text: 'TypeScript' },
+            ]}
           />
-          <ExperienceItem
-            company="First Prize, Chinese Physics Olympiad"
-            type="· Provincial Level"
-            position=""
-            period="2024"
-            description=""
-          />
+          <SkillGroup label="Languages" items={[{ text: 'TOEFL: 97' }]} />
         </section>
       </Box>
     </>
