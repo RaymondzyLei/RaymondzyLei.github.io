@@ -26,7 +26,12 @@ export const LanguageMenu: React.FC = () => {
 
   return (
     <>
-      <IconButton onClick={handleClick} size="small" title={t('layout.changeLanguage')}>
+      <IconButton
+        onClick={handleClick}
+        size="small"
+        aria-label={t('layout.changeLanguage')}
+        title={t('layout.changeLanguage')}
+      >
         <LanguageIcon />
       </IconButton>
       <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={handleClose}>
@@ -35,6 +40,7 @@ export const LanguageMenu: React.FC = () => {
             key={lang.code}
             onClick={() => handleChange(lang.code)}
             selected={i18n.language === lang.code}
+            aria-current={i18n.language === lang.code ? 'true' : undefined}
           >
             {t(lang.labelKey)}
           </MenuItem>

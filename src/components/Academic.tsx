@@ -26,6 +26,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
+import { SectionHeading } from './SectionHeading';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -139,18 +140,7 @@ export const Academic: React.FC = () => {
       }}
     >
       <Container maxWidth="md">
-        <Typography
-          variant="h3"
-          component="h2"
-          sx={{
-            mb: 6,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            color: 'text.primary',
-          }}
-        >
-          {t('academic.title')}
-        </Typography>
+        <SectionHeading title={t('academic.title')} />
 
         <Stack spacing={2}>
           {Object.entries(groupedByCategory).map(([category, achievements]) => (

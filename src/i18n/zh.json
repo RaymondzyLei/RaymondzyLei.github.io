@@ -12,7 +12,9 @@
   "layout": {
     "logo": "作品集",
     "changeLanguage": "切换语言",
-    "toggleTheme": "切换暗色模式"
+    "toggleTheme": "切换暗色模式",
+    "openMenu": "打开导航菜单",
+    "backToTop": "返回顶部"
   },
   "hero": {
     "title": "你好，我是",
@@ -40,7 +42,8 @@
   "portfolio": {
     "title": "作品集",
     "viewDemo": "查看演示",
-    "viewCode": "查看代码"
+    "viewCode": "查看代码",
+    "projectAlt": "{{title}} 项目截图"
   },
   "contact": {
     "title": "联系我",

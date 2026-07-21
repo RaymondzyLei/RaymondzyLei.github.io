@@ -39,6 +39,7 @@ homepage-smoke.png
 resume-page.png
 *-smoke.png
 *-page.png
+feel-check-*.png
 
 # Environment variables
 .env*

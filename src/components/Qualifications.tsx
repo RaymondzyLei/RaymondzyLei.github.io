@@ -17,6 +17,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
+import { SectionHeading } from './SectionHeading';
 
 const DesktopTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> = ({
   item,
@@ -100,18 +101,7 @@ export const Qualifications: React.FC = () => {
       }}
     >
       <Container maxWidth="md">
-        <Typography
-          variant="h3"
-          component="h2"
-          sx={{
-            mb: 6,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            color: 'text.primary',
-          }}
-        >
-          {t('qualifications.title')}
-        </Typography>
+        <SectionHeading title={t('qualifications.title')} />
 
         {isMobile ? (
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>

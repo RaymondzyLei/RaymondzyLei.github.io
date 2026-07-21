@@ -13,6 +13,8 @@ import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
 import { LiquidGlassButton } from './LiquidGlassButton';
+import { SectionHeading } from './SectionHeading';
+import { easing } from '../theme';
 
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
@@ -33,18 +35,7 @@ export const Contact: React.FC = () => {
       }}
     >
       <Container maxWidth="md">
-        <Typography
-          variant="h3"
-          component="h2"
-          sx={{
-            mb: 6,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            color: 'text.primary',
-          }}
-        >
-          {t('contact.title')}
-        </Typography>
+        <SectionHeading title={t('contact.title')} />
 
         <Grid
           container
@@ -155,7 +146,7 @@ export const Contact: React.FC = () => {
                         textDecoration: 'none',
                         p: 1,
                         borderRadius: 1,
-                        transition: 'background-color 0.2s',
+                        transition: `background-color 0.2s ${easing.easeOut}`,
                         '&:hover': {
                           backgroundColor: 'action.hover',
                         },

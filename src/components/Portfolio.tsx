@@ -19,6 +19,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { glass } from '../theme';
+import { SectionHeading } from './SectionHeading';
 
 const StyledProjectCard = styled(Card)(({ theme }) => ({
   ...glass(theme),
@@ -34,18 +35,22 @@ const StyledProjectCard = styled(Card)(({ theme }) => ({
     content: '""',
     position: 'absolute',
     top: 0,
-    left: '-100%',
+    left: 0,
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(124, 58, 237, 0.05)',
-    transition: theme.transitions.create('left', {
+    // H5: animate transform (translateX), not the `left` layout property --
+    // GPU-friendly per emil/review-animations. translateX(-100%) -> translateX(100%)
+    // sweeps across the card; overflow:hidden clips it.
+    transform: 'translateX(-100%)',
+    transition: theme.transitions.create('transform', {
       duration: theme.transitions.duration.standard,
     }),
   },
   '&:hover': {
     boxShadow: theme.shadows[16],
     '&::before': {
-      left: '100%',
+      transform: 'translateX(100%)',
     },
   },
 }));
@@ -61,7 +66,7 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
         <Box
           component="img"
           src={img}
-          alt={t(`${prefix}.title`)}
+          alt={t('portfolio.projectAlt', { title: t(`${prefix}.title`) })}
           sx={{
             width: '100%',
             height: 200,
@@ -177,18 +182,7 @@ export const Portfolio: React.FC = () => {
       }}
     >
       <Container maxWidth="lg">
-        <Typography
-          variant="h3"
-          component="h2"
-          sx={{
-            mb: 6,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            color: 'text.primary',
-          }}
-        >
-          {t('portfolio.title')}
-        </Typography>
+        <SectionHeading title={t('portfolio.title')} />
 
         <Grid
           container

@@ -12,7 +12,9 @@
   "layout": {
     "logo": "Portfolio",
     "changeLanguage": "Change Language",
-    "toggleTheme": "Toggle dark mode"
+    "toggleTheme": "Toggle dark mode",
+    "openMenu": "Open navigation menu",
+    "backToTop": "Back to top"
   },
   "hero": {
     "title": "Hi, I'm",
@@ -40,7 +42,8 @@
   "portfolio": {
     "title": "Portfolio",
     "viewDemo": "View Demo",
-    "viewCode": "View Code"
+    "viewCode": "View Code",
+    "projectAlt": "{{title}} project screenshot"
   },
   "contact": {
     "title": "Contact Me",

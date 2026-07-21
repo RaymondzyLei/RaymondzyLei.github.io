@@ -3,6 +3,8 @@ import IconButton from '@mui/material/IconButton';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLenis } from 'lenis/react';
+import { useTranslation } from 'react-i18next';
+import { easing } from '../../theme';
 
 /**
  * Fixed back-to-top button. Fades in as the user scrolls (opacity =
@@ -10,6 +12,7 @@ import { useLenis } from 'lenis/react';
  * update, and respects prefers-reduced-motion for the scroll duration.
  */
 export const BackToTopButton: React.FC = () => {
+  const { t } = useTranslation();
   const lenis = useLenis();
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [opacity, setOpacity] = useState(0);
@@ -25,6 +28,9 @@ export const BackToTopButton: React.FC = () => {
   return (
     <IconButton
       onClick={handleClick}
+      size="medium"
+      aria-label={t('layout.backToTop')}
+      title={t('layout.backToTop')}
       sx={{
         position: 'fixed',
         bottom: 24,
@@ -32,11 +38,14 @@ export const BackToTopButton: React.FC = () => {
         backgroundColor: 'primary.main',
         color: 'primary.contrastText',
         opacity,
+        // M5: when invisible, don't intercept pointer events (emil: handle edge
+        // cases invisibly). Tab focus still reveals it via focus-visible outline.
+        pointerEvents: opacity === 0 ? 'none' : 'auto',
         '&:hover': {
           backgroundColor: 'primary.dark',
           transform: 'scale(1.1)',
         },
-        transition: 'opacity 0.3s ease, transform 0.3s ease',
+        transition: `opacity 0.3s ${easing.easeOut}, transform 0.3s ${easing.easeOut}`,
         zIndex: 1000,
       }}
     >

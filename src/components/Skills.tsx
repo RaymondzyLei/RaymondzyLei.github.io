@@ -11,14 +11,23 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
+import { SectionHeading } from './SectionHeading';
 
 const SkillChip = styled(Chip)(({ theme }) => ({
-  transition: theme.transitions.create(['all'], {
+  // M1: specify exact properties instead of `all` (review-animations trigger).
+  transition: theme.transitions.create(['transform', 'boxShadow', 'background-color'], {
     duration: theme.transitions.duration.shorter,
   }),
   '&:hover': {
     transform: 'scale(1.1) translateY(-2px)',
     boxShadow: theme.shadows[4],
+  },
+  // H3: respect reduced-motion -- keep hover amplitude, drop the transform.
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': {
+      transform: 'none',
+    },
   },
 }));
 
@@ -84,18 +93,7 @@ export const Skills: React.FC = () => {
       }}
     >
       <Container maxWidth="md">
-        <Typography
-          variant="h3"
-          component="h2"
-          sx={{
-            mb: 6,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            color: 'text.primary',
-          }}
-        >
-          {t('skills.title')}
-        </Typography>
+        <SectionHeading title={t('skills.title')} />
 
         <Stack spacing={4}>
           {categories.map(({ key, label }, index) => (

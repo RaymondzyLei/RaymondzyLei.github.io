@@ -24,32 +24,23 @@ const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
     transform: 'scale(1.3) rotateZ(5deg)',
     boxShadow: theme.shadows[12],
   },
+  // H3: respect reduced-motion -- keep hover amplitude, drop the transform.
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': {
+      transform: 'none',
+    },
+  },
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
-  position: 'relative',
-  overflow: 'hidden',
+  // H4: removed hand-rolled ::before ripple (animated width/height -- a layout
+  // property, GPU-violating per emil/review-animations). MUI Button ships its
+  // own TouchRipple which is GPU-friendly and interruptible; rely on that.
+  // Hover keeps the elevation bump; :active scale is handled globally in theme.
   transition: theme.transitions.create(['boxShadow'], {
     duration: theme.transitions.duration.standard,
   }),
-  '&::before': {
-    content: '""',
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    width: 0,
-    height: 0,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
-    borderRadius: '50%',
-    transform: 'translate(-50%, -50%)',
-    transition: theme.transitions.create('width', {
-      duration: theme.transitions.duration.shorter,
-    }),
-  },
-  '&:hover::before': {
-    width: '300px',
-    height: '300px',
-  },
   '&:hover': {
     boxShadow: theme.shadows[8],
   },

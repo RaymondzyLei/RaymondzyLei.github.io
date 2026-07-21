@@ -65,7 +65,7 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
               mb: 3,
             }}
           >
-            <LinkIcon sx={{ fontSize: 40, color: '#fff' }} />
+            <LinkIcon sx={{ fontSize: 40, color: 'primary.contrastText' }} />
           </Box>
 
           <Typography

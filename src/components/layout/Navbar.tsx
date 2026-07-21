@@ -53,6 +53,17 @@ const StyledNavButton = styled(Button)(({ theme }) => ({
       transformOrigin: 'left',
     },
   },
+  // H3: respect reduced-motion (Motion-Driven style a11y debt) -- keep hover
+  // amplitude, just disable the transform transition.
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
+    '&:hover': {
+      transform: 'none',
+      '&::before': {
+        transition: 'none',
+      },
+    },
+  },
 }));
 
 export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
@@ -143,12 +154,21 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
 
           <Stack direction="row" spacing={1} sx={{ ml: 2 }}>
             <LanguageMenu />
-            <IconButton onClick={handleModeChange} size="small" title={t('layout.toggleTheme')}>
+            <IconButton
+              onClick={handleModeChange}
+              size="small"
+              aria-label={t('layout.toggleTheme')}
+              title={t('layout.toggleTheme')}
+            >
               {mode === 'light' ? <Brightness4Icon /> : <Brightness7Icon />}
             </IconButton>
 
             {isMobile && (
-              <IconButton onClick={handleMobileMenuToggle}>
+              <IconButton
+                onClick={handleMobileMenuToggle}
+                aria-label={t('layout.openMenu')}
+                title={t('layout.openMenu')}
+              >
                 <MenuIcon />
               </IconButton>
             )}
