@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { isSupportedLanguage } from './i18n';
+import { isSupportedLanguage, default as i18n } from './i18n';
 
 describe('isSupportedLanguage', () => {
   it('accepts "en" and "zh"', () => {
@@ -15,5 +15,15 @@ describe('isSupportedLanguage', () => {
     expect(isSupportedLanguage('')).toBe(false);
     expect(isSupportedLanguage('fr')).toBe(false);
     expect(isSupportedLanguage('ja')).toBe(false);
+  });
+});
+
+describe('html lang sync', () => {
+  it('updates document.documentElement.lang when language changes', async () => {
+    await i18n.changeLanguage('zh');
+    expect(document.documentElement.lang).toBe('zh');
+
+    await i18n.changeLanguage('en');
+    expect(document.documentElement.lang).toBe('en');
   });
 });

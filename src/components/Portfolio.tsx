@@ -67,6 +67,8 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
           component="img"
           src={img}
           alt={t('portfolio.projectAlt', { title: t(`${prefix}.title`) })}
+          loading="lazy"
+          decoding="async"
           sx={{
             width: '100%',
             height: 200,

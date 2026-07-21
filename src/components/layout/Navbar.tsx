@@ -14,6 +14,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useLenis } from 'lenis/react';
 import { glass } from '../../theme';
+import { useActiveSection } from '../../hooks/useActiveSection';
 import { LanguageMenu } from './LanguageMenu';
 
 interface NavbarProps {
@@ -100,24 +101,41 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
     { id: 'contact', label: t('nav.contact') },
   ];
 
+  // Wayfinding: highlight the section currently in view (apple-design §16).
+  // Skipped on 404/redirect where nav items are plain links to "/".
+  const activeSection = useActiveSection(
+    sections.map((s) => s.id),
+    64,
+  );
+
   const navContent = (
     <Stack direction={isMobile ? 'column' : 'row'} spacing={1}>
-      {sections.map((section) => (
-        <StyledNavButton
-          key={section.id}
-          {...(isNotFound
-            ? { component: 'a', href: '/' }
-            : { onClick: () => handleNavClick(section.id) })}
-          sx={{
-            color: 'text.primary',
-            textTransform: 'none',
-            fontSize: '0.95rem',
-            fontWeight: 500,
-          }}
-        >
-          {section.label}
-        </StyledNavButton>
-      ))}
+      {sections.map((section) => {
+        const isActive = !isNotFound && activeSection === section.id;
+        return (
+          <StyledNavButton
+            key={section.id}
+            {...(isNotFound
+              ? { component: 'a', href: '/' }
+              : { onClick: () => handleNavClick(section.id) })}
+            sx={{
+              color: isActive ? 'primary.main' : 'text.primary',
+              textTransform: 'none',
+              fontSize: '0.95rem',
+              fontWeight: isActive ? 600 : 500,
+              // Active: keep the underline scaled in permanently.
+              ...(isActive && {
+                '&::before': {
+                  transform: 'scaleX(1)',
+                  transformOrigin: 'left',
+                },
+              }),
+            }}
+          >
+            {section.label}
+          </StyledNavButton>
+        );
+      })}
     </Stack>
   );
 

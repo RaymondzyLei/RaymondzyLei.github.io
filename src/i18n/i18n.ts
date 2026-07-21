@@ -17,6 +17,13 @@ const resources = {
 const saved = localStorage.getItem('language');
 const initialLng: SupportedLanguage = isSupportedLanguage(saved) ? saved : 'en';
 
+// Keep <html lang> in sync with the active language so screen readers pronounce
+// content correctly and search engines index the right language.
+const setHtmlLang = (lng: string) => {
+  document.documentElement.lang = lng;
+};
+setHtmlLang(initialLng);
+
 i18n.use(initReactI18next).init({
   resources,
   lng: initialLng,
@@ -26,6 +33,7 @@ i18n.use(initReactI18next).init({
 
 i18n.on('languageChanged', (lng) => {
   localStorage.setItem('language', lng);
+  setHtmlLang(lng);
 });
 
 export default i18n;

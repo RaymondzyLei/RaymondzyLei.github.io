@@ -164,8 +164,10 @@ export const Hero: React.FC = () => {
             </StyledButton>
           </Stack>
           <AnimatedAvatar
-            src="/avatar.jpg"
+            src="/avatar.webp"
+            srcSet="/avatar.webp 1x, /avatar-2x.webp 2x"
             alt={t('hero.avatarAlt')}
+            slotProps={{ img: { decoding: 'async' } }}
             sx={{
               width: { xs: 200, md: 320 },
               height: { xs: 200, md: 320 },

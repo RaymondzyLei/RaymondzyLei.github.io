@@ -1,6 +1,6 @@
 export interface Project {
   id: string;
-  /** Path relative to public/, e.g. '/projects/class-arrange.png'. When set, replaces the colored placeholder. */
+  /** Path relative to public/, e.g. '/projects/class-arrange.webp'. When set, replaces the colored placeholder. */
   imageUrl?: string;
   technologies: string[];
   githubUrl?: string;
@@ -15,7 +15,7 @@ export interface Project {
 export const projectsData: Project[] = [
   {
     id: '1',
-    imageUrl: '/projects/class-arrange.png',
+    imageUrl: '/projects/class-arrange.webp',
     technologies: ['React', 'TypeScript'],
     githubUrl: 'https://github.com/RaymondzyLei/class-arrange',
     demoUrl: 'https://class-arrange.raymondzylei.me',
