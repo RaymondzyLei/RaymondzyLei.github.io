@@ -44,6 +44,16 @@ export const duration = {
   standard: 300, // card elevation, color shifts
 } as const;
 
+/**
+ * z-index scale (ui-ux-pro-max `z-index-management`).
+ * MUI defaults: appBar 1100, drawer 1200, modal 1300, snackbar 1400, tooltip 1500.
+ * Use these named tokens instead of magic numbers so layering stays auditable.
+ */
+export const zIndex = {
+  backgroundOrb: 0, // behind all content
+  backToTop: 1150, // above AppBar (1100), below drawer/modal
+} as const;
+
 let theme = createTheme({
   colorSchemes: {
     light: {

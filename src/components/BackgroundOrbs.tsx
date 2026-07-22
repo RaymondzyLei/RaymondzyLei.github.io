@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import { alpha, useTheme, useColorScheme } from '@mui/material/styles';
 import { keyframes } from '@emotion/react';
+import { zIndex } from '../theme';
 
 const ORB_SIZE = 440;
 
@@ -125,7 +126,7 @@ export const BackgroundOrbs: React.FC = () => {
         sx={{
           position: 'fixed',
           inset: 0,
-          zIndex: 0,
+          zIndex: zIndex.backgroundOrb,
           pointerEvents: 'none',
           overflow: 'hidden',
         }}

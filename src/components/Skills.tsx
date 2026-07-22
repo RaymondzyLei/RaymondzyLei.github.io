@@ -39,7 +39,7 @@ const SkillCategory: React.FC<{ label: string; skills: Skill[]; index: number }>
   const tiltRef = useTilt();
   const { ref: revealRef, isVisible } = useReveal();
   return (
-    <Box ref={revealRef} sx={revealSx(isVisible, index * 100)}>
+    <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
       <GlassCard accent="left" ref={tiltRef} sx={{ p: 3 }}>
         <Typography
           variant="h6"

@@ -108,7 +108,7 @@ export const Contact: React.FC = () => {
             </GlassCard>
           </Box>
 
-          <Box ref={linksCellRef} sx={revealSx(linksVisible, 100)}>
+          <Box ref={linksCellRef} sx={revealSx(linksVisible, 60)}>
             <GlassCard ref={linksTiltRef} sx={{ p: 3, height: '100%' }}>
               <Typography
                 variant="h6"

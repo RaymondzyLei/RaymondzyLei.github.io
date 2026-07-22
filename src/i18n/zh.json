@@ -14,7 +14,8 @@
     "changeLanguage": "切换语言",
     "toggleTheme": "切换暗色模式",
     "openMenu": "打开导航菜单",
-    "backToTop": "返回顶部"
+    "backToTop": "返回顶部",
+    "skipToContent": "跳转到主要内容"
   },
   "hero": {
     "title": "你好，我是",

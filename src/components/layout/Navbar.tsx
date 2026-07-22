@@ -146,8 +146,9 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
         elevation={0}
         sx={(theme) => ({
           ...glass(theme),
-          borderBottom: '1px solid',
-          borderBottomColor: 'divider',
+          // apple §12: no hard divider -- the glass backdrop blur + rim border
+          // separate the bar from scrolling content. A 1px borderBottom reads as
+          // a hard cut; the material itself is the divider.
         })}
       >
         <Toolbar>

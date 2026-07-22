@@ -39,7 +39,7 @@ function App() {
 
   return (
     <>
-      <InitColorSchemeScript defaultMode="light" />
+      <InitColorSchemeScript defaultMode="system" />
       <ThemeProvider theme={theme}>
         <CssBaseline />
         {/* apple-design §14: ease dark<->light theme changes (avoid abrupt

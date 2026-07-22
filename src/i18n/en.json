@@ -14,7 +14,8 @@
     "changeLanguage": "Change Language",
     "toggleTheme": "Toggle dark mode",
     "openMenu": "Open navigation menu",
-    "backToTop": "Back to top"
+    "backToTop": "Back to top",
+    "skipToContent": "Skip to content"
   },
   "hero": {
     "title": "Hi, I'm",

@@ -163,7 +163,7 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
 const ProjectCardCell: React.FC<{ project: Project; index: number }> = ({ project, index }) => {
   const { ref: revealRef, isVisible } = useReveal();
   return (
-    <Box ref={revealRef} sx={revealSx(isVisible, index * 100)}>
+    <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
       <ProjectCardView project={project} />
     </Box>
   );

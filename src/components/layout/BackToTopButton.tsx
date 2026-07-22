@@ -4,7 +4,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLenis } from 'lenis/react';
 import { useTranslation } from 'react-i18next';
-import { easing } from '../../theme';
+import { easing, zIndex } from '../../theme';
 
 /**
  * Fixed back-to-top button. Fades in as the user scrolls (opacity =
@@ -46,7 +46,7 @@ export const BackToTopButton: React.FC = () => {
           transform: 'scale(1.1)',
         },
         transition: `opacity 0.3s ${easing.easeOut}, transform 0.3s ${easing.easeOut}`,
-        zIndex: 1000,
+        zIndex: zIndex.backToTop,
       }}
     >
       <KeyboardArrowUpIcon />
