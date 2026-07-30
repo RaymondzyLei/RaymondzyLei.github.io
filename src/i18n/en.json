@@ -174,6 +174,28 @@
       "the-book-of-answers": { "label": "The Book of Answers" }
     }
   },
+  "resume": {
+    "avatarAlt": "Lei Zhangyue",
+    "backHome": "Back to Home",
+    "fullName": "Lei Zhangyue",
+    "tagline": "Student & Developer",
+    "location": "Hefei, Anhui, China",
+    "about": "Undergraduate at the School of the Gifted Young College, USTC, with a solid academic foundation in computer science and strong self-directed learning capabilities. Hold a profound curiosity for cutting-edge science and technology, and eager to apply theoretical knowledge to solve real-world problems.",
+    "academicProfile": "Overall GPA 3.72/4.30, Major Ranking 27/147",
+    "languages": "TOEFL: 97",
+    "section": {
+      "about": "About",
+      "education": "Education",
+      "awards": "Awards & Achievements",
+      "academicProfile": "Academic Profile",
+      "skills": "Skills"
+    },
+    "timelineLocation": {
+      "1": "Hefei, Anhui, China",
+      "2": "Guangzhou, Guangdong, China",
+      "3": "Singapore"
+    }
+  },
   "notFound": {
     "code": "404",
     "title": "Page Not Found",

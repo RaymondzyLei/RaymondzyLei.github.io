@@ -174,6 +174,28 @@
       "the-book-of-answers": { "label": "答案之书" }
     }
   },
+  "resume": {
+    "avatarAlt": "雷章跃",
+    "backHome": "返回首页",
+    "fullName": "雷章跃",
+    "tagline": "学生 & 开发者",
+    "location": "中国安徽合肥",
+    "about": "中国科学技术大学少年班学院在读本科生，具备扎实的计算机科学基础与较强的自主学习能力。对前沿科技抱有深厚好奇心，渴望将理论知识应用于解决实际问题。",
+    "academicProfile": "Overall GPA 3.72/4.30, Major Ranking 27/147",
+    "languages": "TOEFL: 97",
+    "section": {
+      "about": "关于",
+      "education": "教育经历",
+      "awards": "奖项与成就",
+      "academicProfile": "学术概况",
+      "skills": "技能"
+    },
+    "timelineLocation": {
+      "1": "中国安徽合肥",
+      "2": "中国广东广州",
+      "3": "新加坡"
+    }
+  },
   "notFound": {
     "code": "404",
     "title": "页面未找到",

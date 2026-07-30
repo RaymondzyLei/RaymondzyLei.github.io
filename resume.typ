@@ -53,8 +53,19 @@
   description: "B.Eng. in Computer Science and Technology, School of the Gifted Young College",
 )
 #resume-item[
-  - Currently a first-year undergraduate student with a solid academic foundation in computer science-related basic courses
+  - Currently a second-year undergraduate student with a solid academic foundation in computer science-related basic courses
   - Active in academic competitions and independent learning of cutting-edge computer science knowledge
+]
+
+#resume-entry(
+  title: "Structure and Interpretation of Computer Programs (SICP)",
+  location: "Singapore",
+  date: "May 2026 – July 2026",
+  description: "National University of Singapore (NUS), School of Computing Summer Workshop 2026",
+)
+#resume-item[
+  - Completed the NUS School of Computing Summer Workshop with a focus on fundamental programming paradigms and computational thinking
+  - Gained deep insights into functional programming, recursive problem-solving, and the mathematical foundations of computer science through the classic SICP curriculum
 ]
 
 #resume-entry(

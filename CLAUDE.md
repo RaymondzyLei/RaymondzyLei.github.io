@@ -66,6 +66,7 @@ src/
 │   ├── Contact.tsx             # 联系信息 + LiquidGlassButton 社交行 + 有用链接
 │   ├── NotFound.tsx            # 404 页面（毛玻璃卡片 + 返回首页链接）
 │   ├── RedirectPage.tsx        # 重定向中间页（3 秒倒计时自动跳转）
+│   ├── ResumePage.tsx          # /resume 数据驱动简历页（固定英文 getFixedT('en')，复用 timeline/achievements/skills/social + data/resume.ts，硬编码浅色打印主题）
 │   └── layout/
 │       ├── Navbar.tsx          # 吸顶毛玻璃 AppBar + 导航 + 主题切换 + 移动抽屉
 │       ├── LanguageMenu.tsx    # 语言切换下拉菜单（en/zh）
@@ -78,7 +79,8 @@ src/
 │   ├── projects.ts     # 项目作品数据（占位中，TODO 标记）
 │   ├── social.ts       # 社交媒体链接（SocialLink extends BaseLink，icon 必填）
 │   ├── contact.ts      # 联系页面链接（ContactLink = BaseLink，部分占位 url: '#'）
-│   └── redirects.ts    # 短链接重定向规则（如 /google、/the-book-of-answers）
+│   ├── redirects.ts    # 短链接重定向规则（如 /google、/the-book-of-answers）
+│   └── resume.ts       # 简历专属字段（头像/电话/技能选择）；Education/Awards/Skills 复用 home 数据源
 └── test/
     └── setup.ts        # Vitest 环境 setup（jest-dom/vitest matchers）
 ```
@@ -90,6 +92,8 @@ src/
 **初始化时校验 localStorage**：`src/i18n/i18n.ts` 启动时读 `language` 键，**仅接受 `en` / `zh`**，其他值一律回退到 `en`（用 `isSupportedLanguage` 类型守卫实现，不要用 `|| 'en'` 这种 fallback，养成显式校验习惯）。`SUPPORTED_LANGUAGES` 数组是 single source of truth。
 
 **未实现区块的 key 用 `_TODO_` 前缀标记**（JSON 不支持注释，所以用 key 命名做标记）：`en.json` / `zh.json` 里以下划线开头的 key 是占位，搜索 `_TODO_` 可定位。
+
+**ResumePage 固定英文**：`src/components/ResumePage.tsx` 用 `i18n.getFixedT('en')` 读取 en 资源，不响应语言切换（简历始终英文）。resume 专属文本在 `resume.*` namespace（en/zh 对称补齐，运行时只读 en）；Education/Awards/Skills/联系方式 复用 home 的 `src/data` + `data.*` i18n，避免与首页内容漂移。`resume.typ`（Typst 源）手动同步，不自动读 data。
 
 ## 主题
 

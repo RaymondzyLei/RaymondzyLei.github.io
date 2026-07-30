@@ -6,27 +6,48 @@ import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
+import i18n from '../i18n/i18n';
+import { timelineData } from '../data/timeline';
+import { achievementsData } from '../data/achievements';
+import { skillsData, type Skill } from '../data/skills';
+import { socialLinks, type SocialLink } from '../data/social';
+import {
+  resumeAvatar,
+  resumePhone,
+  resumeContactIds,
+  resumeSkillIds,
+  resumeStrongSkillIds,
+} from '../data/resume';
 
 /**
  * Standalone resume preview page (/resume).
  *
- * Deliberately decoupled from the home page: NOT wrapped in <Layout>, so no
- * Navbar / background orbs / back-to-top / Lenis reveal. Hardcoded light
- * theme (white paper, dark ink) — ignores useColorScheme so it always looks
- * like a printed résumé. Content mirrors resume.typ (the source of truth);
- * print via browser (Ctrl+P) uses the inline @media print rules below.
+ * Data-driven: education / awards / skills / social contacts are reused from
+ * src/data (timelineData, achievementsData, skillsData, socialLinks) so this
+ * page never drifts from the home page. Resume-only fields (full name,
+ * location, phone, about, GPA, TOEFL, which skills to bold) live in
+ * src/data/resume.ts + the i18n `resume.*` namespace.
+ *
+ * Fixed English via i18n.getFixedT('en') - the page ignores the active language
+ * so it always reads like a printed English résumé. Deliberately decoupled from
+ * <Layout>: no Navbar / background orbs / back-to-top / Lenis reveal. Hardcoded
+ * light theme (white paper, dark ink) - ignores useColorScheme. Print via
+ * browser (Ctrl+P) uses the inline @media print rules below. resume.typ (Typst
+ * source) is kept in sync manually for PDF export.
  */
 
-// Hardcoded light palette — no theme dependency.
+// Hardcoded light palette - no theme dependency.
 const INK = '#1a1a1a';
 const SUB = '#6b7280';
 const LINE = '#e5e7eb';
 const PAPER = '#ffffff';
 const CHIP_BG = '#1f2937';
 const CHIP_INK = '#ffffff';
+
+// Skill sub-group labels (fixed English; resume doesn't translate).
+const PROGRAMMING_LANGUAGES_LABEL = 'Programming Languages';
+const LANGUAGES_LABEL = 'Languages';
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <Typography
@@ -132,6 +153,18 @@ const SkillGroup: React.FC<{ label: string; items: { text: string; strong?: bool
 );
 
 export const ResumePage: React.FC = () => {
+  // Fixed English: read en resources regardless of the active language.
+  const t = i18n.getFixedT('en');
+
+  const contactSocials = resumeContactIds
+    .map((id) => socialLinks.find((s) => s.id === id))
+    .filter((s): s is SocialLink => Boolean(s));
+
+  const programmingItems = resumeSkillIds
+    .map((id) => skillsData.find((s) => s.id === id))
+    .filter((s): s is Skill => Boolean(s))
+    .map((s) => ({ text: s.name, strong: resumeStrongSkillIds.some((id) => id === s.id) }));
+
   return (
     <>
       <GlobalStyles
@@ -173,7 +206,7 @@ export const ResumePage: React.FC = () => {
           }}
         >
           <ArrowBackIcon sx={{ fontSize: '1.1rem' }} />
-          Back to Home
+          {t('resume.backHome')}
         </Link>
       </Box>
 
@@ -203,18 +236,19 @@ export const ResumePage: React.FC = () => {
         >
           <Box>
             <Typography variant="h4" sx={{ fontWeight: 800, color: INK, lineHeight: 1.1 }}>
-              Lei Zhangyue
+              {t('resume.fullName')}
             </Typography>
             <Typography sx={{ color: SUB, fontSize: '1.05rem', mt: 0.5 }}>
-              Student & Developer
+              {t('resume.tagline')}
             </Typography>
             <Typography sx={{ color: SUB, fontSize: '0.85rem', mt: 0.25 }}>
-              Hefei, Anhui, China
+              {t('resume.location')}
             </Typography>
           </Box>
           <Avatar
-            src="/avatar.jpg"
-            alt="Lei Zhangyue"
+            src={resumeAvatar.src}
+            srcSet={resumeAvatar.srcSet}
+            alt={t('resume.avatarAlt')}
             variant="rounded"
             sx={{ width: 96, height: 96, flexShrink: 0 }}
           />
@@ -222,17 +256,23 @@ export const ResumePage: React.FC = () => {
 
         {/* Contact icons */}
         <Box className="no-print" sx={{ display: 'flex', gap: 1.5, mt: 2.5 }}>
+          {contactSocials.map((link) => {
+            const Icon = link.icon;
+            return (
+              <IconButton
+                key={link.id}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                size="small"
+                sx={{ border: `1px solid ${LINE}`, borderRadius: '50%', color: INK }}
+              >
+                <Icon sx={{ fontSize: 20 }} />
+              </IconButton>
+            );
+          })}
           <IconButton
-            href="mailto:raymond.lei@mail.ustc.edu.cn"
-            target="_blank"
-            rel="noopener noreferrer"
-            size="small"
-            sx={{ border: `1px solid ${LINE}`, borderRadius: '50%', color: INK }}
-          >
-            <EmailIcon sx={{ fontSize: 20 }} />
-          </IconButton>
-          <IconButton
-            href="tel:+8615918530509"
+            href={`tel:${resumePhone}`}
             target="_blank"
             rel="noopener noreferrer"
             size="small"
@@ -240,105 +280,69 @@ export const ResumePage: React.FC = () => {
           >
             <PhoneIcon sx={{ fontSize: 20 }} />
           </IconButton>
-          <IconButton
-            href="https://github.com/RaymondzyLei"
-            target="_blank"
-            rel="noopener noreferrer"
-            size="small"
-            sx={{ border: `1px solid ${LINE}`, borderRadius: '50%', color: INK }}
-          >
-            <GitHubIcon sx={{ fontSize: 20 }} />
-          </IconButton>
         </Box>
 
         {/* About */}
         <section>
-          <SectionTitle>About</SectionTitle>
+          <SectionTitle>{t('resume.section.about')}</SectionTitle>
           <Typography sx={{ color: INK, fontSize: '0.9rem', lineHeight: 1.7 }}>
-            First-year undergraduate at the School of the Gifted Young College, USTC, with a solid
-            academic foundation in computer science and strong self-directed learning capabilities.
-            Hold a profound curiosity for cutting-edge science and technology, and eager to apply
-            theoretical knowledge to solve real-world problems.
+            {t('resume.about')}
           </Typography>
         </section>
 
         {/* Education */}
         <section>
-          <SectionTitle>Education</SectionTitle>
-          <EducationItem
-            institution="University of Science and Technology of China (USTC)"
-            location="Hefei, Anhui, China"
-            degree="B.Eng. in Computer Science and Technology, School of the Gifted Young College"
-            period="2025 - Present"
-            bullets={[
-              'Currently a first-year undergraduate student with a solid academic foundation in computer science-related basic courses',
-              'Active in academic competitions and independent learning of cutting-edge computer science knowledge',
-            ]}
-          />
-          <EducationItem
-            institution="Guangzhou No.6 Middle School"
-            location="Guangzhou, Guangdong, China"
-            degree="Senior High School Education"
-            period="2023 - 2025"
-            bullets={[
-              'Completed high school curriculum with outstanding academic performance in Physics and Mathematics',
-              'Ranked among the top students in science-related subjects',
-            ]}
-          />
+          <SectionTitle>{t('resume.section.education')}</SectionTitle>
+          {timelineData.map((item) => {
+            const p = `data.timeline.${item.id}`;
+            const bullets = t(`${p}.description`).split('\n').filter(Boolean);
+            return (
+              <EducationItem
+                key={item.id}
+                institution={t(`${p}.institution`)}
+                location={t(`resume.timelineLocation.${item.id}`)}
+                degree={t(`${p}.title`)}
+                period={t(`${p}.date`)}
+                bullets={bullets}
+              />
+            );
+          })}
         </section>
 
         {/* Awards & Achievements */}
         <section>
-          <SectionTitle>Awards & Achievements</SectionTitle>
-          <AwardItem
-            title="Second Prize, China Algorithm Capability Competition (Final Contest)"
-            level="National Level, China"
-            date="Spring 2026"
-            details="The 2nd Session, First-Year Undergraduate Period"
-          />
-          <AwardItem
-            title="Second Prize, China Algorithm Capability Competition (Regional Contest)"
-            level="National Level, China"
-            date="Fall 2025"
-            details="The 2nd Session, First-Year Undergraduate Period"
-          />
-          <AwardItem
-            title="First Prize, Chinese Physics Olympiad"
-            level="Provincial Level, China"
-            date="Senior 2, 2024"
-            details="The 41st Session, Senior High School Period"
-          />
-          <AwardItem
-            title="Third Prize, Chinese Mathematical Olympiad"
-            level="Preliminary Round, China"
-            date="Senior 2, 2024"
-            details="The 2024 Session, Senior High School Period"
-          />
+          <SectionTitle>{t('resume.section.awards')}</SectionTitle>
+          {achievementsData.map((achievement) => {
+            const p = `data.achievements.${achievement.id}`;
+            const title = t(`${p}.title`);
+            if (!title) return null;
+            return (
+              <AwardItem
+                key={achievement.id}
+                title={title}
+                level={t(`${p}.description`)}
+                date={t(`${p}.date`)}
+                details={t(`${p}.details`)}
+              />
+            );
+          })}
         </section>
 
         {/* Academic Profile */}
         <section>
-          <SectionTitle>Academic Profile</SectionTitle>
+          <SectionTitle>{t('resume.section.academicProfile')}</SectionTitle>
           <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none' }}>
             <Box component="li" sx={{ color: INK, fontSize: '0.9rem', lineHeight: 1.6 }}>
-              Overall GPA 3.72/4.30, Major Ranking 27/147
+              {t('resume.academicProfile')}
             </Box>
           </Box>
         </section>
 
         {/* Skills */}
         <section>
-          <SectionTitle>Skills</SectionTitle>
-          <SkillGroup
-            label="Programming Languages"
-            items={[
-              { text: 'C++', strong: true },
-              { text: 'Python', strong: true },
-              { text: 'Rust' },
-              { text: 'TypeScript' },
-            ]}
-          />
-          <SkillGroup label="Languages" items={[{ text: 'TOEFL: 97' }]} />
+          <SectionTitle>{t('resume.section.skills')}</SectionTitle>
+          <SkillGroup label={PROGRAMMING_LANGUAGES_LABEL} items={programmingItems} />
+          <SkillGroup label={LANGUAGES_LABEL} items={[{ text: t('resume.languages') }]} />
         </section>
       </Box>
     </>
