@@ -16,4 +16,8 @@ export interface TimelineItem {
  * Optional `file.path` enables a certificate download button on the card
  * (same pattern as achievements). When absent, no button is rendered.
  */
-export const timelineData: TimelineItem[] = [{ id: '1' }, { id: '2' }];
+export const timelineData: TimelineItem[] = [
+  { id: '1' },
+  { id: '3', file: { path: '/files/nus-sicp-certificate.pdf' } },
+  { id: '2' },
+];

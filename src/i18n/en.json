@@ -147,13 +147,20 @@
         "title": "B.Eng. in Computer Science and Technology",
         "institution": "University of Science and Technology of China (USTC), School of the Gifted Young College",
         "date": "2025 - Present",
-        "description": "Currently a first-year undergraduate student with a solid academic foundation in computer science-related basic courses.\nActive in academic competitions and independent learning of cutting-edge computer science knowledge."
+        "description": "Currently a second-year undergraduate student with a solid academic foundation in computer science-related basic courses.\nActive in academic competitions and independent learning of cutting-edge computer science knowledge."
       },
       "2": {
         "title": "Senior High School Education",
         "institution": "Guangzhou No.6 Middle School",
         "date": "2023 - 2025",
         "description": "Completed high school curriculum with outstanding academic performance in Physics and Mathematics.\nRanked among the top students in science-related subjects."
+      },
+      "3": {
+        "title": "Structure and Interpretation of Computer Programs (SICP)",
+        "institution": "National University of Singapore (NUS), School of Computing Summer Workshop 2026",
+        "date": "May 2026 – July 2026",
+        "description": "Completed the NUS School of Computing Summer Workshop with a focus on fundamental programming paradigms and computational thinking.\nGained deep insights into functional programming, recursive problem-solving, and the mathematical foundations of computer science through the classic SICP curriculum.",
+        "certLabel": "Cert."
       }
     },
     "projects": {
