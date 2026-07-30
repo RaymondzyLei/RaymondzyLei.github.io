@@ -108,6 +108,12 @@ MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。主色为紫�
 
 新加页面级 meta / 链接（如 favicon 主题色、apple-touch-icon）也加在这里。
 
+## 排版基准（root font-size）
+
+全站 rem 基准在 `src/fonts.css` 顶部 `html { font-size: 20px }`，**不是 MUI 主题**。所有 rem 字体（MUI variant 的 `pxToRem` 输出 + 组件里硬编码的 `'0.9rem'` 等）都以此渲染；px 单位（图标 `fontSize: 20` 等）不受影响。
+
+**调整全局字体大小统一改这一个值**（±1px ≈ ±5%），不要在 `theme.ts` 用 `MuiCssBaseline.styleOverrides.html.fontSize` 覆盖——MUI emotion 运行时注入的 `<style>` 优先级高于 `main.tsx` 静态 import 的 `fonts.css`，会反把 fonts.css 的值盖掉（曾在 18px 基准上设 17px，字体反而变小）。间距基本不动（MUI spacing 走 px）。
+
 ## Lenis 平滑滚动
 
 - 包：`lenis`（`lenis/react` 提供 `<ReactLenis>` + `useLenis`）
