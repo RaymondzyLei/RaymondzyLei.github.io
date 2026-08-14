@@ -32,6 +32,13 @@
           background-color: #0d0d0d;
         }
       }
+      /* View Transitions API (theme toggle): the UA default root cross-fade
+         (~250ms) feels abrupt; slow it with a smooth ease-in-out. */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 500ms;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
       /* View Transitions API (theme toggle): disable the root cross-fade under
          reduced-motion. Navbar also skips startViewTransition entirely. */
       @media (prefers-reduced-motion: reduce) {
