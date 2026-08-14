@@ -11,7 +11,9 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
+import { ctaButtonSx } from '../theme';
 import type { RedirectRule } from '../data/redirects';
+import { isHttpUrl } from '../data/redirects';
 
 interface RedirectPageProps {
   rule: RedirectRule;
@@ -28,7 +30,10 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
 
   useEffect(() => {
     if (seconds <= 0) {
-      window.location.href = rule.targetUrl;
+      // Defense-in-depth: never navigate to a non-http(s) target.
+      if (isHttpUrl(rule.targetUrl)) {
+        window.location.href = rule.targetUrl;
+      }
       return;
     }
     const id = setInterval(() => {
@@ -107,30 +112,13 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
           <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
             <Button
               variant="contained"
-              href={rule.targetUrl}
+              {...(isHttpUrl(rule.targetUrl) ? { href: rule.targetUrl } : { disabled: true })}
               size="large"
-              sx={{
-                textTransform: 'none',
-                px: 4,
-                py: 1.2,
-                fontSize: '1rem',
-                fontWeight: 600,
-              }}
+              sx={ctaButtonSx}
             >
               {t('redirect.goNow')}
             </Button>
-            <Button
-              variant="outlined"
-              href="/"
-              size="large"
-              sx={{
-                textTransform: 'none',
-                px: 4,
-                py: 1.2,
-                fontSize: '1rem',
-                fontWeight: 600,
-              }}
-            >
+            <Button variant="outlined" href="/" size="large" sx={ctaButtonSx}>
               {t('redirect.backHome')}
             </Button>
           </Stack>

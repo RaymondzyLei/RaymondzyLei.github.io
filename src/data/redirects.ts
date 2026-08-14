@@ -3,15 +3,24 @@ export interface RedirectRule {
   path: string;
   /** 跳转目标完整 URL */
   targetUrl: string;
-  /** 可选描述，如 "博客"（用于提示文字） */
-  label?: string;
 }
 
-/**
- * TODO: 在此填写需要重定向的路径和目标 URL
- * 可用于内容迁移、短链接等场景
- */
+/** Short-link redirects. Add rules here as needed. */
 export const REDIRECTS: RedirectRule[] = [
-  { path: '/google', targetUrl: 'https://www.google.com', label: 'Google 搜索' },
-  { path: '/the-book-of-answers', targetUrl: 'https://answers.raymondzylei.me', label: '答案之书' },
+  { path: '/google', targetUrl: 'https://www.google.com' },
+  { path: '/the-book-of-answers', targetUrl: 'https://answers.raymondzylei.me' },
 ];
+
+/**
+ * Defense-in-depth: only allow http(s) targets for `window.location`/`href`
+ * assignment. REDIRECTS are static https today, but a future bad entry
+ * (`javascript:`/`data:`) must not be able to navigate to DOM XSS.
+ */
+export const isHttpUrl = (url: string): boolean => {
+  try {
+    const { protocol } = new URL(url);
+    return protocol === 'http:' || protocol === 'https:';
+  } catch {
+    return false;
+  }
+};

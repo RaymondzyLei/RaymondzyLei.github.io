@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useColorScheme, useTheme, styled } from '@mui/material/styles';
+import { flushSync } from 'react-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
@@ -14,16 +15,12 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useLenis } from 'lenis/react';
 import { glass } from '../../theme';
+import { SECTIONS, SECTION_IDS } from '../../sections';
 import { useActiveSection } from '../../hooks/useActiveSection';
 import { LanguageMenu } from './LanguageMenu';
 
 interface NavbarProps {
   isNotFound?: boolean;
-}
-
-interface Section {
-  id: string;
-  label: string;
 }
 
 const StyledNavButton = styled(Button)(({ theme }) => ({
@@ -72,6 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
   const { mode, setMode } = useColorScheme();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const lenis = useLenis();
 
@@ -89,28 +87,29 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
   };
 
   const handleModeChange = () => {
-    setMode(mode === 'light' ? 'dark' : 'light');
+    const nextMode = mode === 'light' ? 'dark' : 'light';
+    // View Transitions API: snapshot old -> flush DOM -> snapshot new -> cross-fade.
+    // flushSync forces React to commit the color-scheme change synchronously
+    // inside the VT callback so the "new" snapshot captures the updated theme
+    // (standard React + VT pattern). Skip under reduced-motion / unsupported
+    // browsers -> instant switch (graceful degradation).
+    if (reducedMotion || typeof document.startViewTransition !== 'function') {
+      setMode(nextMode);
+      return;
+    }
+    document.startViewTransition(() => {
+      flushSync(() => setMode(nextMode));
+    });
   };
 
-  const sections: Section[] = [
-    { id: 'hero', label: t('nav.about') },
-    { id: 'skills', label: t('nav.skills') },
-    { id: 'qualifications', label: t('nav.qualifications') },
-    { id: 'academic', label: t('nav.academic') },
-    { id: 'portfolio', label: t('nav.portfolio') },
-    { id: 'contact', label: t('nav.contact') },
-  ];
-
-  // Wayfinding: highlight the section currently in view (apple-design §16).
-  // Skipped on 404/redirect where nav items are plain links to "/".
-  const activeSection = useActiveSection(
-    sections.map((s) => s.id),
-    64,
-  );
+  // Stable SECTION_IDS (module-level) — see src/sections.ts. Without this the
+  // observer effect recreated on every render (scroll -> setActive -> re-render
+  // -> new array -> teardown+reobserve loop).
+  const activeSection = useActiveSection(SECTION_IDS, 64);
 
   const navContent = (
     <Stack direction={isMobile ? 'column' : 'row'} spacing={1}>
-      {sections.map((section) => {
+      {SECTIONS.map((section) => {
         const isActive = !isNotFound && activeSection === section.id;
         return (
           <StyledNavButton
@@ -132,7 +131,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
               }),
             }}
           >
-            {section.label}
+            {t(section.labelKey)}
           </StyledNavButton>
         );
       })}

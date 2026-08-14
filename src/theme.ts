@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import { createTheme, responsiveFontSizes, alpha } from '@mui/material/styles';
-import type { Theme } from '@mui/material/styles';
+import type { Theme, SxProps } from '@mui/material/styles';
 
 export const glass = (theme: Theme): CSSProperties => ({
   backgroundColor: alpha(
@@ -19,6 +19,27 @@ export const glass = (theme: Theme): CSSProperties => ({
       : 'inset 0 1px 0 0 rgba(255,255,255,0.6), 0 8px 32px rgba(124,58,237,0.08)',
 });
 
+/**
+ * Focus-visible ring (ui-ux-pro-max `focus-states`). Uses the palette CSS
+ * variable so the ring follows light/dark primary. Spread into a component's
+ * `styleOverrides.root`.
+ */
+export const focusVisibleRing = (offset = 2): Record<string, CSSProperties> => ({
+  '&:focus-visible': {
+    outline: '2px solid var(--mui-palette-primary-main)',
+    outlineOffset: offset,
+  },
+});
+
+/** Shared CTA button sx (NotFound + RedirectPage). Hero keeps its own. */
+export const ctaButtonSx: SxProps = {
+  textTransform: 'none',
+  px: 4,
+  py: 1.2,
+  fontSize: '1rem',
+  fontWeight: 600,
+};
+
 const HEADING_FONT = '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace';
 const BODY_FONT = '"Neo Sans Pro", "SmileySans", sans-serif';
 const headingTypography = { fontFamily: HEADING_FONT };
@@ -33,15 +54,11 @@ export const DISPLAY_FONT = '"Playfair Display", serif';
 export const easing = {
   /** Strong ease-out for entering elements & feedback (dropdowns, hovers). */
   easeOut: 'cubic-bezier(0.23, 1, 0.32, 1)',
-  /** Strong ease-in-out for on-screen movement. */
-  easeInOut: 'cubic-bezier(0.77, 0, 0.175, 1)',
 } as const;
 
 /** Duration tokens (emil: UI animations stay under 300ms). */
 export const duration = {
   press: 160, // button :active feedback
-  hover: 200, // chip / icon hover
-  standard: 300, // card elevation, color shifts
 } as const;
 
 /**
@@ -80,7 +97,6 @@ let theme = createTheme({
         primary: {
           main: '#a78bfa',
         },
-        // TODO: secondary palette currently mirrors primary; pick a real accent when needed
         secondary: {
           main: '#a78bfa',
         },
@@ -123,10 +139,7 @@ let theme = createTheme({
             transform: 'scale(0.97)',
           },
           // H2: global focus-visible policy (ui-ux-pro-max `focus-states` CRITICAL).
-          '&:focus-visible': {
-            outline: '2px solid var(--mui-palette-primary-main)',
-            outlineOffset: 2,
-          },
+          ...focusVisibleRing(2),
         },
       },
     },
@@ -135,40 +148,28 @@ let theme = createTheme({
     MuiIconButton: {
       styleOverrides: {
         root: {
-          '&:focus-visible': {
-            outline: '2px solid var(--mui-palette-primary-main)',
-            outlineOffset: 2,
-          },
+          ...focusVisibleRing(2),
         },
       },
     },
     MuiMenuItem: {
       styleOverrides: {
         root: {
-          '&:focus-visible': {
-            outline: '2px solid var(--mui-palette-primary-main)',
-            outlineOffset: -2,
-          },
+          ...focusVisibleRing(-2),
         },
       },
     },
     MuiChip: {
       styleOverrides: {
         root: {
-          '&:focus-visible': {
-            outline: '2px solid var(--mui-palette-primary-main)',
-            outlineOffset: 2,
-          },
+          ...focusVisibleRing(2),
         },
       },
     },
     MuiAccordionSummary: {
       styleOverrides: {
         root: {
-          '&:focus-visible': {
-            outline: '2px solid var(--mui-palette-primary-main)',
-            outlineOffset: 2,
-          },
+          ...focusVisibleRing(2),
         },
       },
     },

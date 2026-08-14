@@ -7,6 +7,58 @@
     <meta name="viewport" content="initial-scale=1, width=device-width" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0d" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'none'"
+    />
+    <!--
+      Anti-FOUC: MUI's <InitColorSchemeScript> runs post-mount in this CSR SPA
+      (no SSR), so it can't paint the correct background before first paint.
+      This inline <style> maps the data-mui-color-scheme attribute -> background
+      (plus a prefers-color-scheme fallback for no-JS / pre-attribute), and the
+      inline <script> sets that attribute synchronously in <head> pre-paint from
+      localStorage('mui-color-scheme') or the system preference. CSP allows both
+      via 'unsafe-inline' (static GitHub Pages has no server for nonce issuance).
+    -->
+    <style>
+      html[data-mui-color-scheme='light'] {
+        background-color: #ffffff;
+      }
+      html[data-mui-color-scheme='dark'] {
+        background-color: #0d0d0d;
+      }
+      @media (prefers-color-scheme: dark) {
+        html:not([data-mui-color-scheme='light']) {
+          background-color: #0d0d0d;
+        }
+      }
+      /* View Transitions API (theme toggle): the UA default root cross-fade
+         (~250ms) feels abrupt; slow it with a smooth ease-in-out. */
+      ::view-transition-old(root),
+      ::view-transition-new(root) {
+        animation-duration: 500ms;
+        animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      /* View Transitions API (theme toggle): disable the root cross-fade under
+         reduced-motion. Navbar also skips startViewTransition entirely. */
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation: none;
+        }
+      }
+    </style>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('mui-color-scheme');
+          var scheme =
+            stored ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          document.documentElement.setAttribute('data-mui-color-scheme', scheme);
+        } catch (e) {}
+      })();
+    </script>
     <title>RaymondzyLei's HomePage</title>
     <meta
       name="description"

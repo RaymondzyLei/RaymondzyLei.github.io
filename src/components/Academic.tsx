@@ -6,7 +6,6 @@
 // never fire at all. Section-level reveal on the outer Box is enough.
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -18,15 +17,12 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import DownloadIcon from '@mui/icons-material/Download';
-import Button from '@mui/material/Button';
+import { CertDownloadButton } from './CertDownloadButton';
 import { styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
-import { useReveal } from '../hooks/useReveal';
-import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
-import { SectionHeading } from './SectionHeading';
+import { Section } from './Section';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
   backgroundColor: 'transparent',
@@ -85,24 +81,10 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
             }}
           />
           {achievement.file && (
-            <Button
-              size="small"
-              startIcon={<DownloadIcon />}
-              href={achievement.file.path}
-              download={achievement.file.path.split('/').pop() || true}
-              variant="outlined"
-              sx={{
-                borderColor: 'primary.main',
-                color: 'primary.main',
-                textTransform: 'none',
-                '&:hover': {
-                  backgroundColor: 'primary.main',
-                  color: 'primary.contrastText',
-                },
-              }}
-            >
-              {certLabel || t('academic.download')}
-            </Button>
+            <CertDownloadButton
+              file={achievement.file}
+              label={certLabel || t('academic.download')}
+            />
           )}
         </Box>
       </CardContent>
@@ -112,58 +94,43 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
 
 export const Academic: React.FC = () => {
   const { t } = useTranslation();
-  const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
 
-  const groupedByCategory = useMemo(
-    () =>
-      achievementsData.reduce(
-        (acc, achievement) => {
-          if (!acc[achievement.category]) {
-            acc[achievement.category] = [];
-          }
-          acc[achievement.category].push(achievement);
-          return acc;
-        },
-        {} as Record<string, Achievement[]>,
-      ),
-    [],
-  );
+  const groupedByCategory = useMemo(() => {
+    const map = new Map<string, Achievement[]>();
+    for (const achievement of achievementsData) {
+      const list = map.get(achievement.category);
+      if (list) {
+        list.push(achievement);
+      } else {
+        map.set(achievement.category, [achievement]);
+      }
+    }
+    return Array.from(map.entries());
+  }, []);
 
   return (
-    <Box
-      id="academic"
-      ref={sectionRef}
-      component="section"
-      sx={{
-        py: 8,
-        ...revealSx(sectionVisible),
-      }}
-    >
-      <Container maxWidth="md">
-        <SectionHeading title={t('academic.title')} />
-
-        <Stack spacing={2}>
-          {Object.entries(groupedByCategory).map(([category, achievements]) => (
-            <StyledAccordion key={category}>
-              <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
-                <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
-                  {t(`data.achievements.category.${category}`)}
-                </Typography>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Stack spacing={2}>
-                  {achievements.map((achievement) => (
-                    <Box key={achievement.id}>
-                      <AchievementCardView achievement={achievement} category={category} />
-                    </Box>
-                  ))}
-                </Stack>
-              </AccordionDetails>
-            </StyledAccordion>
-          ))}
-        </Stack>
-      </Container>
-    </Box>
+    <Section id="academic" title={t('academic.title')} maxWidth="md">
+      <Stack spacing={2}>
+        {groupedByCategory.map(([category, achievements]) => (
+          <StyledAccordion key={category}>
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
+              <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
+                {t(`data.achievements.category.${category}`)}
+              </Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack spacing={2}>
+                {achievements.map((achievement) => (
+                  <Box key={achievement.id}>
+                    <AchievementCardView achievement={achievement} category={category} />
+                  </Box>
+                ))}
+              </Stack>
+            </AccordionDetails>
+          </StyledAccordion>
+        ))}
+      </Stack>
+    </Section>
   );
 };

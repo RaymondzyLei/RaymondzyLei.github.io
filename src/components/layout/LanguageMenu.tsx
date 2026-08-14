@@ -4,11 +4,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import LanguageIcon from '@mui/icons-material/Language';
-
-const LANGUAGES = [
-  { code: 'en', labelKey: 'nav.langEn' as const },
-  { code: 'zh', labelKey: 'nav.langZh' as const },
-] as const;
+import { LANGUAGE_OPTIONS } from '../../i18n/i18n';
 
 /** Language picker (IconButton + dropdown). Persists via i18n's languageChanged listener. */
 export const LanguageMenu: React.FC = () => {
@@ -35,7 +31,7 @@ export const LanguageMenu: React.FC = () => {
         <LanguageIcon />
       </IconButton>
       <Menu anchorEl={anchor} open={Boolean(anchor)} onClose={handleClose}>
-        {LANGUAGES.map((lang) => (
+        {LANGUAGE_OPTIONS.map((lang) => (
           <MenuItem
             key={lang.code}
             onClick={() => handleChange(lang.code)}

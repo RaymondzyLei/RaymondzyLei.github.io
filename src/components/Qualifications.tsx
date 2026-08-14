@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Timeline from '@mui/lab/Timeline';
@@ -10,8 +9,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import SchoolIcon from '@mui/icons-material/School';
-import DownloadIcon from '@mui/icons-material/Download';
-import Button from '@mui/material/Button';
+import { CertDownloadButton } from './CertDownloadButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { timelineData, type TimelineItem as TimelineDataItem } from '../data/timeline';
@@ -19,31 +17,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
-import { SectionHeading } from './SectionHeading';
-
-const CertDownloadButton: React.FC<{ file: { path: string }; label: string }> = ({
-  file,
-  label,
-}) => (
-  <Button
-    size="small"
-    startIcon={<DownloadIcon />}
-    href={file.path}
-    download={file.path.split('/').pop() || true}
-    variant="outlined"
-    sx={{
-      borderColor: 'primary.main',
-      color: 'primary.main',
-      textTransform: 'none',
-      '&:hover': {
-        backgroundColor: 'primary.main',
-        color: 'primary.contrastText',
-      },
-    }}
-  >
-    {label}
-  </Button>
-);
+import { Section } from './Section';
 
 const DesktopTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> = ({
   item,
@@ -130,45 +104,32 @@ export const Qualifications: React.FC = () => {
   const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
 
   return (
-    <Box
-      id="qualifications"
-      ref={sectionRef}
-      component="section"
-      sx={{
-        py: 8,
-        ...revealSx(sectionVisible),
-      }}
-    >
-      <Container maxWidth="md">
-        <SectionHeading title={t('qualifications.title')} />
-
-        {isMobile ? (
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {timelineData.map((item, index) => (
-              <MobileTimelineItem key={item.id} item={item} index={index} />
-            ))}
-          </Box>
-        ) : (
-          <Timeline position="alternate">
-            {timelineData.map((item, index) => (
-              <TimelineItem key={item.id}>
-                <TimelineSeparator>
-                  <TimelineDot sx={{ bgcolor: 'primary.main', boxShadow: 1 }}>
-                    <SchoolIcon />
-                  </TimelineDot>
-                  {index < timelineData.length - 1 && <TimelineConnector />}
-                </TimelineSeparator>
-                <TimelineContent sx={{ py: 2 }}>
-                  <DesktopTimelineItem item={item} index={index} />
-                </TimelineContent>
-              </TimelineItem>
-            ))}
-          </Timeline>
-        )}
-      </Container>
-    </Box>
+    <Section id="qualifications" title={t('qualifications.title')} maxWidth="md">
+      {isMobile ? (
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          {timelineData.map((item, index) => (
+            <MobileTimelineItem key={item.id} item={item} index={index} />
+          ))}
+        </Box>
+      ) : (
+        <Timeline position="alternate">
+          {timelineData.map((item, index) => (
+            <TimelineItem key={item.id}>
+              <TimelineSeparator>
+                <TimelineDot sx={{ bgcolor: 'primary.main', boxShadow: 1 }}>
+                  <SchoolIcon />
+                </TimelineDot>
+                {index < timelineData.length - 1 && <TimelineConnector />}
+              </TimelineSeparator>
+              <TimelineContent sx={{ py: 2 }}>
+                <DesktopTimelineItem item={item} index={index} />
+              </TimelineContent>
+            </TimelineItem>
+          ))}
+        </Timeline>
+      )}
+    </Section>
   );
 };
