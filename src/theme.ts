@@ -54,15 +54,11 @@ export const DISPLAY_FONT = '"Playfair Display", serif';
 export const easing = {
   /** Strong ease-out for entering elements & feedback (dropdowns, hovers). */
   easeOut: 'cubic-bezier(0.23, 1, 0.32, 1)',
-  /** Strong ease-in-out for on-screen movement. */
-  easeInOut: 'cubic-bezier(0.77, 0, 0.175, 1)',
 } as const;
 
 /** Duration tokens (emil: UI animations stay under 300ms). */
 export const duration = {
   press: 160, // button :active feedback
-  hover: 200, // chip / icon hover
-  standard: 300, // card elevation, color shifts
 } as const;
 
 /**
