@@ -30,6 +30,17 @@ export default defineConfig([
           message: 'Use lenis?.scrollTo instead of window.scrollTo (see CLAUDE.md)',
         },
       ],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "CallExpression[callee.property.name='scrollIntoView']",
+          message: 'Use lenis?.scrollTo(element) instead of element.scrollIntoView (see CLAUDE.md)',
+        },
+        {
+          selector: "CallExpression[callee.object.name='window'][callee.property.name='scrollTo']",
+          message: 'Use lenis?.scrollTo instead of window.scrollTo (see CLAUDE.md)',
+        },
+      ],
       'no-console': 'warn',
       'no-debugger': 'error',
     },
