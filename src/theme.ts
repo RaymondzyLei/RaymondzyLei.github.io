@@ -1,6 +1,6 @@
 import type { CSSProperties } from 'react';
 import { createTheme, responsiveFontSizes, alpha } from '@mui/material/styles';
-import type { Theme } from '@mui/material/styles';
+import type { Theme, SxProps } from '@mui/material/styles';
 
 export const glass = (theme: Theme): CSSProperties => ({
   backgroundColor: alpha(
@@ -30,6 +30,15 @@ export const focusVisibleRing = (offset = 2): Record<string, CSSProperties> => (
     outlineOffset: offset,
   },
 });
+
+/** Shared CTA button sx (NotFound + RedirectPage). Hero keeps its own. */
+export const ctaButtonSx: SxProps = {
+  textTransform: 'none',
+  px: 4,
+  py: 1.2,
+  fontSize: '1rem',
+  fontWeight: 600,
+};
 
 const HEADING_FONT = '"Ubuntu Mono", "Cascadia Code", "Fira Code", monospace';
 const BODY_FONT = '"Neo Sans Pro", "SmileySans", sans-serif';

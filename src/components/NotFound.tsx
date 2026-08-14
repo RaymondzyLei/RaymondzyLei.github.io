@@ -8,6 +8,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
+import { ctaButtonSx } from '../theme';
 
 export const NotFound: React.FC = () => {
   const { t } = useTranslation();
@@ -65,18 +66,7 @@ export const NotFound: React.FC = () => {
             {t('notFound.description')}
           </Typography>
 
-          <Button
-            variant="contained"
-            href="/"
-            size="large"
-            sx={{
-              textTransform: 'none',
-              px: 4,
-              py: 1.2,
-              fontSize: '1rem',
-              fontWeight: 600,
-            }}
-          >
+          <Button variant="contained" href="/" size="large" sx={ctaButtonSx}>
             {t('notFound.home')}
           </Button>
         </GlassCard>

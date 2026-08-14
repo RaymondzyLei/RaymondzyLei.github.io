@@ -11,6 +11,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
+import { ctaButtonSx } from '../theme';
 import type { RedirectRule } from '../data/redirects';
 
 interface RedirectPageProps {
@@ -105,32 +106,10 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
           </Typography>
 
           <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
-            <Button
-              variant="contained"
-              href={rule.targetUrl}
-              size="large"
-              sx={{
-                textTransform: 'none',
-                px: 4,
-                py: 1.2,
-                fontSize: '1rem',
-                fontWeight: 600,
-              }}
-            >
+            <Button variant="contained" href={rule.targetUrl} size="large" sx={ctaButtonSx}>
               {t('redirect.goNow')}
             </Button>
-            <Button
-              variant="outlined"
-              href="/"
-              size="large"
-              sx={{
-                textTransform: 'none',
-                px: 4,
-                py: 1.2,
-                fontSize: '1rem',
-                fontWeight: 600,
-              }}
-            >
+            <Button variant="outlined" href="/" size="large" sx={ctaButtonSx}>
               {t('redirect.backHome')}
             </Button>
           </Stack>
