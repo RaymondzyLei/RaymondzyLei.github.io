@@ -5,12 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ReactLenis } from 'lenis/react';
 import theme from './theme';
 import { Layout } from './components/Layout';
-import { Hero } from './components/Hero';
-import { Skills } from './components/Skills';
-import { Qualifications } from './components/Qualifications';
-import { Academic } from './components/Academic';
-import { Portfolio } from './components/Portfolio';
-import { Contact } from './components/Contact';
+import { SECTIONS } from './sections';
 import { resolveRoute } from './routing';
 
 const NotFound = lazy(() => import('./components/NotFound').then((m) => ({ default: m.NotFound })));
@@ -70,12 +65,9 @@ function App() {
                   <NotFound />
                 ) : (
                   <>
-                    <Hero />
-                    <Skills />
-                    <Qualifications />
-                    <Academic />
-                    <Portfolio />
-                    <Contact />
+                    {SECTIONS.map(({ id, Component }) => (
+                      <Component key={id} />
+                    ))}
                   </>
                 )}
               </Layout>

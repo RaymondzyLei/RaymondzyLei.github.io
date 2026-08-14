@@ -14,16 +14,12 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import { useLenis } from 'lenis/react';
 import { glass } from '../../theme';
+import { SECTIONS, SECTION_IDS } from '../../sections';
 import { useActiveSection } from '../../hooks/useActiveSection';
 import { LanguageMenu } from './LanguageMenu';
 
 interface NavbarProps {
   isNotFound?: boolean;
-}
-
-interface Section {
-  id: string;
-  label: string;
 }
 
 const StyledNavButton = styled(Button)(({ theme }) => ({
@@ -92,25 +88,14 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
     setMode(mode === 'light' ? 'dark' : 'light');
   };
 
-  const sections: Section[] = [
-    { id: 'hero', label: t('nav.about') },
-    { id: 'skills', label: t('nav.skills') },
-    { id: 'qualifications', label: t('nav.qualifications') },
-    { id: 'academic', label: t('nav.academic') },
-    { id: 'portfolio', label: t('nav.portfolio') },
-    { id: 'contact', label: t('nav.contact') },
-  ];
-
-  // Wayfinding: highlight the section currently in view (apple-design §16).
-  // Skipped on 404/redirect where nav items are plain links to "/".
-  const activeSection = useActiveSection(
-    sections.map((s) => s.id),
-    64,
-  );
+  // Stable SECTION_IDS (module-level) — see src/sections.ts. Without this the
+  // observer effect recreated on every render (scroll -> setActive -> re-render
+  // -> new array -> teardown+reobserve loop).
+  const activeSection = useActiveSection(SECTION_IDS, 64);
 
   const navContent = (
     <Stack direction={isMobile ? 'column' : 'row'} spacing={1}>
-      {sections.map((section) => {
+      {SECTIONS.map((section) => {
         const isActive = !isNotFound && activeSection === section.id;
         return (
           <StyledNavButton
@@ -132,7 +117,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
               }),
             }}
           >
-            {section.label}
+            {t(section.labelKey)}
           </StyledNavButton>
         );
       })}
