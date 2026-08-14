@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -19,7 +18,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { glass } from '../theme';
-import { SectionHeading } from './SectionHeading';
+import { Section } from './Section';
 
 const StyledProjectCard = styled(Card)(({ theme }) => ({
   ...glass(theme),
@@ -171,34 +170,21 @@ const ProjectCardCell: React.FC<{ project: Project; index: number }> = ({ projec
 
 export const Portfolio: React.FC = () => {
   const { t } = useTranslation();
-  const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
 
   return (
-    <Box
-      id="portfolio"
-      ref={sectionRef}
-      component="section"
-      sx={{
-        py: 8,
-        ...revealSx(sectionVisible),
-      }}
-    >
-      <Container maxWidth="lg">
-        <SectionHeading title={t('portfolio.title')} />
-
-        <Grid
-          container
-          spacing={3}
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
-          }}
-        >
-          {projectsData.map((project, index) => (
-            <ProjectCardCell key={project.id} project={project} index={index} />
-          ))}
-        </Grid>
-      </Container>
-    </Box>
+    <Section id="portfolio" title={t('portfolio.title')} maxWidth="lg">
+      <Grid
+        container
+        spacing={3}
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+        }}
+      >
+        {projectsData.map((project, index) => (
+          <ProjectCardCell key={project.id} project={project} index={index} />
+        ))}
+      </Grid>
+    </Section>
   );
 };

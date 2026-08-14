@@ -1,6 +1,5 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -11,7 +10,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
-import { SectionHeading } from './SectionHeading';
+import { Section } from './Section';
 
 const SkillChip = styled(Chip)(({ theme }) => ({
   // M1: specify exact properties instead of `all` (review-animations trigger).
@@ -74,7 +73,6 @@ const SkillCategory: React.FC<{ label: string; skills: Skill[]; index: number }>
 
 export const Skills: React.FC = () => {
   const { t } = useTranslation();
-  const { ref: sectionRef, isVisible: sectionVisible } = useReveal();
 
   const categories = [
     { key: 'languages', label: t('skills.languages') },
@@ -83,29 +81,12 @@ export const Skills: React.FC = () => {
   ] as const;
 
   return (
-    <Box
-      id="skills"
-      ref={sectionRef}
-      component="section"
-      sx={{
-        py: 8,
-        ...revealSx(sectionVisible),
-      }}
-    >
-      <Container maxWidth="md">
-        <SectionHeading title={t('skills.title')} />
-
-        <Stack spacing={4}>
-          {categories.map(({ key, label }, index) => (
-            <SkillCategory
-              key={key}
-              label={label}
-              skills={getSkillsByCategory(key)}
-              index={index}
-            />
-          ))}
-        </Stack>
-      </Container>
-    </Box>
+    <Section id="skills" title={t('skills.title')} maxWidth="md">
+      <Stack spacing={4}>
+        {categories.map(({ key, label }, index) => (
+          <SkillCategory key={key} label={label} skills={getSkillsByCategory(key)} index={index} />
+        ))}
+      </Stack>
+    </Section>
   );
 };
