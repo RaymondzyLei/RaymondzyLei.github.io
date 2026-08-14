@@ -10,8 +10,7 @@ import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
 import SchoolIcon from '@mui/icons-material/School';
-import DownloadIcon from '@mui/icons-material/Download';
-import Button from '@mui/material/Button';
+import { CertDownloadButton } from './CertDownloadButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { timelineData, type TimelineItem as TimelineDataItem } from '../data/timeline';
@@ -20,30 +19,6 @@ import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
 import { SectionHeading } from './SectionHeading';
-
-const CertDownloadButton: React.FC<{ file: { path: string }; label: string }> = ({
-  file,
-  label,
-}) => (
-  <Button
-    size="small"
-    startIcon={<DownloadIcon />}
-    href={file.path}
-    download={file.path.split('/').pop() || true}
-    variant="outlined"
-    sx={{
-      borderColor: 'primary.main',
-      color: 'primary.main',
-      textTransform: 'none',
-      '&:hover': {
-        backgroundColor: 'primary.main',
-        color: 'primary.contrastText',
-      },
-    }}
-  >
-    {label}
-  </Button>
-);
 
 const DesktopTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> = ({
   item,

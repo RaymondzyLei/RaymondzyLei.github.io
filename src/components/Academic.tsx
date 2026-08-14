@@ -18,8 +18,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import DownloadIcon from '@mui/icons-material/Download';
-import Button from '@mui/material/Button';
+import { CertDownloadButton } from './CertDownloadButton';
 import { styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
@@ -85,24 +84,10 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
             }}
           />
           {achievement.file && (
-            <Button
-              size="small"
-              startIcon={<DownloadIcon />}
-              href={achievement.file.path}
-              download={achievement.file.path.split('/').pop() || true}
-              variant="outlined"
-              sx={{
-                borderColor: 'primary.main',
-                color: 'primary.main',
-                textTransform: 'none',
-                '&:hover': {
-                  backgroundColor: 'primary.main',
-                  color: 'primary.contrastText',
-                },
-              }}
-            >
-              {certLabel || t('academic.download')}
-            </Button>
+            <CertDownloadButton
+              file={achievement.file}
+              label={certLabel || t('academic.download')}
+            />
           )}
         </Box>
       </CardContent>
