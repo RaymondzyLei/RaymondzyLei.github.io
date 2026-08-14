@@ -12,7 +12,7 @@ import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import { projectsData, type Project } from '../data/projects';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
@@ -37,7 +37,7 @@ const StyledProjectCard = styled(Card)(({ theme }) => ({
     left: 0,
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(124, 58, 237, 0.05)',
+    backgroundColor: alpha(theme.palette.primary.main, 0.05),
     // H5: animate transform (translateX), not the `left` layout property --
     // GPU-friendly per emil/review-animations. translateX(-100%) -> translateX(100%)
     // sweeps across the card; overflow:hidden clips it.
