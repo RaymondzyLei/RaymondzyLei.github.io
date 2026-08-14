@@ -13,6 +13,7 @@ import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
 import { ctaButtonSx } from '../theme';
 import type { RedirectRule } from '../data/redirects';
+import { isHttpUrl } from '../data/redirects';
 
 interface RedirectPageProps {
   rule: RedirectRule;
@@ -29,7 +30,10 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
 
   useEffect(() => {
     if (seconds <= 0) {
-      window.location.href = rule.targetUrl;
+      // Defense-in-depth: never navigate to a non-http(s) target.
+      if (isHttpUrl(rule.targetUrl)) {
+        window.location.href = rule.targetUrl;
+      }
       return;
     }
     const id = setInterval(() => {
@@ -106,7 +110,12 @@ export const RedirectPage: React.FC<RedirectPageProps> = ({ rule }) => {
           </Typography>
 
           <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }}>
-            <Button variant="contained" href={rule.targetUrl} size="large" sx={ctaButtonSx}>
+            <Button
+              variant="contained"
+              {...(isHttpUrl(rule.targetUrl) ? { href: rule.targetUrl } : { disabled: true })}
+              size="large"
+              sx={ctaButtonSx}
+            >
               {t('redirect.goNow')}
             </Button>
             <Button variant="outlined" href="/" size="large" sx={ctaButtonSx}>
