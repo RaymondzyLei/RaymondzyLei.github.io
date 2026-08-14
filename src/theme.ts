@@ -97,7 +97,6 @@ let theme = createTheme({
         primary: {
           main: '#a78bfa',
         },
-        // TODO: secondary palette currently mirrors primary; pick a real accent when needed
         secondary: {
           main: '#a78bfa',
         },

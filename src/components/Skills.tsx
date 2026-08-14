@@ -76,7 +76,6 @@ export const Skills: React.FC = () => {
 
   const categories = [
     { key: 'languages', label: t('skills.languages') },
-    //{ key: 'frameworks', label: t('skills.frameworks') },
     { key: 'tools', label: t('skills.tools') },
   ] as const;
 

@@ -15,7 +15,6 @@ export interface Achievement {
  *   data.achievements.<id>.certLabel  (optional, for download button)
  *
  * Category labels: data.achievements.category.<category>
- * Empty placeholder: data.achievements.empty.title, .description, .date, .details
  */
 export const achievementsData: Achievement[] = [
   { id: '1', category: 'Competition', file: { path: '/files/cacc-final-certificate.pdf' } },
