@@ -95,25 +95,23 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
 export const Academic: React.FC = () => {
   const { t } = useTranslation();
 
-  const groupedByCategory = useMemo(
-    () =>
-      achievementsData.reduce(
-        (acc, achievement) => {
-          if (!acc[achievement.category]) {
-            acc[achievement.category] = [];
-          }
-          acc[achievement.category].push(achievement);
-          return acc;
-        },
-        {} as Record<string, Achievement[]>,
-      ),
-    [],
-  );
+  const groupedByCategory = useMemo(() => {
+    const map = new Map<string, Achievement[]>();
+    for (const achievement of achievementsData) {
+      const list = map.get(achievement.category);
+      if (list) {
+        list.push(achievement);
+      } else {
+        map.set(achievement.category, [achievement]);
+      }
+    }
+    return Array.from(map.entries());
+  }, []);
 
   return (
     <Section id="academic" title={t('academic.title')} maxWidth="md">
       <Stack spacing={2}>
-        {Object.entries(groupedByCategory).map(([category, achievements]) => (
+        {groupedByCategory.map(([category, achievements]) => (
           <StyledAccordion key={category}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
