@@ -126,6 +126,9 @@ export const Contact: React.FC = () => {
                     key={link.id}
                     component="a"
                     href={link.url}
+                    {...(link.url.startsWith('http')
+                      ? { target: '_blank', rel: 'noopener noreferrer' }
+                      : {})}
                     sx={{
                       display: 'flex',
                       alignItems: 'center',
