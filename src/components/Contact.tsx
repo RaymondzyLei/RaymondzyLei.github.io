@@ -13,7 +13,7 @@ import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
 import { LiquidGlassButton } from './LiquidGlassButton';
 import { Section } from './Section';
-import { easing } from '../theme';
+import { easing, default as theme } from '../theme';
 
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
@@ -136,7 +136,10 @@ export const Contact: React.FC = () => {
                       textDecoration: 'none',
                       p: 1,
                       borderRadius: 1,
-                      transition: `background-color 0.2s ${easing.easeOut}`,
+                      transition: theme.transitions.create(['background-color'], {
+                        duration: theme.transitions.duration.shorter,
+                        easing: easing.easeOut,
+                      }),
                       '&:hover': {
                         backgroundColor: 'action.hover',
                       },
