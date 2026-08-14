@@ -36,9 +36,10 @@ pnpm run preview      # 本地预览生产构建
 ```
 src/
 ├── main.tsx          # 入口：加载 i18n、字体 CSS（fonts.css）、lenis CSS、渲染 <App />
-├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/redirect/404
+├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404
 ├── theme.ts          # MUI 主题：亮/暗双色方案、紫色主色调、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 24`
-├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、REDIRECTS 命中→redirect、其余→notFound
+├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume、REDIRECTS 命中→redirect、其余→notFound
+├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
 ├── theme.test.ts      # glass() helper 单元测试（亮/暗模式）
 ├── styles/
@@ -47,7 +48,8 @@ src/
 ├── hooks/
 │   ├── useTilt.ts        # 3D 倾斜 hook（rAF 插值，最大 ±5°，订阅 matchMedia change 响应式）
 │   ├── useReveal.ts      # scroll-reveal hook（react-intersection-observer useInView + MUI useMediaQuery 减弱动效）
-│   └── useHashScroll.ts  # hash 深链接：getHashTarget() + useHashScroll()（监听 hashchange + lenis.scrollTo，无效 hash 忽略）
+│   ├── useHashScroll.ts  # hash 深链接：getHashTarget() + useHashScroll()（监听 hashchange + lenis.scrollTo，无效 hash 忽略）
+│   └── useActiveSection.ts  # IntersectionObserver 驱动的 nav active-section 高亮（sectionIds 稳定引用,避免 observer 重建）
 ├── i18n/
 │   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage，export isSupportedLanguage 类型守卫
 │   ├── i18n.test.ts  # isSupportedLanguage 单元测试（en/zh → true, null/空/未知 → false）
@@ -56,6 +58,9 @@ src/
 ├── components/
 │   ├── Layout.tsx              # 页面骨架：编排 <Navbar> + <BackgroundOrbs> + <main> + <BackToTopButton>
 │   ├── GlassCard.tsx           # 共享液态玻璃卡片（`glass(theme)` + hover elevation，`accent` 控制左/上边线）
+│   ├── SectionHeading.tsx     # 共享区块标题（variant h3/h2 + mb/居中）
+│   ├── Section.tsx            # 共享区块外壳（scroll-reveal Box + Container + SectionHeading，5 个 section 复用）
+│   ├── CertDownloadButton.tsx # 共享证书下载按钮（Qualifications + Academic 复用）
 │   ├── BackgroundOrbs.tsx      # 2 个模糊光球背景层（边界碰撞 + 滚动视差 + 视口 clamp）
 │   ├── LiquidGlassButton.tsx   # 圆形 48px 液态玻璃按钮（Hero + Contact 社交行复用）
 │   ├── Hero.tsx                # 头像 + 4 个 LiquidGlassButton 社交链接 + CTA 按钮（useLenis 滚到 Contact）
@@ -72,13 +77,12 @@ src/
 │       ├── LanguageMenu.tsx    # 语言切换下拉菜单（en/zh）
 │       └── BackToTopButton.tsx # 固定返回顶部按钮（订阅 Lenis 滚动更新透明度）
 ├── data/
-│   ├── types.ts        # 共享 `BaseLink` 接口（social/contact 复用）
 │   ├── skills.ts       # 技能数据及按类别查询函数
 │   ├── timeline.ts     # 教育经历时间线数据
 │   ├── achievements.ts # 竞赛/学术成就数据
 │   ├── projects.ts     # 项目作品数据（占位中，TODO 标记）
-│   ├── social.ts       # 社交媒体链接（SocialLink extends BaseLink，icon 必填）
-│   ├── contact.ts      # 联系页面链接（ContactLink = BaseLink，部分占位 url: '#'）
+│   ├── social.ts       # 社交媒体链接（SocialLink 自带结构，icon 必填）
+│   ├── contact.ts      # 联系页面链接（ContactLink 自带结构，部分占位 url: '#'）
 │   ├── redirects.ts    # 短链接重定向规则（如 /google、/the-book-of-answers）
 │   └── resume.ts       # 简历专属字段（头像/电话/技能选择）；Education/Awards/Skills 复用 home 数据源
 └── test/
@@ -171,7 +175,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 
 所有动效遵循"克制"原则：
 
-- **卡片 3D 倾斜**用 `src/hooks/useTilt.ts`，最大 ±5°，rAF 平滑插值。已应用到的卡片：Hero CTA、SkillPaper、TimelineCard（桌面 + 移动）、AchievementCard、StyledProjectCard、ContactPaper。
+- **卡片 3D 倾斜**用 `src/hooks/useTilt.ts`，最大 ±5°，rAF 平滑插值。已应用到的卡片：Hero CTA、SkillCategory、DesktopTimelineItem / MobileTimelineItem、AchievementCardView、StyledProjectCard、Contact。
 - **挂 `useTilt` ref 的元素，hover 不得再叠 `transform: translateY/translateX`**（inline transform 冲突）。**非倾斜元素**（如 nav button、avatar、social icon、Chip）可以自由加 hover transform。
 - **背景光球**：固定 2 个（紫色 `primary.main` + 蓝色 `info.main`），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。暗色模式下透明度显著降低（0.16 / 0.12），避免光球在黑色背景上过于抢眼干扰阅读。
 - **移动端（`pointer: coarse`）自动退化**：3D 倾斜不触发（无 mousemove）；视差改为滚动驱动所以移动端也工作。
@@ -180,6 +184,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - **transform 写入隔离**：`useTilt`（写 `rotate3d`）和 `useReveal`（写 `translate3d`）**不允许挂在同一 DOM 元素**。reveal 写外层 wrapper Box，tilt 写内层卡片 DOM。
 - **Academic Accordion 特殊处理**：accordion 内的 `AchievementCardView` **不** stagger。`<AccordionDetails>` 折叠时 `height: 0` 但 DOM 存在，IntersectionObserver 立即 fire `inView: true`，展开时卡片已 visible，再 stagger 反而闪烁。仅 `Academic` 区块整体渐现。
 - **LiquidGlassButton 动效**：hover `transform: scale(1.08)` + 加深 inset highlight；active `scale(0.96)`；`focus-visible` 焦点环 `outline: 2px solid primary.main; outline-offset: 4px`；`@media (pointer: coarse)` 禁用 scale；`prefers-reduced-motion: reduce` 时 transition 全部清零。**不挂 useTilt**（与 scale transform 冲突）。
+- **Nav active-section 高亮**（`useActiveSection`）：IntersectionObserver 监听 6 个 section，视口内占比最高者高亮。`SECTION_IDS` 必须是模块级稳定引用（`src/sections.ts`），否则 effect 每次渲染 teardown+recreate observer。404/redirect 页 nav 退化为普通链接。
 
 ## 占位数据约定
 
@@ -226,5 +231,5 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - `.gitignore` 防 `*.bak` / `*.tsxbak` / `*.orig` / `.playwright-mcp/` / `.claude/`（Claude Code 本地配置如 plans/）等产物
 - `.gitattributes`：`* text=auto eol=lf`（统一 LF 行尾，Windows 开发不会被 CRLF 污染）
 - 代码风格用 Prettier（`.prettierrc`：单引号、分号、2 空格、`trailingComma: all`、`printWidth: 100`），`pnpm run format` 格式化；ESLint 末尾接 `eslint-config-prettier` 关闭冲突规则
-- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`reveal.test.ts`、`useHashScroll.test.ts`
+- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`reveal.test.ts`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`redirects.test.ts`
 - 包管理只用 pnpm（不混用 npm / yarn）
