@@ -25,12 +25,9 @@
     "cta": "联系我",
     "avatarAlt": "头像"
   },
-  "_TODO_about_title": "关于我",
-  "_TODO_about_description": "我是一名专注的学生，热衷于技术和持续学习。我喜欢探索新技术并将其应用于解决实际问题。",
   "skills": {
     "title": "技能",
     "languages": "编程语言",
-    "frameworks": "框架库",
     "tools": "开发工具"
   },
   "qualifications": {
@@ -52,14 +49,7 @@
     "connectTitle": "与我联系",
     "connectDesc": "欢迎通过以下任何渠道与我联系，我乐意与您交流并探讨合作机会。",
     "linksTitle": "实用链接",
-    "linksDesc": "以下是我的一些精选项目和文章，您可能会感兴趣。",
-    "name": "名字",
-    "email": "邮箱",
-    "message": "消息",
-    "send": "发送消息",
-    "_TODO_nameError": "名字是必需的",
-    "_TODO_emailError": "需要有效的邮箱",
-    "_TODO_messageError": "消息是必需的"
+    "linksDesc": "以下是我的一些精选项目和文章，您可能会感兴趣。"
   },
   "data": {
     "social": {
@@ -104,12 +94,6 @@
         "Academic Award": "学术奖项",
         "Research": "科研",
         "Scholarship": "奖学金"
-      },
-      "empty": {
-        "title": "",
-        "description": "",
-        "date": "",
-        "details": ""
       },
       "1": {
         "title": "CCF算法能力大赛决赛银奖",
@@ -168,10 +152,6 @@
         "title": "USTC 选课工具",
         "description": "为学生提供丰富的选课、排课功能，解决选课过程中教务系统难以使用、选课结果不直观等困难。"
       }
-    },
-    "redirects": {
-      "google": { "label": "Google 搜索" },
-      "the-book-of-answers": { "label": "答案之书" }
     }
   },
   "resume": {

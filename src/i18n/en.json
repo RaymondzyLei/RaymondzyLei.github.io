@@ -25,12 +25,9 @@
     "cta": "Get in touch",
     "avatarAlt": "Avatar"
   },
-  "_TODO_about_title": "About Me",
-  "_TODO_about_description": "I'm a dedicated student with a passion for technology and continuous learning. I love exploring new technologies and applying them to solve real-world problems.",
   "skills": {
     "title": "Skills",
     "languages": "Languages",
-    "frameworks": "Frameworks",
     "tools": "Tools"
   },
   "qualifications": {
@@ -52,14 +49,7 @@
     "connectTitle": "Connect With Me",
     "connectDesc": "Feel free to reach out through any of these channels. I'm always happy to connect and discuss opportunities.",
     "linksTitle": "Useful Links",
-    "linksDesc": "Here are some of my selected projects and articles you might find interesting.",
-    "name": "Name",
-    "email": "Email",
-    "message": "Message",
-    "send": "Send Message",
-    "_TODO_nameError": "Name is required",
-    "_TODO_emailError": "Valid email is required",
-    "_TODO_messageError": "Message is required"
+    "linksDesc": "Here are some of my selected projects and articles you might find interesting."
   },
   "data": {
     "social": {
@@ -104,12 +94,6 @@
         "Academic Award": "Academic Award",
         "Research": "Research",
         "Scholarship": "Scholarship"
-      },
-      "empty": {
-        "title": "",
-        "description": "",
-        "date": "",
-        "details": ""
       },
       "1": {
         "title": "Second Prize, China Algorithm Capability Competition (Final Contest)",
@@ -168,10 +152,6 @@
         "title": "USTC Course Arrangement Tool",
         "description": "A course selection and scheduling tool that solves the pain points of USTC's official system — helping students browse courses intuitively and plan their timetables with ease."
       }
-    },
-    "redirects": {
-      "google": { "label": "Google" },
-      "the-book-of-answers": { "label": "The Book of Answers" }
     }
   },
   "resume": {
