@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useColorScheme, useTheme, styled } from '@mui/material/styles';
+import { flushSync } from 'react-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Box from '@mui/material/Box';
@@ -68,6 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
   const { mode, setMode } = useColorScheme();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const lenis = useLenis();
 
@@ -85,7 +87,19 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
   };
 
   const handleModeChange = () => {
-    setMode(mode === 'light' ? 'dark' : 'light');
+    const nextMode = mode === 'light' ? 'dark' : 'light';
+    // View Transitions API: snapshot old -> flush DOM -> snapshot new -> cross-fade.
+    // flushSync forces React to commit the color-scheme change synchronously
+    // inside the VT callback so the "new" snapshot captures the updated theme
+    // (standard React + VT pattern). Skip under reduced-motion / unsupported
+    // browsers -> instant switch (graceful degradation).
+    if (reducedMotion || typeof document.startViewTransition !== 'function') {
+      setMode(nextMode);
+      return;
+    }
+    document.startViewTransition(() => {
+      flushSync(() => setMode(nextMode));
+    });
   };
 
   // Stable SECTION_IDS (module-level) — see src/sections.ts. Without this the

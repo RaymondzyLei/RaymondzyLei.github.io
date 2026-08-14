@@ -1,6 +1,6 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
-import { InitColorSchemeScript, GlobalStyles } from '@mui/material';
+import { InitColorSchemeScript } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ReactLenis } from 'lenis/react';
 import theme from './theme';
@@ -37,22 +37,10 @@ function App() {
       <InitColorSchemeScript defaultMode="system" />
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        {/* apple-design §14: ease dark<->light theme changes (avoid abrupt
-            brightness jumps). Only transition the body background + base text
-            color -- the biggest brightness contributors -- so the swap doesn't
-            feel like a flash. Disabled under reduced-motion per a11y guidance. */}
-        <GlobalStyles
-          styles={{
-            body: {
-              transition: 'background-color 400ms ease, color 400ms ease',
-            },
-            '@media (prefers-reduced-motion: reduce)': {
-              body: {
-                transition: 'none',
-              },
-            },
-          }}
-        />
+        {/* Theme light<->dark transitions use the View Transitions API (see
+            Navbar handleModeChange). The previous body background-color
+            transition is removed: VT's root cross-fade replaces it, and a CSS
+            transition would compose muddy on top of the VT snapshot. */}
         <ReactLenis root options={lenisOptions}>
           <Suspense fallback={null}>
             {route.type === 'resume' ? (

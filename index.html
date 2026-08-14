@@ -32,6 +32,14 @@
           background-color: #0d0d0d;
         }
       }
+      /* View Transitions API (theme toggle): disable the root cross-fade under
+         reduced-motion. Navbar also skips startViewTransition entirely. */
+      @media (prefers-reduced-motion: reduce) {
+        ::view-transition-old(root),
+        ::view-transition-new(root) {
+          animation: none;
+        }
+      }
     </style>
     <script>
       (function () {
