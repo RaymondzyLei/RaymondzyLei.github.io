@@ -6,6 +6,16 @@ import zhTranslations from './zh.json';
 const SUPPORTED_LANGUAGES = ['en', 'zh'] as const;
 type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
+/**
+ * Single source of truth for the language picker. code derives the type;
+ * labelKey is the i18n key for the menu item label. Add a language here only
+ * (plus en.json/zh.json translations).
+ */
+export const LANGUAGE_OPTIONS = [
+  { code: 'en', labelKey: 'nav.langEn' },
+  { code: 'zh', labelKey: 'nav.langZh' },
+] as const;
+
 export const isSupportedLanguage = (value: string | null): value is SupportedLanguage =>
   value !== null && (SUPPORTED_LANGUAGES as readonly string[]).includes(value);
 
