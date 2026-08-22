@@ -36,8 +36,8 @@ interface OrbData {
 }
 
 const getInitialOrbs = (): OrbData[] => {
-  const w = typeof window !== 'undefined' ? window.innerWidth : 1200;
-  const h = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
   const maxX = Math.max(0, w - ORB_SIZE);
   const maxY = Math.max(0, h - ORB_SIZE);
   return [

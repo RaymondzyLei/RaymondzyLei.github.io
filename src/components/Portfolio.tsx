@@ -2,7 +2,6 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
@@ -173,18 +172,17 @@ export const Portfolio: React.FC = () => {
 
   return (
     <Section id="portfolio" title={t('portfolio.title')} maxWidth="lg">
-      <Grid
-        container
-        spacing={3}
+      <Box
         sx={{
           display: 'grid',
           gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: 'repeat(3, 1fr)' },
+          gap: 3,
         }}
       >
         {projectsData.map((project, index) => (
           <ProjectCardCell key={project.id} project={project} index={index} />
         ))}
-      </Grid>
+      </Box>
     </Section>
   );
 };

@@ -9,7 +9,9 @@ import './fonts.css';
 // Lenis recommended CSS (html height, scroll-behavior override, etc.)
 import 'lenis/dist/lenis.css';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root');
+if (!root) throw new Error('Root element #root not found');
+ReactDOM.createRoot(root).render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,

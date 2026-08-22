@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import Grid from '@mui/material/Grid';
 import FolderIcon from '@mui/icons-material/Folder';
 import { socialLinks } from '../data/social';
 import { contactLinks } from '../data/contact';
@@ -24,10 +23,12 @@ export const Contact: React.FC = () => {
 
   return (
     <Section id="contact" title={t('contact.title')} maxWidth="md" revealDelay={0}>
-      <Grid
-        container
-        spacing={4}
-        sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' } }}
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+          gap: 4,
+        }}
       >
         <Box ref={connectCellRef} sx={revealSx(connectVisible, 0)}>
           <GlassCard ref={connectTiltRef} sx={{ p: 3, height: '100%' }}>
@@ -184,7 +185,7 @@ export const Contact: React.FC = () => {
             </Stack>
           </GlassCard>
         </Box>
-      </Grid>
+      </Box>
     </Section>
   );
 };
