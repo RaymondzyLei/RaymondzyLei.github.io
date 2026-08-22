@@ -17,11 +17,13 @@ export interface Achievement {
  * Category labels: data.achievements.category.<category>
  */
 export const achievementsData: Achievement[] = [
-  { id: '1', category: 'Competition', file: { path: '/files/cacc-final-certificate.pdf' } },
-  { id: '2', category: 'Competition', file: { path: '/files/cacc-regional-certificate.pdf' } },
-  { id: '3', category: 'Competition', file: { path: '/files/cpho-2024-certificate.pdf' } },
-  { id: '4', category: 'Competition' },
-  { id: '5', category: 'Academic Award' },
-  { id: '6', category: 'Research' },
-  { id: '7', category: 'Scholarship' },
+  // TODO: add certificate file path once available (Second Prize, CSDC 2026)
+  { id: '1', category: 'Competition' },
+  { id: '2', category: 'Competition', file: { path: '/files/cacc-final-certificate.pdf' } },
+  { id: '3', category: 'Competition', file: { path: '/files/cacc-regional-certificate.pdf' } },
+  { id: '4', category: 'Competition', file: { path: '/files/cpho-2024-certificate.pdf' } },
+  { id: '5', category: 'Competition' },
+  { id: '6', category: 'Academic Award' },
+  { id: '7', category: 'Research' },
+  { id: '8', category: 'Scholarship' },
 ];

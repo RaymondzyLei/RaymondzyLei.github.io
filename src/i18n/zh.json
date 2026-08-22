@@ -96,35 +96,41 @@
         "Scholarship": "奖学金"
       },
       "1": {
+        "title": "全国大学生计算机系统能力大赛全国二等奖",
+        "description": "国家级，中国",
+        "date": "2026 年夏",
+        "details": "2026 届，本科一年级期间，操作系统设计赛功能挑战赛道"
+      },
+      "2": {
         "title": "CCF算法能力大赛决赛银奖",
         "description": "国家级，中国",
         "date": "2026 年春",
         "details": "第二届，本科一年级期间",
         "certLabel": "证书"
       },
-      "2": {
+      "3": {
         "title": "CCF算法能力大赛区域赛二等奖",
         "description": "国家级，中国",
         "date": "2025 年秋",
         "details": "第二届，本科一年级期间",
         "certLabel": "证书"
       },
-      "3": {
+      "4": {
         "title": "全国中学生物理竞赛一等奖",
         "description": "省级，中国",
         "date": "2024 年，高二",
         "details": "第 41 届，高中期间",
         "certLabel": "证书"
       },
-      "4": {
+      "5": {
         "title": "全国中学生数学竞赛三等奖",
         "description": "初赛，中国",
         "date": "2024 年，高二",
         "details": "2024 届，高中期间"
       },
-      "5": { "title": "", "description": "", "date": "", "details": "" },
       "6": { "title": "", "description": "", "date": "", "details": "" },
-      "7": { "title": "", "description": "", "date": "", "details": "" }
+      "7": { "title": "", "description": "", "date": "", "details": "" },
+      "8": { "title": "", "description": "", "date": "", "details": "" }
     },
     "timeline": {
       "1": {
