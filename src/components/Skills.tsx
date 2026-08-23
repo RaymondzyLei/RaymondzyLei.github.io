@@ -3,32 +3,13 @@ import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import Chip from '@mui/material/Chip';
-import { styled } from '@mui/material/styles';
 import { getSkillsByCategory, type Skill } from '../data/skills';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
+import { SoftChip } from './SoftChip';
 import { Section } from './Section';
-
-const SkillChip = styled(Chip)(({ theme }) => ({
-  // M1: specify exact properties instead of `all` (review-animations trigger).
-  transition: theme.transitions.create(['transform', 'boxShadow', 'background-color'], {
-    duration: theme.transitions.duration.shorter,
-  }),
-  '&:hover': {
-    transform: 'scale(1.1) translateY(-2px)',
-    boxShadow: theme.shadows[4],
-  },
-  // H3: respect reduced-motion -- keep hover amplitude, drop the transform.
-  '@media (prefers-reduced-motion: reduce)': {
-    transition: 'none',
-    '&:hover': {
-      transform: 'none',
-    },
-  },
-}));
 
 const SkillCategory: React.FC<{ label: string; skills: Skill[]; index: number }> = ({
   label,
@@ -52,18 +33,7 @@ const SkillCategory: React.FC<{ label: string; skills: Skill[]; index: number }>
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
           {skills.map((skill) => (
-            <SkillChip
-              key={skill.id}
-              label={skill.name}
-              sx={{
-                backgroundColor: 'primary.main',
-                color: 'primary.contrastText',
-                fontWeight: 500,
-                '&:hover': {
-                  backgroundColor: 'primary.dark',
-                },
-              }}
-            />
+            <SoftChip key={skill.id} label={skill.name} />
           ))}
         </Box>
       </GlassCard>

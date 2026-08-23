@@ -33,7 +33,7 @@ const Root = styled('a')(({ theme }) => ({
   },
   '&:focus-visible': {
     outline: `2px solid ${theme.palette.primary.main}`,
-    outlineOffset: 4,
+    outlineOffset: 2,
   },
   '@media (pointer: coarse)': {
     '&:hover': {

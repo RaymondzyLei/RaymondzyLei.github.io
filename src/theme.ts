@@ -20,6 +20,16 @@ export const glass = (theme: Theme): CSSProperties => ({
 });
 
 /**
+ * Hover shadow for glass surfaces -- same violet family as glass()'s static
+ * shadow, deepened one notch. Replaces MUI's neutral grey shadows on hover
+ * (GlassCard / StyledProjectCard / StyledAccordion).
+ */
+export const glassHoverShadow = (theme: Theme): string =>
+  theme.palette.mode === 'dark'
+    ? 'inset 0 1px 0 0 rgba(255,255,255,0.10), 0 12px 36px rgba(167,139,250,0.10)'
+    : '0 12px 40px rgba(124,58,237,0.16)';
+
+/**
  * Focus-visible ring (ui-ux-pro-max `focus-states`). Uses the palette CSS
  * variable so the ring follows light/dark primary. Spread into a component's
  * `styleOverrides.root`.
@@ -87,8 +97,8 @@ let theme = createTheme({
           paper: '#ffffff',
         },
         text: {
-          primary: '#000000',
-          secondary: '#333333',
+          primary: '#18181b',
+          secondary: '#52525b',
         },
       },
     },
@@ -105,8 +115,8 @@ let theme = createTheme({
           paper: '#1a1a1a',
         },
         text: {
-          primary: '#ffffff',
-          secondary: '#e5e7eb',
+          primary: '#f4f4f5',
+          secondary: '#a1a1aa',
         },
       },
     },
@@ -170,6 +180,31 @@ let theme = createTheme({
       styleOverrides: {
         root: {
           ...focusVisibleRing(2),
+        },
+      },
+    },
+    // Decorative global styles: violet selection tint + slim rounded scrollbar.
+    // color-mix() against CSS vars follows light/dark automatically. Pseudo-
+    // elements only -- NEVER set html font-size here (emotion would override
+    // the static fonts.css rem baseline).
+    MuiCssBaseline: {
+      styleOverrides: {
+        '::selection': {
+          backgroundColor: 'color-mix(in srgb, var(--mui-palette-primary-main) 20%, transparent)',
+        },
+        '*': {
+          scrollbarWidth: 'thin',
+          scrollbarColor:
+            'color-mix(in srgb, var(--mui-palette-text-primary) 18%, transparent) transparent',
+        },
+        '::-webkit-scrollbar': { width: 10, height: 10 },
+        '::-webkit-scrollbar-track': { background: 'transparent' },
+        '::-webkit-scrollbar-thumb': {
+          borderRadius: 999,
+          backgroundColor: 'color-mix(in srgb, var(--mui-palette-text-primary) 18%, transparent)',
+        },
+        '::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: 'color-mix(in srgb, var(--mui-palette-text-primary) 28%, transparent)',
         },
       },
     },

@@ -14,14 +14,15 @@ import CardHeader from '@mui/material/CardHeader';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { CertDownloadButton } from './CertDownloadButton';
 import { styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
+import { glassHoverShadow } from '../theme';
 import { GlassCard } from './GlassCard';
+import { SoftChip } from './SoftChip';
 import { Section } from './Section';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -33,7 +34,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     backgroundColor: 'transparent',
   },
   '&:hover': {
-    boxShadow: theme.shadows[4],
+    boxShadow: glassHoverShadow(theme),
   },
 }));
 
@@ -55,31 +56,25 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
       <CardHeader
         title={title}
         subheader={date}
+        sx={{ px: 3, pt: 3, pb: 1 }}
         slotProps={{
           title: { variant: 'h6', sx: { fontWeight: 600 } },
           subheader: { sx: { color: 'text.secondary' } },
         }}
       />
-      <CardContent>
+      <CardContent sx={{ px: 3, pt: 1 }}>
         <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
           {description}
         </Typography>
         {details && (
-          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
             {details}
           </Typography>
         )}
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}
         >
-          <Chip
-            label={t(`data.achievements.category.${category}`)}
-            size="small"
-            sx={{
-              backgroundColor: 'primary.main',
-              color: 'primary.contrastText',
-            }}
-          />
+          <SoftChip label={t(`data.achievements.category.${category}`)} size="small" />
           {achievement.file && (
             <CertDownloadButton
               file={achievement.file}
