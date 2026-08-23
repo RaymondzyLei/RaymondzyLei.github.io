@@ -87,8 +87,8 @@ let theme = createTheme({
           paper: '#ffffff',
         },
         text: {
-          primary: '#000000',
-          secondary: '#333333',
+          primary: '#18181b',
+          secondary: '#52525b',
         },
       },
     },
@@ -105,8 +105,8 @@ let theme = createTheme({
           paper: '#1a1a1a',
         },
         text: {
-          primary: '#ffffff',
-          secondary: '#e5e7eb',
+          primary: '#f4f4f5',
+          secondary: '#a1a1aa',
         },
       },
     },
