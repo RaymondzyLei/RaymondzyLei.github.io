@@ -29,6 +29,9 @@ dist-ssr
 # Claude Code local config
 .claude/
 
+# Superpowers scratch (brainstorm mockups, SDD ledger)
+.superpowers/
+
 # Editor / backup files
 *.bak
 *.tsxbak
