@@ -20,6 +20,16 @@ export const glass = (theme: Theme): CSSProperties => ({
 });
 
 /**
+ * Hover shadow for glass surfaces -- same violet family as glass()'s static
+ * shadow, deepened one notch. Replaces MUI's neutral grey shadows on hover
+ * (GlassCard / StyledProjectCard / StyledAccordion).
+ */
+export const glassHoverShadow = (theme: Theme): string =>
+  theme.palette.mode === 'dark'
+    ? 'inset 0 1px 0 0 rgba(255,255,255,0.10), 0 12px 36px rgba(167,139,250,0.10)'
+    : '0 12px 40px rgba(124,58,237,0.16)';
+
+/**
  * Focus-visible ring (ui-ux-pro-max `focus-states`). Uses the palette CSS
  * variable so the ring follows light/dark primary. Spread into a component's
  * `styleOverrides.root`.

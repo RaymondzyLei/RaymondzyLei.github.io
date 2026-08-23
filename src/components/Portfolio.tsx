@@ -16,7 +16,7 @@ import { projectsData, type Project } from '../data/projects';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
-import { glass } from '../theme';
+import { glass, glassHoverShadow } from '../theme';
 import { Section } from './Section';
 
 const StyledProjectCard = styled(Card)(({ theme }) => ({
@@ -46,7 +46,7 @@ const StyledProjectCard = styled(Card)(({ theme }) => ({
     }),
   },
   '&:hover': {
-    boxShadow: theme.shadows[16],
+    boxShadow: glassHoverShadow(theme),
     '&::before': {
       transform: 'translateX(100%)',
     },

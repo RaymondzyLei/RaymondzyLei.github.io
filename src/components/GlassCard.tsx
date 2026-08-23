@@ -1,6 +1,6 @@
 import Paper from '@mui/material/Paper';
 import { styled } from '@mui/material/styles';
-import { glass } from '../theme';
+import { glass, glassHoverShadow } from '../theme';
 
 type Accent = 'none' | 'left' | 'top';
 
@@ -31,6 +31,6 @@ export const GlassCard = styled(Paper, {
     borderTop: `4px solid ${theme.palette.primary.main}`,
   }),
   '&:hover': {
-    boxShadow: theme.shadows[8],
+    boxShadow: glassHoverShadow(theme),
   },
 }));

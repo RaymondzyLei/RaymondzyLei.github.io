@@ -155,7 +155,7 @@ export const Contact: React.FC = () => {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        color: 'background.paper',
+                        color: 'primary.contrastText',
                       }}
                     >
                       {Icon ? <Icon /> : <FolderIcon />}

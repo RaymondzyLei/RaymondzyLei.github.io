@@ -118,7 +118,9 @@ export const Qualifications: React.FC = () => {
           {timelineData.map((item, index) => (
             <TimelineItem key={item.id}>
               <TimelineSeparator>
-                <TimelineDot sx={{ bgcolor: 'primary.main', boxShadow: 1 }}>
+                <TimelineDot
+                  sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', boxShadow: 1 }}
+                >
                   <SchoolIcon />
                 </TimelineDot>
                 {index < timelineData.length - 1 && <TimelineConnector />}

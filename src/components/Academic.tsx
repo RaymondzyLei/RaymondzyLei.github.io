@@ -21,6 +21,7 @@ import { CertDownloadButton } from './CertDownloadButton';
 import { styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
+import { glassHoverShadow } from '../theme';
 import { GlassCard } from './GlassCard';
 import { Section } from './Section';
 
@@ -33,7 +34,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     backgroundColor: 'transparent',
   },
   '&:hover': {
-    boxShadow: theme.shadows[4],
+    boxShadow: glassHoverShadow(theme),
   },
 }));
 
