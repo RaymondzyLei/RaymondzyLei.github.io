@@ -21,7 +21,7 @@ const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
   }),
   cursor: 'pointer',
   '&:hover': {
-    transform: 'scale(1.3) rotateZ(5deg)',
+    transform: 'scale(1.06)',
     boxShadow: theme.shadows[12],
   },
   // H3: respect reduced-motion -- keep hover amplitude, drop the transform.

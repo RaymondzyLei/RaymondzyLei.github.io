@@ -183,6 +183,31 @@ let theme = createTheme({
         },
       },
     },
+    // Decorative global styles: violet selection tint + slim rounded scrollbar.
+    // color-mix() against CSS vars follows light/dark automatically. Pseudo-
+    // elements only -- NEVER set html font-size here (emotion would override
+    // the static fonts.css rem baseline).
+    MuiCssBaseline: {
+      styleOverrides: {
+        '::selection': {
+          backgroundColor: 'color-mix(in srgb, var(--mui-palette-primary-main) 20%, transparent)',
+        },
+        '*': {
+          scrollbarWidth: 'thin',
+          scrollbarColor:
+            'color-mix(in srgb, var(--mui-palette-text-primary) 18%, transparent) transparent',
+        },
+        '::-webkit-scrollbar': { width: 10, height: 10 },
+        '::-webkit-scrollbar-track': { background: 'transparent' },
+        '::-webkit-scrollbar-thumb': {
+          borderRadius: 999,
+          backgroundColor: 'color-mix(in srgb, var(--mui-palette-text-primary) 18%, transparent)',
+        },
+        '::-webkit-scrollbar-thumb:hover': {
+          backgroundColor: 'color-mix(in srgb, var(--mui-palette-text-primary) 28%, transparent)',
+        },
+      },
+    },
   },
 });
 
