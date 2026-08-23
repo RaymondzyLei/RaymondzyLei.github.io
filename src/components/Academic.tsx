@@ -14,7 +14,6 @@ import CardHeader from '@mui/material/CardHeader';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import Chip from '@mui/material/Chip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { CertDownloadButton } from './CertDownloadButton';
@@ -23,6 +22,7 @@ import { achievementsData, type Achievement } from '../data/achievements';
 import { useTilt } from '../hooks/useTilt';
 import { glassHoverShadow } from '../theme';
 import { GlassCard } from './GlassCard';
+import { SoftChip } from './SoftChip';
 import { Section } from './Section';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
@@ -74,14 +74,7 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
         <Box
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}
         >
-          <Chip
-            label={t(`data.achievements.category.${category}`)}
-            size="small"
-            sx={{
-              backgroundColor: 'primary.main',
-              color: 'primary.contrastText',
-            }}
-          />
+          <SoftChip label={t(`data.achievements.category.${category}`)} size="small" />
           {achievement.file && (
             <CertDownloadButton
               file={achievement.file}

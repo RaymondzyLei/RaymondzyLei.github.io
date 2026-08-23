@@ -6,7 +6,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Paper from '@mui/material/Paper';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -17,6 +16,7 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { glass, glassHoverShadow } from '../theme';
+import { SoftChip } from './SoftChip';
 import { Section } from './Section';
 
 const StyledProjectCard = styled(Card)(({ theme }) => ({
@@ -114,16 +114,7 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
         </Typography>
         <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
           {project.technologies.map((tech) => (
-            <Chip
-              key={tech}
-              label={tech}
-              size="small"
-              variant="outlined"
-              sx={{
-                borderColor: 'primary.main',
-                color: 'primary.main',
-              }}
-            />
+            <SoftChip key={tech} label={tech} size="small" />
           ))}
         </Stack>
       </CardContent>
