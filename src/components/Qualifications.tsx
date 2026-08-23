@@ -29,14 +29,14 @@ const DesktopTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> =
   const p = `data.timeline.${item.id}`;
   return (
     <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
-      <GlassCard accent="left" ref={tiltRef} sx={{ p: 2 }}>
+      <GlassCard accent="left" ref={tiltRef} sx={{ p: 3 }}>
         <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
           {t(`${p}.title`)}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
           {t(`${p}.institution`)}
         </Typography>
-        <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block', mt: 0.5 }}>
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}>
           {t(`${p}.date`)}
         </Typography>
         <Typography
@@ -71,7 +71,7 @@ const MobileTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> = 
       <GlassCard accent="top" ref={tiltRef} sx={{ p: 3 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
-          <Typography variant="caption" sx={{ color: 'text.disabled' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
             {t(`${p}.date`)}
           </Typography>
         </Box>

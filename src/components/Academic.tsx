@@ -56,17 +56,18 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
       <CardHeader
         title={title}
         subheader={date}
+        sx={{ px: 3, pt: 3, pb: 1 }}
         slotProps={{
           title: { variant: 'h6', sx: { fontWeight: 600 } },
           subheader: { sx: { color: 'text.secondary' } },
         }}
       />
-      <CardContent>
+      <CardContent sx={{ px: 3, pt: 1 }}>
         <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
           {description}
         </Typography>
         {details && (
-          <Typography variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
             {details}
           </Typography>
         )}
