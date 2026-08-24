@@ -5,8 +5,10 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta name="viewport" content="initial-scale=1, width=device-width" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0d" />
+    <!-- __COLOR_LIGHT__ / __COLOR_DARK__ are replaced at dev/build time by the
+         inject-design-tokens plugin in vite.config.ts (source: src/styles/colors.ts). -->
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="__COLOR_LIGHT__" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="__COLOR_DARK__" />
     <meta
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'none'"
@@ -22,14 +24,14 @@
     -->
     <style>
       html[data-mui-color-scheme='light'] {
-        background-color: #ffffff;
+        background-color: __COLOR_LIGHT__;
       }
       html[data-mui-color-scheme='dark'] {
-        background-color: #0d0d0d;
+        background-color: __COLOR_DARK__;
       }
       @media (prefers-color-scheme: dark) {
         html:not([data-mui-color-scheme='light']) {
-          background-color: #0d0d0d;
+          background-color: __COLOR_DARK__;
         }
       }
       /* View Transitions API (theme toggle): the UA default root cross-fade

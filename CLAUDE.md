@@ -37,12 +37,13 @@ pnpm run preview      # 本地预览生产构建
 src/
 ├── main.tsx          # 入口：加载 i18n、字体 CSS（fonts.css）、lenis CSS、渲染 <App />
 ├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404
-├── theme.ts          # MUI 主题：亮/暗双色方案（亮紫 #7c3aed / 暗蓝绿 #29b6f6，与 orb2 同色）、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 24`
+├── theme.ts          # MUI 主题：亮/暗双色方案（色值全部引用 styles/colors.ts）、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 24`
 ├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume、REDIRECTS 命中→redirect、其余→notFound
 ├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
 ├── theme.test.ts      # glass() helper 单元测试（亮/暗模式）
 ├── styles/
+│   ├── colors.ts      # ★ 全站颜色单一来源（ACCENT/SURFACE/TEXT/INFO/RESUME + rgbChannels）。theme.ts、BackgroundOrbs（orb1 紫）、LiquidGlassButton、ResumePage、vite.config 的 index.html token 注入全部引用此处——改颜色只动这一个文件
 │   ├── reveal.ts      # 共享 scroll-reveal 样式片段
 │   └── reveal.test.ts # revealSx() 单元测试 `revealSx(isVisible, delayMs)`（6 区块 + 卡片错位复用）
 ├── hooks/
@@ -101,7 +102,11 @@ src/
 
 ## 主题
 
-MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。主色两模式不同色系：亮色模式紫色 `#7c3aed`，暗色模式蓝绿色 `#29b6f6`（= 背景光球 orb2 的 `info.main` 值，让暗色文字与第二个光球呼应；dark `primary`/`secondary` 同值）。暗色背景为经典黑色（default `#0d0d0d` / paper `#1a1a1a`）。`secondary` 当前与 `primary` 同色（TODO 标记，待未来选个真正的副色）。组件使用 MUI 的 `styled()` API 自定义样式，不使用 CSS 文件。
+MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。**所有颜色值集中在 `src/styles/colors.ts`**（ACCENT/SURFACE/TEXT/INFO/RESUME），palette、glass 阴影、焦点环、`::selection`、滚动条、光球、简历打印色全部引用它；`index.html` 的 anti-FOUC 内联 CSS 与 meta theme-color 由 `vite.config.ts` 的 `inject-design-tokens` 插件在 dev/build 时注入占位符（`__COLOR_LIGHT__`/`__COLOR_DARK__`）——**改颜色只动 colors.ts 一个文件**。
+
+主色两模式不同色系：亮色模式紫色 `ACCENT.light`，暗色模式蓝绿色 `ACCENT.dark`（与光球 orb2 同为蓝绿系但**非同值**——orb2 是 `INFO.main` 固定的 MUI 默认 info 蓝 `#03a9f4`）。暗色背景为经典黑色（default `SURFACE.dark.default` / paper `SURFACE.dark.paper`）。`secondary` 当前与 `primary` 同色（TODO 标记，待未来选个真正的副色）。组件使用 MUI 的 `styled()` API 自定义样式，不使用 CSS 文件。
+
+**注意**：不要给 `createTheme` 开 `cssVariables: true`——开启后 styled/sx 回调里的 `theme.palette` 会冻结在默认亮色 scheme，所有 `mode === 'dark'` 分支（glass 暗色、SoftChip、hover 阴影）全部失效（曾引发线上回归）。模式相关的纯装饰 CSS 用 `[data-mui-color-scheme="dark"]` 双选择器静态规则实现（App.tsx 的 `ColorSchemeAttrSync` 保持 attribute 与运行时 mode 同步）。
 
 `shape.borderRadius: 24`（iOS 26 风格），全局级联到所有 Paper / Card / Accordion / Chip / IconButton；圆形元素（avatar、background orbs）不受影响。
 

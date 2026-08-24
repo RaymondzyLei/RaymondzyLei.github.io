@@ -1,6 +1,7 @@
 import React from 'react';
 import { alpha, styled } from '@mui/material/styles';
 import { glass } from '../theme';
+import { ACCENT } from '../styles/colors';
 
 const SIZE = 48;
 
@@ -25,8 +26,8 @@ const Root = styled('a')(({ theme }) => ({
     color: theme.palette.primary.dark,
     boxShadow:
       theme.palette.mode === 'dark'
-        ? 'inset 0 1px 0 0 rgba(255,255,255,0.14), 0 12px 36px rgba(41,182,246,0.2)'
-        : `inset 0 1px 0 0 rgba(255,255,255,0.7), 0 12px 36px ${alpha(theme.palette.primary.main, 0.25)}`,
+        ? `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.14)}, 0 12px 36px ${alpha(ACCENT.dark, 0.2)}`
+        : `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.7)}, 0 12px 36px ${alpha(theme.palette.primary.main, 0.25)}`,
   },
   '&:active': {
     transform: 'scale(0.96)',

@@ -4,6 +4,7 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import { alpha, useTheme, useColorScheme } from '@mui/material/styles';
 import { keyframes } from '@emotion/react';
 import { zIndex } from '../theme';
+import { ACCENT } from '../styles/colors';
 
 const ORB_SIZE = 440;
 
@@ -116,9 +117,8 @@ export const BackgroundOrbs: React.FC = () => {
   }, []);
 
   // Orb1 is a fixed violet brand color, intentionally decoupled from
-  // palette.primary (dark-mode text accents use the orb2 blue-teal instead;
-  // see theme.ts dark primary comment).
-  const orb1Color = alpha(isDark ? '#a78bfa' : '#7c3aed', isDark ? 0.16 : 0.32);
+  // palette.primary (dark-mode text accents use ACCENT.dark instead).
+  const orb1Color = alpha(isDark ? ACCENT.orbDark : ACCENT.light, isDark ? 0.16 : 0.32);
   const orb2Color = alpha(theme.palette.info.main, isDark ? 0.12 : 0.26);
 
   return (
