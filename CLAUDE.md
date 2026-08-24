@@ -37,7 +37,7 @@ pnpm run preview      # 本地预览生产构建
 src/
 ├── main.tsx          # 入口：加载 i18n、字体 CSS（fonts.css）、lenis CSS、渲染 <App />
 ├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404
-├── theme.ts          # MUI 主题：亮/暗双色方案（色值全部引用 styles/colors.ts）、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 24`
+├── theme.ts          # MUI 主题：亮/暗双色方案（色值全部引用 styles/colors.ts）、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 16`
 ├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume、REDIRECTS 命中→redirect、其余→notFound
 ├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
@@ -108,7 +108,7 @@ MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。**所有颜�
 
 **注意**：不要给 `createTheme` 开 `cssVariables: true`——开启后 styled/sx 回调里的 `theme.palette` 会冻结在默认亮色 scheme，所有 `mode === 'dark'` 分支（glass 暗色、SoftChip、hover 阴影）全部失效（曾引发线上回归）。模式相关的纯装饰 CSS 用 `[data-mui-color-scheme="dark"]` 双选择器静态规则实现（App.tsx 的 `ColorSchemeAttrSync` 保持 attribute 与运行时 mode 同步）。
 
-`shape.borderRadius: 24`（iOS 26 风格），全局级联到所有 Paper / Card / Accordion / Chip / IconButton；圆形元素（avatar、background orbs）不受影响。
+`shape.borderRadius: 16`（Material 3 large 档位；曾为 iOS 风格 24，2026-08 应用户要求收敛以去「气泡感」——40px 高按钮在半径 ≥20 时会被视觉压成胶囊），全局级联到所有 Paper / Card / Accordion / Chip / IconButton。sx 里的 `borderRadius: 1`/`:2` 是 shape 的乘数，随之联动；圆形元素（avatar、background orbs、`'50%'`/`999` 药丸）不受影响。
 
 ## HTML 文档约定
 

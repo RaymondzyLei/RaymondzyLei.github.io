@@ -159,7 +159,7 @@ let theme = createTheme({
     h6: { ...headingTypography, letterSpacing: '0', lineHeight: 1.4 },
   },
   shape: {
-    borderRadius: 24,
+    borderRadius: 16,
   },
   components: {
     MuiButton: {
