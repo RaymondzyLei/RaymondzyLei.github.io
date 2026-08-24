@@ -169,7 +169,10 @@ export const ResumePage: React.FC = () => {
     <>
       <GlobalStyles
         styles={`
-          body { background: ${PAPER}; }
+          /* !important: must beat the anti-FOUC inline html[data-mui-color-scheme]
+             background and the dark-mode CssBaseline body rule, so no dark
+             bars peek above/below the paper in dark mode. */
+          html, body { background: ${PAPER} !important; }
           @media print {
             @page { size: A4; margin: 1.5cm; }
             .no-print { display: none !important; }
