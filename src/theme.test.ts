@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { createTheme } from '@mui/material/styles';
 import { glass, easing, duration, default as theme } from './theme';
+import { ACCENT } from './styles/colors';
 
 describe('glass', () => {
   const light = createTheme({ palette: { mode: 'light' } });
@@ -75,14 +76,14 @@ describe('component focus-visible & active overrides', () => {
         styleOverrides: { root: Record<string, unknown> };
       };
       const fv = root.styleOverrides.root['&:focus-visible'] as Record<string, string>;
-      expect(fv.outline).toContain('2px solid #7c3aed');
+      expect(fv.outline).toContain(`2px solid ${ACCENT.light}`);
       // Dual-selector dark override as a top-level sibling key (theme.palette
       // is frozen at the default scheme in style callbacks; also MUI drops
       // selector keys NESTED inside '&:focus-visible').
       const dark = root.styleOverrides.root['[data-mui-color-scheme="dark"] &:focus-visible'] as {
         outlineColor: string;
       };
-      expect(dark.outlineColor).toBe('#29b6f6');
+      expect(dark.outlineColor).toBe(ACCENT.dark);
     }
   });
 });

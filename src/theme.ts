@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react';
 import { createTheme, responsiveFontSizes, alpha } from '@mui/material/styles';
 import type { Theme, SxProps } from '@mui/material/styles';
 import type { CSSObject } from '@emotion/react';
+import { ACCENT, ACCENT_RGB, TEXT_RGB, SURFACE, TEXT, INFO } from './styles/colors';
 
 export const glass = (theme: Theme): CSSProperties => ({
   backgroundColor: alpha(
@@ -16,8 +17,8 @@ export const glass = (theme: Theme): CSSProperties => ({
   borderColor: alpha(theme.palette.common.white, theme.palette.mode === 'dark' ? 0.12 : 0.5),
   boxShadow:
     theme.palette.mode === 'dark'
-      ? 'inset 0 1px 0 0 rgba(255,255,255,0.08)'
-      : 'inset 0 1px 0 0 rgba(255,255,255,0.6), 0 8px 32px rgba(124,58,237,0.08)',
+      ? `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.08)}`
+      : `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.6)}, 0 8px 32px ${alpha(ACCENT.light, 0.08)}`,
 });
 
 /**
@@ -27,8 +28,8 @@ export const glass = (theme: Theme): CSSProperties => ({
  */
 export const glassHoverShadow = (theme: Theme): string =>
   theme.palette.mode === 'dark'
-    ? 'inset 0 1px 0 0 rgba(255,255,255,0.10), 0 12px 36px rgba(41,182,246,0.10)'
-    : '0 12px 40px rgba(124,58,237,0.16)';
+    ? `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.1)}, 0 12px 36px ${alpha(ACCENT.dark, 0.1)}`
+    : `0 12px 40px ${alpha(ACCENT.light, 0.16)}`;
 
 /**
  * Focus-visible ring (ui-ux-pro-max `focus-states`). Static dual-selector CSS
@@ -88,15 +89,12 @@ export const zIndex = {
   backToTop: 1150, // above AppBar (1100), below drawer/modal
 } as const;
 
-// Single source for the dual-mode accent hexes used by the palette below and
-// by the static dual-selector rules (focusVisibleRing / ::selection /
-// scrollbar). Those rules are plain CSS keyed off <html data-mui-color-scheme>
-// because theme.palette is frozen at the default scheme inside style
-// callbacks — runtime JS branching cannot follow the active mode there.
-const ACCENT = { light: '#7c3aed', dark: '#29b6f6' } as const;
-// RGB triples for rgba() in the dual-selector rules below (selection/scrollbar).
-const ACCENT_RGB = { light: '124,58,237', dark: '41,182,246' } as const;
-const TEXT_RGB = { light: '24,24,27', dark: '244,244,245' } as const;
+// Color values live in src/styles/colors.ts (single source of truth — also
+// consumed by BackgroundOrbs, LiquidGlassButton, ResumePage and vite.config's
+// index.html token injection). The dual-selector rules below are plain CSS
+// keyed off <html data-mui-color-scheme> because theme.palette is frozen at
+// the default scheme inside style callbacks — runtime JS branching cannot
+// follow the active mode there.
 
 let theme = createTheme({
   // NOTE: cssVariables is intentionally OFF. With it on, `theme.palette` in
@@ -115,34 +113,36 @@ let theme = createTheme({
         secondary: {
           main: ACCENT.light,
         },
+        info: { main: INFO.main },
         background: {
-          default: '#ffffff',
-          paper: '#ffffff',
+          default: SURFACE.light.default,
+          paper: SURFACE.light.paper,
         },
         text: {
-          primary: '#18181b',
-          secondary: '#52525b',
+          primary: TEXT.light.primary,
+          secondary: TEXT.light.secondary,
         },
       },
     },
     dark: {
       palette: {
-        // Dark-mode accent = the background orb2 blue-teal (palette.info.main
-        // value #29b6f6), so dark text/accents echo the second orb. Orb1 keeps
-        // its violet independently (hardcoded in BackgroundOrbs).
+        // Blue-teal accent — same family as orb2 but NOT the same value (orb2
+        // is the framework-default info blue, pinned above as INFO.main).
+        // Orb1 keeps its violet via ACCENT.orbDark in BackgroundOrbs.
         primary: {
           main: ACCENT.dark,
         },
         secondary: {
           main: ACCENT.dark,
         },
+        info: { main: INFO.main },
         background: {
-          default: '#0d0d0d',
-          paper: '#1a1a1a',
+          default: SURFACE.dark.default,
+          paper: SURFACE.dark.paper,
         },
         text: {
-          primary: '#f4f4f5',
-          secondary: '#a1a1aa',
+          primary: TEXT.dark.primary,
+          secondary: TEXT.dark.secondary,
         },
       },
     },

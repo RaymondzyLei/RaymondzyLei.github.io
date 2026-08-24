@@ -19,6 +19,7 @@ import {
   resumeSkillIds,
   resumeStrongSkillIds,
 } from '../data/resume';
+import { RESUME as C } from '../styles/colors';
 
 /**
  * Standalone resume preview page (/resume).
@@ -37,13 +38,14 @@ import {
  * source) is kept in sync manually for PDF export.
  */
 
-// Hardcoded light palette - no theme dependency.
-const INK = '#1a1a1a';
-const SUB = '#6b7280';
-const LINE = '#e5e7eb';
-const PAPER = '#ffffff';
-const CHIP_BG = '#1f2937';
-const CHIP_INK = '#ffffff';
+// Print palette — values live in src/styles/colors.ts (RESUME namespace),
+// the app-wide color single source; mode-independent by design.
+const INK = C.ink;
+const SUB = C.sub;
+const LINE = C.line;
+const PAPER = C.paper;
+const CHIP_BG = C.chipBg;
+const CHIP_INK = C.chipInk;
 
 // Skill sub-group labels (fixed English; resume doesn't translate).
 const PROGRAMMING_LANGUAGES_LABEL = 'Programming Languages';
@@ -223,7 +225,7 @@ export const ResumePage: React.FC = () => {
           py: { xs: 4, md: 6 },
           bgcolor: PAPER,
           color: INK,
-          boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+          boxShadow: C.paperShadow,
           borderRadius: 2,
           minHeight: '100vh',
         }}
