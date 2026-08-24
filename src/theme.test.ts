@@ -75,8 +75,14 @@ describe('component focus-visible & active overrides', () => {
         styleOverrides: { root: Record<string, unknown> };
       };
       const fv = root.styleOverrides.root['&:focus-visible'] as Record<string, string>;
-      expect(fv.outline).toContain('2px solid');
-      expect(fv.outline).toContain('var(--mui-palette-primary-main)');
+      expect(fv.outline).toContain('2px solid #7c3aed');
+      // Dual-selector dark override as a top-level sibling key (theme.palette
+      // is frozen at the default scheme in style callbacks; also MUI drops
+      // selector keys NESTED inside '&:focus-visible').
+      const dark = root.styleOverrides.root['[data-mui-color-scheme="dark"] &:focus-visible'] as {
+        outlineColor: string;
+      };
+      expect(dark.outlineColor).toBe('#29b6f6');
     }
   });
 });

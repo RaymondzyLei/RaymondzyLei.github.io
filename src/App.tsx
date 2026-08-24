@@ -1,5 +1,5 @@
 import { useEffect, useState, lazy, Suspense } from 'react';
-import { ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider, useColorScheme } from '@mui/material/styles';
 import { InitColorSchemeScript } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ReactLenis } from 'lenis/react';
@@ -15,6 +15,30 @@ const RedirectPage = lazy(() =>
 const ResumePage = lazy(() =>
   import('./components/ResumePage').then((m) => ({ default: m.ResumePage })),
 );
+
+/**
+ * Keeps <html data-mui-color-scheme> in sync with the MUI mode so the
+ * pre-paint inline CSS in index.html (anti-FOUC html background) and the
+ * static dual-selector rules in theme.ts (focus ring / ::selection /
+ * scrollbar) follow in-app theme toggles. Without this, the attribute is
+ * only set once by the head script and goes stale after toggling.
+ */
+function ColorSchemeAttrSync() {
+  const { mode } = useColorScheme();
+  useEffect(() => {
+    const el = document.documentElement;
+    if (mode === 'light' || mode === 'dark') {
+      el.setAttribute('data-mui-color-scheme', mode);
+      return undefined;
+    }
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = () => el.setAttribute('data-mui-color-scheme', mq.matches ? 'dark' : 'light');
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, [mode]);
+  return null;
+}
 
 function App() {
   const [reducedMotion, setReducedMotion] = useState(
@@ -42,6 +66,7 @@ function App() {
             transition is removed: VT's root cross-fade replaces it, and a CSS
             transition would compose muddy on top of the VT snapshot. */}
         <ReactLenis root options={lenisOptions}>
+          <ColorSchemeAttrSync />
           <Suspense fallback={null}>
             {route.type === 'resume' ? (
               <ResumePage />

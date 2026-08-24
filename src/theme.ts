@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react';
 import { createTheme, responsiveFontSizes, alpha } from '@mui/material/styles';
 import type { Theme, SxProps } from '@mui/material/styles';
+import type { CSSObject } from '@emotion/react';
 
 export const glass = (theme: Theme): CSSProperties => ({
   backgroundColor: alpha(
@@ -30,14 +31,20 @@ export const glassHoverShadow = (theme: Theme): string =>
     : '0 12px 40px rgba(124,58,237,0.16)';
 
 /**
- * Focus-visible ring (ui-ux-pro-max `focus-states`). Uses the palette CSS
- * variable so the ring follows light/dark primary. Spread into a component's
+ * Focus-visible ring (ui-ux-pro-max `focus-states`). Static dual-selector CSS
+ * keyed off <html data-mui-color-scheme> — theme callbacks cannot read the
+ * runtime mode (see ACCENT note above). Spread into a component's
  * `styleOverrides.root`.
  */
-export const focusVisibleRing = (offset = 2): Record<string, CSSProperties> => ({
+export const focusVisibleRing = (offset = 2): Record<string, CSSObject> => ({
   '&:focus-visible': {
-    outline: '2px solid var(--mui-palette-primary-main)',
+    outline: `2px solid ${ACCENT.light}`,
     outlineOffset: offset,
+  },
+  // Dark override as a TOP-LEVEL sibling selector: MUI's styleOverrides
+  // pipeline drops nested selector keys inside '&:focus-visible'.
+  '[data-mui-color-scheme="dark"] &:focus-visible': {
+    outlineColor: ACCENT.dark,
   },
 });
 
@@ -81,25 +88,32 @@ export const zIndex = {
   backToTop: 1150, // above AppBar (1100), below drawer/modal
 } as const;
 
+// Single source for the dual-mode accent hexes used by the palette below and
+// by the static dual-selector rules (focusVisibleRing / ::selection /
+// scrollbar). Those rules are plain CSS keyed off <html data-mui-color-scheme>
+// because theme.palette is frozen at the default scheme inside style
+// callbacks — runtime JS branching cannot follow the active mode there.
+const ACCENT = { light: '#7c3aed', dark: '#29b6f6' } as const;
+// RGB triples for rgba() in the dual-selector rules below (selection/scrollbar).
+const ACCENT_RGB = { light: '124,58,237', dark: '41,182,246' } as const;
+const TEXT_RGB = { light: '24,24,27', dark: '244,244,245' } as const;
+
 let theme = createTheme({
-  // Emit the palette as CSS variables (e.g. --mui-palette-primary-main) on
-  // <html> and let MUI maintain the data-mui-color-scheme attribute. Required
-  // by focusVisibleRing / MuiCssBaseline ::selection & scrollbar rules, which
-  // consume those vars; without it every var() usage silently falls back.
-  // NOTE: with both light+dark colorSchemes present, the default selector is
-  // 'media' — which locks the scheme to the OS and makes setMode a no-op.
-  // 'data-mui-color-scheme' generates [data-mui-color-scheme='light'|'dark']
-  // rules and keeps the attribute in sync with useColorScheme().setMode().
-  cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
+  // NOTE: cssVariables is intentionally OFF. With it on, `theme.palette` in
+  // styled()/sx callbacks freezes at the default (light) scheme, breaking
+  // every `palette.mode === 'dark'` branch (glass(), SoftChip, hover shadows).
+  // Mode-dependent CSS that cannot read the runtime theme uses dual-selector
+  // rules keyed off data-mui-color-scheme instead (see ACCENT above); App.tsx
+  // keeps that attribute in sync with useColorScheme().
   colorSchemes: {
     light: {
       palette: {
         primary: {
-          main: '#7c3aed',
+          main: ACCENT.light,
         },
         // TODO: secondary palette currently mirrors primary; pick a real accent when needed
         secondary: {
-          main: '#7c3aed',
+          main: ACCENT.light,
         },
         background: {
           default: '#ffffff',
@@ -117,10 +131,10 @@ let theme = createTheme({
         // value #29b6f6), so dark text/accents echo the second orb. Orb1 keeps
         // its violet independently (hardcoded in BackgroundOrbs).
         primary: {
-          main: '#29b6f6',
+          main: ACCENT.dark,
         },
         secondary: {
-          main: '#29b6f6',
+          main: ACCENT.dark,
         },
         background: {
           default: '#0d0d0d',
@@ -196,27 +210,39 @@ let theme = createTheme({
       },
     },
     // Decorative global styles: violet selection tint + slim rounded scrollbar.
-    // color-mix() against CSS vars follows light/dark automatically. Pseudo-
-    // elements only -- NEVER set html font-size here (emotion would override
-    // the static fonts.css rem baseline).
+    // Dual-selector static rules keyed off <html data-mui-color-scheme> (the
+    // runtime theme is unavailable in styleOverrides — see ACCENT note).
+    // Pseudo-elements only -- NEVER set html font-size here (emotion would
+    // override the static fonts.css rem baseline).
     MuiCssBaseline: {
       styleOverrides: {
         '::selection': {
-          backgroundColor: 'color-mix(in srgb, var(--mui-palette-primary-main) 20%, transparent)',
+          backgroundColor: `rgba(${ACCENT_RGB.light}, 0.20)`,
+          '[data-mui-color-scheme="dark"] &': {
+            backgroundColor: `rgba(${ACCENT_RGB.dark}, 0.30)`,
+          },
         },
         '*': {
           scrollbarWidth: 'thin',
-          scrollbarColor:
-            'color-mix(in srgb, var(--mui-palette-text-primary) 18%, transparent) transparent',
+          scrollbarColor: `rgba(${TEXT_RGB.light}, 0.18) transparent`,
+          '[data-mui-color-scheme="dark"] &': {
+            scrollbarColor: `rgba(${TEXT_RGB.dark}, 0.18) transparent`,
+          },
         },
         '::-webkit-scrollbar': { width: 10, height: 10 },
         '::-webkit-scrollbar-track': { background: 'transparent' },
         '::-webkit-scrollbar-thumb': {
           borderRadius: 999,
-          backgroundColor: 'color-mix(in srgb, var(--mui-palette-text-primary) 18%, transparent)',
+          backgroundColor: `rgba(${TEXT_RGB.light}, 0.18)`,
+          '[data-mui-color-scheme="dark"] &': {
+            backgroundColor: `rgba(${TEXT_RGB.dark}, 0.18)`,
+          },
         },
         '::-webkit-scrollbar-thumb:hover': {
-          backgroundColor: 'color-mix(in srgb, var(--mui-palette-text-primary) 28%, transparent)',
+          backgroundColor: `rgba(${TEXT_RGB.light}, 0.28)`,
+          '[data-mui-color-scheme="dark"] &': {
+            backgroundColor: `rgba(${TEXT_RGB.dark}, 0.28)`,
+          },
         },
       },
     },
