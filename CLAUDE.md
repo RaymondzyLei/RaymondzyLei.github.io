@@ -37,7 +37,7 @@ pnpm run preview      # 本地预览生产构建
 src/
 ├── main.tsx          # 入口：加载 i18n、字体 CSS（fonts.css）、lenis CSS、渲染 <App />
 ├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404
-├── theme.ts          # MUI 主题：亮/暗双色方案、紫色主色调、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 24`
+├── theme.ts          # MUI 主题：亮/暗双色方案（亮紫 #7c3aed / 暗青绿 #2dd4bf）、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 24`
 ├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume、REDIRECTS 命中→redirect、其余→notFound
 ├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
@@ -101,7 +101,7 @@ src/
 
 ## 主题
 
-MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。主色为紫色（亮色模式 `#7c3aed`，暗色模式 `#a78bfa`），暗色背景为经典黑色（default `#0d0d0d` / paper `#1a1a1a`）。`secondary` 当前与 `primary` 同色（TODO 标记，待未来选个真正的副色）。组件使用 MUI 的 `styled()` API 自定义样式，不使用 CSS 文件。
+MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。主色两模式不同色系：亮色模式紫色 `#7c3aed`，暗色模式蓝绿色 `#2dd4bf`（dark `primary`/`secondary` 同值）。暗色背景为经典黑色（default `#0d0d0d` / paper `#1a1a1a`）。`secondary` 当前与 `primary` 同色（TODO 标记，待未来选个真正的副色）。组件使用 MUI 的 `styled()` API 自定义样式，不使用 CSS 文件。
 
 `shape.borderRadius: 24`（iOS 26 风格），全局级联到所有 Paper / Card / Accordion / Chip / IconButton；圆形元素（avatar、background orbs）不受影响。
 
@@ -177,7 +177,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 
 - **卡片 3D 倾斜**用 `src/hooks/useTilt.ts`，最大 ±5°，rAF 平滑插值。已应用到的卡片：Hero CTA、SkillCategory、DesktopTimelineItem / MobileTimelineItem、AchievementCardView、StyledProjectCard、Contact。
 - **挂 `useTilt` ref 的元素，hover 不得再叠 `transform: translateY/translateX`**（inline transform 冲突）。**非倾斜元素**（如 nav button、avatar、social icon、Chip）可以自由加 hover transform。
-- **背景光球**：固定 2 个（紫色 `primary.main` + 蓝色 `info.main`），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。暗色模式下透明度显著降低（0.16 / 0.12），避免光球在黑色背景上过于抢眼干扰阅读。
+- **背景光球**：固定 2 个（`primary.main`（亮紫/暗青绿） + 蓝色 `info.main`），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。暗色模式下透明度显著降低（0.16 / 0.12），避免光球在黑色背景上过于抢眼干扰阅读。
 - **移动端（`pointer: coarse`）自动退化**：3D 倾斜不触发（无 mousemove）；视差改为滚动驱动所以移动端也工作。
 - **所有动效尊重 `prefers-reduced-motion: reduce`**：`useTilt` 订阅 `change` 事件动态启停（关闭时清 transform、取消 rAF）；`BackgroundOrbs` 通过 CSS 媒体查询关闭 keyframe；Lenis 配置 `duration: 0`；`handleBackToTop` 用 `useMediaQuery` 决定 `duration: 0` 还是 `1.2`。
 - **Scroll-reveal（`useReveal`）**：6 个 section + 区块内卡片错位渐现。opacity 0→1 + translateY(24px)→0，缓动 `cubic-bezier(0.22, 1, 0.36, 1)`，1200ms。`useReveal` 包装 `react-intersection-observer` 的 `useInView`（threshold 0.2、rootMargin `'0px 0px 0px 0px'`、triggerOnce true）+ MUI `useMediaQuery`；`prefers-reduced-motion: reduce` 时直接 `isVisible: true` 无 observer。错位 stagger：同区块卡片 `transitionDelay: ${index * 100}ms`，由调用方传 `delayMs`（如 `revealSx(isVisible, index * 100)`），hook 不传 delay。**那段 sx 统一用 `src/styles/reveal.ts` 的 `revealSx(isVisible, delayMs)` 生成**，不要手写重复的 transition 字符串。
