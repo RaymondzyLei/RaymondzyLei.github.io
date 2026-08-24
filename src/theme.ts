@@ -26,7 +26,7 @@ export const glass = (theme: Theme): CSSProperties => ({
  */
 export const glassHoverShadow = (theme: Theme): string =>
   theme.palette.mode === 'dark'
-    ? 'inset 0 1px 0 0 rgba(255,255,255,0.10), 0 12px 36px rgba(45,212,191,0.10)'
+    ? 'inset 0 1px 0 0 rgba(255,255,255,0.10), 0 12px 36px rgba(41,182,246,0.10)'
     : '0 12px 40px rgba(124,58,237,0.16)';
 
 /**
@@ -104,11 +104,14 @@ let theme = createTheme({
     },
     dark: {
       palette: {
+        // Dark-mode accent = the background orb2 blue-teal (palette.info.main
+        // value #29b6f6), so dark text/accents echo the second orb. Orb1 keeps
+        // its violet independently (hardcoded in BackgroundOrbs).
         primary: {
-          main: '#2dd4bf',
+          main: '#29b6f6',
         },
         secondary: {
-          main: '#2dd4bf',
+          main: '#29b6f6',
         },
         background: {
           default: '#0d0d0d',

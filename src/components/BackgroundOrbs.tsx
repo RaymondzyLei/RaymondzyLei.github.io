@@ -115,7 +115,10 @@ export const BackgroundOrbs: React.FC = () => {
     };
   }, []);
 
-  const orb1Color = alpha(theme.palette.primary.main, isDark ? 0.16 : 0.32);
+  // Orb1 is a fixed violet brand color, intentionally decoupled from
+  // palette.primary (dark-mode text accents use the orb2 blue-teal instead;
+  // see theme.ts dark primary comment).
+  const orb1Color = alpha(isDark ? '#a78bfa' : '#7c3aed', isDark ? 0.16 : 0.32);
   const orb2Color = alpha(theme.palette.info.main, isDark ? 0.12 : 0.26);
 
   return (
