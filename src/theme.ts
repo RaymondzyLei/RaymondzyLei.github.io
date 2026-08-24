@@ -82,6 +82,15 @@ export const zIndex = {
 } as const;
 
 let theme = createTheme({
+  // Emit the palette as CSS variables (e.g. --mui-palette-primary-main) on
+  // <html> and let MUI maintain the data-mui-color-scheme attribute. Required
+  // by focusVisibleRing / MuiCssBaseline ::selection & scrollbar rules, which
+  // consume those vars; without it every var() usage silently falls back.
+  // NOTE: with both light+dark colorSchemes present, the default selector is
+  // 'media' — which locks the scheme to the OS and makes setMode a no-op.
+  // 'data-mui-color-scheme' generates [data-mui-color-scheme='light'|'dark']
+  // rules and keeps the attribute in sync with useColorScheme().setMode().
+  cssVariables: { colorSchemeSelector: 'data-mui-color-scheme' },
   colorSchemes: {
     light: {
       palette: {

@@ -51,10 +51,16 @@
     <script>
       (function () {
         try {
-          var stored = localStorage.getItem('mui-color-scheme');
+          // MUI's modeStorageKey is 'mui-mode' (what useColorScheme().setMode
+          // writes); 'mui-color-scheme' is a different key this app never uses.
+          // Resolve 'system' against the OS preference pre-paint.
+          var mode = localStorage.getItem('mui-mode') || 'system';
           var scheme =
-            stored ||
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            mode === 'light' || mode === 'dark'
+              ? mode
+              : window.matchMedia('(prefers-color-scheme: dark)').matches
+                ? 'dark'
+                : 'light';
           document.documentElement.setAttribute('data-mui-color-scheme', scheme);
         } catch (e) {}
       })();
