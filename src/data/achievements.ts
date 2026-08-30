@@ -17,8 +17,7 @@ export interface Achievement {
  * Category labels: data.achievements.category.<category>
  */
 export const achievementsData: Achievement[] = [
-  // TODO: add certificate file path once available (Second Prize, CSDC 2026)
-  { id: '1', category: 'Competition' },
+  { id: '1', category: 'Competition', file: { path: '/files/csdc-2026-certificate.pdf' } },
   { id: '2', category: 'Competition', file: { path: '/files/cacc-final-certificate.pdf' } },
   { id: '3', category: 'Competition', file: { path: '/files/cacc-regional-certificate.pdf' } },
   { id: '4', category: 'Competition', file: { path: '/files/cpho-2024-certificate.pdf' } },
