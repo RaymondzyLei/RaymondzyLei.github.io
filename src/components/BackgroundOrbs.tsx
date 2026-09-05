@@ -8,7 +8,7 @@ import { ACCENT, MOUSE_ORB as MOUSE_ORB_COLOR } from '../styles/colors';
 
 const ORB_SIZE = 440;
 const MOUSE_ORB_SIZE = 240;
-const MOUSE_ORB_LERP = 0.1; // fraction of remaining distance per frame
+const MOUSE_ORB_LERP = 0.15; // fraction of remaining distance per frame
 
 const drift1 = keyframes`
   0%, 100% { transform: translate3d(0, 0, 0); }
