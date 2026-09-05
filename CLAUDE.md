@@ -37,7 +37,8 @@ pnpm run preview      # 本地预览生产构建
 src/
 ├── main.tsx          # 入口：加载 i18n、字体 CSS（fonts.css）、lenis CSS、渲染 <App />
 ├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404
-├── theme.ts          # MUI 主题：亮/暗双色方案（色值全部引用 styles/colors.ts）、`glass(theme)` helper、`DISPLAY_FONT` 常量、`shape.borderRadius: 16`
+├── theme.ts          # MUI 主题桶文件（re-export，实现拆在 theme/ 目录）
+├── theme/            # 主题实现：tokens.ts（动效/z-index/字体 token）、glass.ts（glass/glassHoverShadow/focusVisibleRing/ctaButtonSx）、palette.ts（createTheme + colorSchemes）、overrides.ts（组件级 styleOverrides）——色值全部引用 styles/colors.ts
 ├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume、REDIRECTS 命中→redirect、其余→notFound
 ├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
@@ -62,6 +63,8 @@ src/
 │   ├── SectionHeading.tsx     # 共享区块标题（variant h3/h2 + mb/居中）
 │   ├── Section.tsx            # 共享区块外壳（scroll-reveal Box + Container + SectionHeading，5 个 section 复用）
 │   ├── CertDownloadButton.tsx # 共享证书下载按钮（Qualifications + Academic 复用）
+│   ├── SoftChip.tsx            # 共享软填充 Chip（tinted primary 背景 + inset ring，Skills/Portfolio/Academic 复用）
+│   ├── resume/ResumeBits.tsx   # ResumePage 的 4 个纯展示子组件（SectionTitle/EducationItem/AwardItem/SkillGroup，纯数据 props）
 │   ├── BackgroundOrbs.tsx      # 2 个模糊光球背景层（边界碰撞 + 滚动视差 + 视口 clamp）
 │   ├── LiquidGlassButton.tsx   # 圆形 48px 液态玻璃按钮（Hero + Contact 社交行复用）
 │   ├── Hero.tsx                # 头像 + 4 个 LiquidGlassButton 社交链接 + CTA 按钮（useLenis 滚到 Contact）
@@ -102,7 +105,7 @@ src/
 
 ## 主题
 
-MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。**所有颜色值集中在 `src/styles/colors.ts`**（ACCENT/SURFACE/TEXT/INFO/RESUME），palette、glass 阴影、焦点环、`::selection`、滚动条、光球、简历打印色全部引用它；`index.html` 的 anti-FOUC 内联 CSS 与 meta theme-color 由 `vite.config.ts` 的 `inject-design-tokens` 插件在 dev/build 时注入占位符（`__COLOR_LIGHT__`/`__COLOR_DARK__`）——**改颜色只动 colors.ts 一个文件**。
+MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。实现拆分：`src/theme.ts` 是桶文件，palette/overrides/glass/token 的实现分别在 `src/theme/` 目录——改主题先定位到对应实现文件。**所有颜色值集中在 `src/styles/colors.ts`**（ACCENT/SURFACE/TEXT/INFO/RESUME），palette、glass 阴影、焦点环、`::selection`、滚动条、光球、简历打印色全部引用它；`index.html` 的 anti-FOUC 内联 CSS 与 meta theme-color 由 `vite.config.ts` 的 `inject-design-tokens` 插件在 dev/build 时注入占位符（`__COLOR_LIGHT__`/`__COLOR_DARK__`）——**改颜色只动 colors.ts 一个文件**。
 
 主色两模式不同色系：亮色模式紫色 `ACCENT.light`，暗色模式蓝绿色 `ACCENT.dark`（与光球 orb2 同为蓝绿系但**非同值**——orb2 是 `INFO.main` 固定的 MUI 默认 info 蓝 `#03a9f4`）。暗色背景为经典黑色（default `SURFACE.dark.default` / paper `SURFACE.dark.paper`）。`secondary` 当前与 `primary` 同色（TODO 标记，待未来选个真正的副色）。组件使用 MUI 的 `styled()` API 自定义样式，不使用 CSS 文件。
 
@@ -140,7 +143,7 @@ MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。**所有颜�
 
 ## 毛玻璃模式
 
-**不要再手写 3 行 backdrop-filter 模板**。所有需要"浮在背景光球之上"的表面统一用 `src/theme.ts` 导出的 `glass(theme)` helper：
+**不要再手写 3 行 backdrop-filter 模板**。所有需要"浮在背景光球之上"的表面统一用 `src/theme/glass.ts` 导出的 `glass(theme)` helper：
 
 ```ts
 import { glass } from '../theme';
@@ -195,11 +198,10 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 
 - **JSON 翻译文件**：`en.json` / `zh.json` 中未实现区块的 key 用 `_TODO_` 前缀（如 `_TODO_about_title`）。
 - **TypeScript 数据文件**：未填充的内容在附近加 `// TODO: ...` 注释说明。已标记的：
-  - `src/data/projects.ts`（开头）
-  - `src/data/achievements.ts`（3 个 'None' 占位行上方）
-  - `src/data/skills.ts`（框架技能块上方）
-  - `src/data/contact.ts`（3 个 `url: '#'` 行上方）
-  - `src/theme.ts`（`secondary` 调色板）
+  - `src/data/contact.ts`（2 个 `url: '#'` 行上方）
+  - `src/theme/palette.ts`（`secondary` 调色板）
+
+  其余历史标记（projects.ts、achievements.ts、skills.ts）已随内容填充清理；JSON 侧 `_TODO_` 前缀机制保留，当前 en/zh 均无实例。
 
 ## TypeScript 注意事项
 
@@ -236,5 +238,5 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - `.gitignore` 防 `*.bak` / `*.tsxbak` / `*.orig` / `.playwright-mcp/` / `.claude/`（Claude Code 本地配置如 plans/）等产物
 - `.gitattributes`：`* text=auto eol=lf`（统一 LF 行尾，Windows 开发不会被 CRLF 污染）
 - 代码风格用 Prettier（`.prettierrc`：单引号、分号、2 空格、`trailingComma: all`、`printWidth: 100`），`pnpm run format` 格式化；ESLint 末尾接 `eslint-config-prettier` 关闭冲突规则
-- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`reveal.test.ts`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`redirects.test.ts`
+- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact.test.tsx`、`resume/ResumeBits.test.tsx`
 - 包管理只用 pnpm（不混用 npm / yarn）
