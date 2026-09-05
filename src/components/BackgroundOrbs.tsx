@@ -4,9 +4,11 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import { alpha, useTheme, useColorScheme } from '@mui/material/styles';
 import { keyframes } from '@emotion/react';
 import { zIndex } from '../theme';
-import { ACCENT } from '../styles/colors';
+import { ACCENT, MOUSE_ORB as MOUSE_ORB_COLOR } from '../styles/colors';
 
 const ORB_SIZE = 440;
+const MOUSE_ORB_SIZE = 240;
+const MOUSE_ORB_LERP = 0.1; // fraction of remaining distance per frame
 
 const drift1 = keyframes`
   0%, 100% { transform: translate3d(0, 0, 0); }
@@ -47,10 +49,96 @@ const getInitialOrbs = (): OrbData[] => {
   ];
 };
 
+/** OS-level media query with live `change` subscription (never a one-shot capture). */
+const useMediaFlag = (query: string): boolean => {
+  const [matches, setMatches] = useState(() => window.matchMedia(query).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const onChange = () => setMatches(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, [query]);
+  return matches;
+};
+
+/**
+ * 3rd background orb: follows the mouse with a lerp trail (desktop,
+ * motion-safe only — gated by the parent). Starts at opacity 0; the first
+ * mousemove snaps it to the cursor (no cross-screen fly-in) and fades it in.
+ */
+const MouseOrb: React.FC<{ isDark: boolean }> = ({ isDark }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const posRef = useRef({ x: 0, y: 0 });
+  const targetRef = useRef<{ x: number; y: number } | null>(null);
+  const appearedRef = useRef(false);
+
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      targetRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+
+    let rafId = 0;
+    const animate = () => {
+      const target = targetRef.current;
+      const el = wrapperRef.current;
+      if (target && el) {
+        const pos = posRef.current;
+        if (!appearedRef.current) {
+          appearedRef.current = true;
+          pos.x = target.x;
+          pos.y = target.y;
+          el.style.opacity = '1';
+        } else {
+          pos.x += (target.x - pos.x) * MOUSE_ORB_LERP;
+          pos.y += (target.y - pos.y) * MOUSE_ORB_LERP;
+        }
+        el.style.transform = `translate3d(${pos.x - MOUSE_ORB_SIZE / 2}px, ${pos.y - MOUSE_ORB_SIZE / 2}px, 0)`;
+      }
+      rafId = requestAnimationFrame(animate);
+    };
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('mousemove', onMove);
+    };
+  }, []);
+
+  const color = alpha(isDark ? MOUSE_ORB_COLOR.dark : MOUSE_ORB_COLOR.light, isDark ? 0.15 : 0.25);
+
+  return (
+    <Box
+      ref={wrapperRef}
+      data-testid="mouse-orb"
+      sx={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: MOUSE_ORB_SIZE,
+        height: MOUSE_ORB_SIZE,
+        borderRadius: '50%',
+        backgroundColor: color,
+        filter: 'blur(100px)',
+        // emotion class holds opacity 0; the rAF loop flips an inline style to
+        // '1' on first mousemove (inline wins over the class) -> CSS fade-in.
+        opacity: 0,
+        transition: 'opacity 600ms ease',
+        willChange: 'transform',
+      }}
+    />
+  );
+};
+
 export const BackgroundOrbs: React.FC = () => {
   const theme = useTheme();
   const { mode } = useColorScheme();
   const isDark = mode === 'dark';
+
+  // Mouse orb is desktop + motion-safe only: no mousemove on coarse pointers,
+  // and cursor-chasing is motion itself under prefers-reduced-motion.
+  const isCoarsePointer = useMediaFlag('(pointer: coarse)');
+  const prefersReducedMotion = useMediaFlag('(prefers-reduced-motion: reduce)');
 
   const [initialOrbs] = useState(() => getInitialOrbs());
 
@@ -180,6 +268,7 @@ export const BackgroundOrbs: React.FC = () => {
             }}
           />
         </Box>
+        {!isCoarsePointer && !prefersReducedMotion && <MouseOrb isDark={isDark} />}
       </Box>
     </>
   );
