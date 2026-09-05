@@ -19,68 +19,43 @@ import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
 import { Section } from './Section';
 
-const DesktopTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> = ({
-  item,
-  index,
-}) => {
+/**
+ * Single card renderer for both layouts. Desktop: accent='left' + caption date
+ * under the institution; mobile: accent='top' + icon+date row above the title.
+ * Content JSX is otherwise identical (was ~90% duplicated before).
+ */
+const TimelineItemCard: React.FC<{
+  item: TimelineDataItem;
+  index: number;
+  variant: 'desktop' | 'mobile';
+}> = ({ item, index, variant }) => {
   const { t } = useTranslation();
   const tiltRef = useTilt();
   const { ref: revealRef, isVisible } = useReveal();
+  const isMobile = variant === 'mobile';
   const p = `data.timeline.${item.id}`;
   return (
     <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
-      <GlassCard accent="left" ref={tiltRef} sx={{ p: 3 }}>
-        <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {t(`${p}.title`)}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
-          {t(`${p}.institution`)}
-        </Typography>
-        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}>
-          {t(`${p}.date`)}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}
-        >
-          {t(`${p}.description`)}
-        </Typography>
-        {item.file && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-            <CertDownloadButton
-              file={item.file}
-              label={t(`${p}.certLabel`, '') || t('qualifications.download')}
-            />
+      <GlassCard accent={isMobile ? 'top' : 'left'} ref={tiltRef} sx={{ p: 3 }}>
+        {isMobile && (
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {t(`${p}.date`)}
+            </Typography>
           </Box>
         )}
-      </GlassCard>
-    </Box>
-  );
-};
-
-const MobileTimelineItem: React.FC<{ item: TimelineDataItem; index: number }> = ({
-  item,
-  index,
-}) => {
-  const { t } = useTranslation();
-  const tiltRef = useTilt();
-  const { ref: revealRef, isVisible } = useReveal();
-  const p = `data.timeline.${item.id}`;
-  return (
-    <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
-      <GlassCard accent="top" ref={tiltRef} sx={{ p: 3 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            {t(`${p}.date`)}
-          </Typography>
-        </Box>
         <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
           {t(`${p}.title`)}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
           {t(`${p}.institution`)}
         </Typography>
+        {!isMobile && (
+          <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}>
+            {t(`${p}.date`)}
+          </Typography>
+        )}
         <Typography
           variant="body2"
           sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}
@@ -110,7 +85,7 @@ export const Qualifications: React.FC = () => {
       {isMobile ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {timelineData.map((item, index) => (
-            <MobileTimelineItem key={item.id} item={item} index={index} />
+            <TimelineItemCard key={item.id} item={item} index={index} variant="mobile" />
           ))}
         </Box>
       ) : (
@@ -126,7 +101,7 @@ export const Qualifications: React.FC = () => {
                 {index < timelineData.length - 1 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineContent sx={{ py: 2 }}>
-                <DesktopTimelineItem item={item} index={index} />
+                <TimelineItemCard item={item} index={index} variant="desktop" />
               </TimelineContent>
             </TimelineItem>
           ))}
