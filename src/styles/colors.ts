@@ -35,6 +35,12 @@ export const TEXT = {
 /** Orb2 blue — pins MUI's framework-default info.main explicitly. */
 export const INFO = { main: '#03a9f4' } as const;
 
+/** Mouse-follow orb (3rd background orb) — warm amber, the page's only warm hue. */
+export const MOUSE_ORB = {
+  light: '#f59e0b',
+  dark: '#fbbf24',
+} as const;
+
 /**
  * 'R,G,B' channel triples for use inside rgba() strings (selection tint,
  * scrollbar thumb, hover glows). Derived from the hex tokens above so there
