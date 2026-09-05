@@ -14,6 +14,30 @@ import { LiquidGlassButton } from './LiquidGlassButton';
 import { Section } from './Section';
 import { easing, default as theme } from '../theme';
 
+/** Card header: title + description, shared by both contact cards. */
+const CardIntro: React.FC<{ title: string; description: string }> = ({ title, description }) => (
+  <>
+    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
+      {title}
+    </Typography>
+    <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.6 }}>
+      {description}
+    </Typography>
+  </>
+);
+
+/** Right-side text block of a link row (name + label), shared by both cards. */
+const LinkText: React.FC<{ name: string; label: string }> = ({ name, label }) => (
+  <Box>
+    <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+      {name}
+    </Typography>
+    <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+      {label}
+    </Typography>
+  </Box>
+);
+
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
   const connectTiltRef = useTilt();
@@ -32,27 +56,7 @@ export const Contact: React.FC = () => {
       >
         <Box ref={connectCellRef} sx={revealSx(connectVisible, 0)}>
           <GlassCard ref={connectTiltRef} sx={{ p: 3, height: '100%' }}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 600,
-                mb: 2,
-                color: 'text.primary',
-              }}
-            >
-              {t('contact.connectTitle')}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-                mb: 3,
-                lineHeight: 1.6,
-              }}
-            >
-              {t('contact.connectDesc')}
-            </Typography>
-
+            <CardIntro title={t('contact.connectTitle')} description={t('contact.connectDesc')} />
             <Stack spacing={2}>
               {socialLinks.map((link) => {
                 const Icon = link.icon;
@@ -70,25 +74,10 @@ export const Contact: React.FC = () => {
                       label={t(`data.social.${link.id}.label`)}
                       href={link.url}
                     />
-                    <Box>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          color: 'text.primary',
-                        }}
-                      >
-                        {t(`data.social.${link.id}.name`)}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {t(`data.social.${link.id}.label`)}
-                      </Typography>
-                    </Box>
+                    <LinkText
+                      name={t(`data.social.${link.id}.name`)}
+                      label={t(`data.social.${link.id}.label`)}
+                    />
                   </Box>
                 );
               })}
@@ -98,27 +87,7 @@ export const Contact: React.FC = () => {
 
         <Box ref={linksCellRef} sx={revealSx(linksVisible, 60)}>
           <GlassCard ref={linksTiltRef} sx={{ p: 3, height: '100%' }}>
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 600,
-                mb: 2,
-                color: 'text.primary',
-              }}
-            >
-              {t('contact.linksTitle')}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.secondary',
-                mb: 3,
-                lineHeight: 1.6,
-              }}
-            >
-              {t('contact.linksDesc')}
-            </Typography>
-
+            <CardIntro title={t('contact.linksTitle')} description={t('contact.linksDesc')} />
             <Stack spacing={2}>
               {contactLinks.map((link) => {
                 const Icon = link.icon;
@@ -160,25 +129,10 @@ export const Contact: React.FC = () => {
                     >
                       {Icon ? <Icon /> : <FolderIcon />}
                     </Box>
-                    <Box>
-                      <Typography
-                        variant="body2"
-                        sx={{
-                          fontWeight: 600,
-                          color: 'text.primary',
-                        }}
-                      >
-                        {t(`data.contact.${link.id}.name`)}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {t(`data.contact.${link.id}.label`)}
-                      </Typography>
-                    </Box>
+                    <LinkText
+                      name={t(`data.contact.${link.id}.name`)}
+                      label={t(`data.contact.${link.id}.label`)}
+                    />
                   </Box>
                 );
               })}
