@@ -1390,7 +1390,7 @@ Co-Authored-By: Claude Code <noreply@anthropic.com>"
 替换为：
 
 ```
-现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact.test.tsx`、`resume/ResumeBits.test.tsx`
+现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact.test.tsx`、`resume/ResumeBits.test.tsx`
 ```
 
 - [ ] **Step 3: 「占位数据约定」更新**
@@ -1450,17 +1450,22 @@ Co-Authored-By: Claude Code <noreply@anthropic.com>"
 
 Run: `git status --short` → 无输出；再跑一次完整门禁确认。
 
-- [ ] **Step 2: merge 并推送**
+- [ ] **Step 2: merge 到本地 main（**不 push**——push 由用户自己执行）**
 
 ```bash
 git checkout main
 git merge --no-ff refactor/code-structure -m "Merge branch 'refactor/code-structure'"
-git push origin main
 git branch -d refactor/code-structure
 ```
 
-Expected: push 成功，GitHub Actions 自动重新部署（raymondzylei.me）。
+Expected: merge 无冲突，分支已删。**不要执行 `git push`**——用户明确要求自己推送。
 
-- [ ] **Step 3: 线上确认（可选但推荐）**
+- [ ] **Step 3: 本地确认**
 
-部署完成后访问 https://raymondzylei.me 肉眼确认：首页 6 区块滚动/渐现正常、Qualifications 桌面时间线与移动卡片正常、Contact 两卡正常、/resume 英文简历正常、404 与主题切换正常。
+```bash
+pnpm run dev
+```
+
+肉眼确认：首页 6 区块滚动/渐现正常、Qualifications 桌面时间线与移动卡片正常、Contact 两卡正常、/resume 英文简历正常、404 与主题切换正常。确认完关掉 dev server。
+
+**收尾报告时提醒用户：`git push` 由用户自己执行。**
