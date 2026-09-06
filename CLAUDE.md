@@ -65,7 +65,7 @@ src/
 │   ├── CertDownloadButton.tsx # 共享证书下载按钮（Qualifications + Academic 复用）
 │   ├── SoftChip.tsx            # 共享软填充 Chip（tinted primary 背景 + inset ring，Skills/Portfolio/Academic 复用）
 │   ├── resume/ResumeBits.tsx   # ResumePage 的 4 个纯展示子组件（SectionTitle/EducationItem/AwardItem/SkillGroup，纯数据 props）
-│   ├── BackgroundOrbs.tsx      # 2 个模糊光球背景层（边界碰撞 + 滚动视差 + 视口 clamp）
+│   ├── BackgroundOrbs.tsx      # 3 个模糊光球背景层（2 个自主漂移 + 1 个鼠标跟随琥珀金；边界碰撞 + 滚动视差 + 视口 clamp）
 │   ├── LiquidGlassButton.tsx   # 圆形 48px 液态玻璃按钮（Hero + Contact 社交行复用）
 │   ├── Hero.tsx                # 头像 + 4 个 LiquidGlassButton 社交链接 + CTA 按钮（useLenis 滚到 Contact）
 │   ├── Skills.tsx              # 按类别分组展示技能标签
@@ -168,6 +168,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - `scrollFactor`：orb1 = 0.12，orb2 = 0.18（值越大视差越强，但越容易出框）
 - **clamp 渲染位置**：最终 transform y 限制在 `[0, window.innerHeight - ORB_SIZE]` 范围内，防止光球滚到底时跑出视口顶部
 - 碰撞反弹（光球撞视口边缘）作用于 `orb.y` 物理状态，clamp 只影响最终 transform，**两者解耦**
+- 鼠标跟随光球**不走视差**：跟随的是光标视口坐标，与滚动无关，独立 rAF 循环（见「动效约定」）
 
 ## 导航滚动约定
 
@@ -186,6 +187,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - **卡片 3D 倾斜**用 `src/hooks/useTilt.ts`，最大 ±5°，rAF 平滑插值。已应用到的卡片：Hero CTA、SkillCategory、DesktopTimelineItem / MobileTimelineItem、AchievementCardView、StyledProjectCard、Contact。
 - **挂 `useTilt` ref 的元素，hover 不得再叠 `transform: translateY/translateX`**（inline transform 冲突）。**非倾斜元素**（如 nav button、avatar、social icon、Chip）可以自由加 hover transform。
 - **背景光球**：固定 2 个（紫色：亮 `#7c3aed`/暗 `#a78bfa`，**硬编码在 `BackgroundOrbs.tsx`、与 `primary` 解耦** + 蓝绿 `info.main`），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。暗色模式下透明度显著降低（0.16 / 0.12），避免光球在黑色背景上过于抢眼干扰阅读。
+- **鼠标跟随光球（第 3 个）**：琥珀金（`MOUSE_ORB` token，亮 `#f59e0b`/暗 `#fbbf24`——全站唯一暖色），240px + `blur(100px)`，rAF + lerp 0.1 惯性拖尾。**`pointer: coarse` 或 `prefers-reduced-motion` 不渲染**（`useMediaFlag` hook 响应运行时 change）。首次 mousemove 瞬移吸附到光标再 opacity 淡入（600ms），避免从 (0,0) 横穿全屏飞入。独立 rAF + `window` passive `mousemove`，与漂移球视差 rAF 解耦；无滚动视差（光标本身就是视口坐标）。
 - **移动端（`pointer: coarse`）自动退化**：3D 倾斜不触发（无 mousemove）；视差改为滚动驱动所以移动端也工作。
 - **所有动效尊重 `prefers-reduced-motion: reduce`**：`useTilt` 订阅 `change` 事件动态启停（关闭时清 transform、取消 rAF）；`BackgroundOrbs` 通过 CSS 媒体查询关闭 keyframe；Lenis 配置 `duration: 0`；`handleBackToTop` 用 `useMediaQuery` 决定 `duration: 0` 还是 `1.2`。
 - **Scroll-reveal（`useReveal`）**：6 个 section + 区块内卡片错位渐现。opacity 0→1 + translateY(24px)→0，缓动 `cubic-bezier(0.22, 1, 0.36, 1)`，1200ms。`useReveal` 包装 `react-intersection-observer` 的 `useInView`（threshold 0.2、rootMargin `'0px 0px 0px 0px'`、triggerOnce true）+ MUI `useMediaQuery`；`prefers-reduced-motion: reduce` 时直接 `isVisible: true` 无 observer。错位 stagger：同区块卡片 `transitionDelay: ${index * 100}ms`，由调用方传 `delayMs`（如 `revealSx(isVisible, index * 100)`），hook 不传 delay。**那段 sx 统一用 `src/styles/reveal.ts` 的 `revealSx(isVisible, delayMs)` 生成**，不要手写重复的 transition 字符串。
@@ -238,5 +240,5 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - `.gitignore` 防 `*.bak` / `*.tsxbak` / `*.orig` / `.playwright-mcp/` / `.claude/`（Claude Code 本地配置如 plans/）等产物
 - `.gitattributes`：`* text=auto eol=lf`（统一 LF 行尾，Windows 开发不会被 CRLF 污染）
 - 代码风格用 Prettier（`.prettierrc`：单引号、分号、2 空格、`trailingComma: all`、`printWidth: 100`），`pnpm run format` 格式化；ESLint 末尾接 `eslint-config-prettier` 关闭冲突规则
-- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact.test.tsx`、`resume/ResumeBits.test.tsx`
+- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact/BackgroundOrbs.test.tsx`、`resume/ResumeBits.test.tsx`
 - 包管理只用 pnpm（不混用 npm / yarn）

@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ReactLenis } from 'lenis/react';
 import theme from './theme';
 import { Layout } from './components/Layout';
+import { ScrollSnap } from './components/ScrollSnap';
 import { SECTIONS } from './sections';
 import { resolveRoute } from './routing';
 
@@ -67,6 +68,9 @@ function App() {
             transition would compose muddy on top of the VT snapshot. */}
         <ReactLenis root options={lenisOptions}>
           <ColorSchemeAttrSync />
+          {/* Proximity snap to section tops — homepage only (other routes
+              have no sections to snap to). */}
+          {route.type === 'home' && <ScrollSnap />}
           <Suspense fallback={null}>
             {route.type === 'resume' ? (
               <ResumePage />
