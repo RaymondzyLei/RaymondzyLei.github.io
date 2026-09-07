@@ -28,7 +28,18 @@ export const Section: React.FC<SectionProps> = ({
 }) => {
   const { ref, isVisible } = useReveal();
   return (
-    <Box id={id} ref={ref} component="section" sx={{ py: 8, ...revealSx(isVisible, revealDelay) }}>
+    <Box
+      id={id}
+      ref={ref}
+      component="section"
+      sx={{
+        py: 8,
+        // Browser-native anchor jumps (initial-load deep links) reserve the
+        // sticky AppBar's height; runtime scrolls go through lenis offsets.
+        scrollMarginTop: { xs: '56px', md: '64px' },
+        ...revealSx(isVisible, revealDelay),
+      }}
+    >
       <Container maxWidth={maxWidth}>
         <SectionHeading title={title} />
         {children}

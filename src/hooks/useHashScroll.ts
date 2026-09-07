@@ -3,6 +3,16 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLenis } from 'lenis/react';
 
 /**
+ * The sticky AppBar's height as a negative scroll offset, measured live so it
+ * stays correct across breakpoints/zoom. Keeps hash-targeted section headings
+ * just below the bar instead of underneath it.
+ */
+const appbarOffset = (): number => {
+  const appbar = document.querySelector('.MuiAppBar-root');
+  return appbar ? -appbar.getBoundingClientRect().height : 0;
+};
+
+/**
  * Resolve a URL hash to a DOM element, or null if it doesn't target a real
  * section. Strips a single leading `#`; empty hash -> null; unknown id -> null
  * (the "invalid hash is silently ignored" rule).
@@ -26,10 +36,23 @@ export const useHashScroll = (): void => {
   useEffect(() => {
     const scrollToHash = () => {
       const el = getHashTarget(window.location.hash);
-      if (el) lenis?.scrollTo(el, { duration });
+      if (el) lenis?.scrollTo(el, { duration, offset: appbarOffset() });
     };
-    scrollToHash();
+    // Defer the initial scroll past two rAFs: on first paint the browser's own
+    // anchor jump and the layout (images, fonts) haven't settled, so measuring
+    // the target immediately can compute a stale scroll position. Two frames
+    // let layout commit first; runtime `hashchange` events still scroll
+    // immediately.
+    let raf1 = 0;
+    let raf2 = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(scrollToHash);
+    });
     window.addEventListener('hashchange', scrollToHash);
-    return () => window.removeEventListener('hashchange', scrollToHash);
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.removeEventListener('hashchange', scrollToHash);
+    };
   }, [lenis, duration]);
 };

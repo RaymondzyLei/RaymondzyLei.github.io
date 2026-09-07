@@ -10,9 +10,9 @@ import { styled } from '@mui/material/styles';
 import { socialLinks } from '../data/social';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
+import { useScrollToSection } from '../hooks/useScrollToSection';
 import { revealSx } from '../styles/reveal';
 import { DISPLAY_FONT } from '../theme';
-import { useLenis } from 'lenis/react';
 import { LiquidGlassButton } from './LiquidGlassButton';
 
 const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
@@ -50,11 +50,11 @@ export const Hero: React.FC = () => {
   const { t } = useTranslation();
   const ctaTiltRef = useTilt<HTMLButtonElement>();
   const { ref: heroRef, isVisible: heroVisible } = useReveal();
-  const lenis = useLenis();
+  const scrollToSection = useScrollToSection();
   const handleContactClick = () => {
     const element = document.getElementById('contact');
     if (element) {
-      lenis?.scrollTo(element);
+      scrollToSection(element);
     }
   };
 

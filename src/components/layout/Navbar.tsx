@@ -13,10 +13,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import MenuIcon from '@mui/icons-material/Menu';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
-import { useLenis } from 'lenis/react';
 import { glass } from '../../theme';
 import { SECTIONS, SECTION_IDS } from '../../sections';
 import { useActiveSection } from '../../hooks/useActiveSection';
+import { useScrollToSection } from '../../hooks/useScrollToSection';
 import { LanguageMenu } from './LanguageMenu';
 
 interface NavbarProps {
@@ -71,13 +71,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const lenis = useLenis();
+  const scrollToSection = useScrollToSection();
 
   const handleNavClick = (sectionId: string) => {
     setMobileMenuOpen(false);
     const element = document.getElementById(sectionId);
     if (element) {
-      lenis?.scrollTo(element);
+      scrollToSection(element);
       history.replaceState(null, '', `#${sectionId}`);
     }
   };
