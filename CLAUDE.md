@@ -49,10 +49,11 @@ src/
 │   ├── reveal.ts      # 共享 scroll-reveal 样式片段
 │   └── reveal.test.ts # revealSx() 单元测试 `revealSx(isVisible, delayMs)`（6 区块 + 卡片错位复用）
 ├── hooks/
-│   ├── useTilt.ts        # 3D 倾斜 hook（rAF 插值，最大 ±5°，订阅 matchMedia change 响应式）
-│   ├── useReveal.ts      # scroll-reveal hook（react-intersection-observer useInView + MUI useMediaQuery 减弱动效）
-│   ├── useHashScroll.ts  # hash 深链接：getHashTarget() + useHashScroll()（监听 hashchange + lenis.scrollTo，无效 hash 忽略）
-│   └── useActiveSection.ts  # IntersectionObserver 驱动的 nav active-section 高亮（sectionIds 稳定引用,避免 observer 重建）
+│   ├── useTilt.ts            # 3D 倾斜 hook（rAF 插值，最大 ±5°，订阅 matchMedia change 响应式）
+│   ├── useReveal.ts          # scroll-reveal hook（react-intersection-observer useInView + MUI useMediaQuery 减弱动效）
+│   ├── useHashScroll.ts      # hash 深链接：getHashTarget() + useHashScroll()（监听 hashchange + lenis.scrollTo 带 AppBar offset；初始滚动延迟两帧 rAF，无效 hash 忽略）
+│   ├── useScrollToSection.ts # 共享滚动定位 helper：点击时实测 .MuiAppBar-root 高度作 lenis offset（Navbar 导航 + Hero CTA 复用）
+│   └── useActiveSection.ts   # IntersectionObserver 驱动的 nav active-section 高亮（sectionIds 稳定引用,避免 observer 重建）
 ├── i18n/
 │   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage，export isSupportedLanguage 类型守卫
 │   ├── i18n.test.ts  # isSupportedLanguage 单元测试（en/zh → true, null/空/未知 → false）
@@ -62,14 +63,14 @@ src/
 │   ├── Layout.tsx              # 页面骨架：编排 <Navbar> + <BackgroundOrbs> + <main> + <BackToTopButton>
 │   ├── GlassCard.tsx           # 共享液态玻璃卡片（`glass(theme)` + hover elevation，`accent` 控制左/上边线）
 │   ├── SectionHeading.tsx     # 共享区块标题（variant h3/h2 + mb/居中）
-│   ├── Section.tsx            # 共享区块外壳（scroll-reveal Box + Container + SectionHeading，5 个 section 复用）
+│   ├── Section.tsx            # 共享区块外壳（scroll-reveal Box + Container + SectionHeading + scrollMarginTop 兜底原生锚点，5 个 section 复用）
 │   ├── CertDownloadButton.tsx # 共享证书下载按钮（Qualifications + Academic 复用）
 │   ├── SoftChip.tsx            # 共享软填充 Chip（tinted primary 背景 + inset ring，Skills/Portfolio/Academic 复用）
 │   ├── resume/ResumeBits.tsx   # ResumePage 的 4 个纯展示子组件（SectionTitle/EducationItem/AwardItem/SkillGroup，纯数据 props）
 │   ├── BackgroundOrbs.tsx      # 3 个模糊光球背景层（2 个自主漂移 + 1 个鼠标跟随琥珀金；边界碰撞 + 滚动视差 + 视口 clamp）
 │   ├── ScrollSnap.tsx          # proximity 滚动吸附（lenis/snap 扩展，仅 home 路由挂载；reduced-motion/coarse-pointer 不启用）
 │   ├── LiquidGlassButton.tsx   # 圆形 48px 液态玻璃按钮（Hero + Contact 社交行复用）
-│   ├── Hero.tsx                # 头像 + 4 个 LiquidGlassButton 社交链接 + CTA 按钮（useLenis 滚到 Contact）
+│   ├── Hero.tsx                # 头像 + 4 个 LiquidGlassButton 社交链接 + CTA 按钮（useScrollToSection 滚到 Contact）
 │   ├── Skills.tsx              # 按类别分组展示技能标签
 │   ├── Qualifications.tsx      # 教育经历时间线（桌面端交替布局，移动端卡片）
 │   ├── Academic.tsx            # 学术成就/竞赛（按类别折叠面板）
@@ -175,13 +176,14 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 
 ## 导航滚动约定
 
-**所有导航按钮、Hero CTA、返回顶部按钮** 一律用 `lenis?.scrollTo(element)` 或 `lenis?.scrollTo(0, ...)`。**禁止**用 `element.scrollIntoView()` 或 `window.scrollTo()`（会和 Lenis 冲突，要么双滚动要么不丝滑）。
+**所有区块定位统一走 `useScrollToSection`**（`src/hooks/useScrollToSection.ts`）：点击时实测 `.MuiAppBar-root` 高度作 lenis offset（不缓存，断点/语言切换/缩放都保持正确），让区块标题落在 AppBar 正下方。当前使用方：Navbar 导航按钮、Hero CTA。**禁止**用 `element.scrollIntoView()` 或 `window.scrollTo()`（会和 Lenis 冲突，要么双滚动要么不丝滑）。**注意 `lenis.scrollTo(element)` 默认不带 AppBar offset**——直接调会把标题滚到栏底下（PR #4 前的历史行为），所以不要绕过 helper。
 
-- `lenis.scrollTo(element)` 默认处理 sticky AppBar 的 offset
-- 返回顶部：`lenis?.scrollTo(0, { duration: reducedMotion ? 0 : 1.2 })`（用 `useMediaQuery('(prefers-reduced-motion: reduce)')` 读 `reducedMotion`）
+- 返回顶部：`lenis?.scrollTo(0, { duration: reducedMotion ? 0 : 1.2 })`（滚到 0 无需 offset；用 `useMediaQuery('(prefers-reduced-motion: reduce)')` 读 `reducedMotion`）
 - 返回顶部按钮透明度：`Math.min(lenis.scroll / 300, 1)`（用 `useLenis((lenis) => ...)` 订阅更新）
 
-**Hash 深链接**（`useHashScroll`，挂在 `Layout`）：访问 `/#skills` 等会在 lenis 就绪后滚到对应区块，并订阅 `hashchange` 持续响应；无效 hash 静默忽略。导航点击用 `history.replaceState` 回写 hash（不触发 hashchange，避免与监听循环），因此浏览器前进/后退不在 section 间跳转——这是有意为之，保持历史栈干净。
+**Hash 深链接**（`useHashScroll`，挂在 `Layout`）：访问 `/#skills` 等会滚到对应区块（同样带 AppBar offset，初始滚动延迟两帧 rAF 等首屏布局稳定后再测量），并订阅 `hashchange` 持续响应（运行时响应即时、不延迟）；无效 hash 静默忽略。`Section` 外壳另带 `scrollMarginTop`（xs 56px / md 64px，对应 MUI Toolbar 默认高度）兜底浏览器原生锚点跳转。导航点击用 `history.replaceState` 回写 hash（不触发 hashchange，避免与监听循环），因此浏览器前进/后退不在 section 间跳转——这是有意为之，保持历史栈干净。
+
+**已知缺口——ScrollSnap 吸附无 AppBar offset**：lenis/snap 的 SnapElement 只有 `align`/`ignoreSticky`/`ignoreTransform` 选项（无 offset），吸附终点与点击导航终点相差一个 AppBar 高度。目前靠 `Section` 的 `py: 8`（64px）内边距巧合兜住（标题恰好落在栏下缘），若调整 `py` 值或 Toolbar 高度需重新验证吸附落点。
 
 ## 动效约定
 
