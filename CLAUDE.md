@@ -11,7 +11,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Vite 8 + React 19 + TypeScript 6（均为较新版本，参考文档请查 release notes）
 - Material-UI v9（`@mui/material`、`@mui/icons-material`、`@mui/lab`）
 - i18next + react-i18next（中/英双语）
-- Lenis 1.x（`lenis` + `lenis/react`）—— 平滑滚动
+- Lenis 1.x（`lenis` + `lenis/react`）—— 平滑滚动 + `lenis/snap` 滚动吸附
+- 运行时要求（`package.json` engines）：Node ≥ 24、pnpm ≥ 10
 
 ## 命令
 
@@ -36,15 +37,15 @@ pnpm run preview      # 本地预览生产构建
 ```
 src/
 ├── main.tsx          # 入口：加载 i18n、字体 CSS（fonts.css）、lenis CSS、渲染 <App />
-├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404
+├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404；home 路由挂载 <ScrollSnap>
 ├── theme.ts          # MUI 主题桶文件（re-export，实现拆在 theme/ 目录）
 ├── theme/            # 主题实现：tokens.ts（动效/z-index/字体 token）、glass.ts（glass/glassHoverShadow/focusVisibleRing/ctaButtonSx）、palette.ts（createTheme + colorSchemes）、overrides.ts（组件级 styleOverrides）——色值全部引用 styles/colors.ts
 ├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume、REDIRECTS 命中→redirect、其余→notFound
 ├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
-├── theme.test.ts      # glass() helper 单元测试（亮/暗模式）
+├── theme.test.ts      # 主题单元测试（glass() 亮/暗、easing/duration token、排版 optical sizing、按钮 active scale + focus-visible overrides）
 ├── styles/
-│   ├── colors.ts      # ★ 全站颜色单一来源（ACCENT/SURFACE/TEXT/INFO/RESUME + rgbChannels）。theme.ts、BackgroundOrbs（orb1 紫）、LiquidGlassButton、ResumePage、vite.config 的 index.html token 注入全部引用此处——改颜色只动这一个文件
+│   ├── colors.ts      # ★ 全站颜色单一来源（ACCENT/SURFACE/TEXT/INFO/MOUSE_ORB/RESUME + rgbChannels）。theme.ts、BackgroundOrbs（orb1 紫 + 鼠标光球琥珀金）、LiquidGlassButton、ResumePage、vite.config 的 index.html token 注入全部引用此处——改颜色只动这一个文件
 │   ├── reveal.ts      # 共享 scroll-reveal 样式片段
 │   └── reveal.test.ts # revealSx() 单元测试 `revealSx(isVisible, delayMs)`（6 区块 + 卡片错位复用）
 ├── hooks/
@@ -66,6 +67,7 @@ src/
 │   ├── SoftChip.tsx            # 共享软填充 Chip（tinted primary 背景 + inset ring，Skills/Portfolio/Academic 复用）
 │   ├── resume/ResumeBits.tsx   # ResumePage 的 4 个纯展示子组件（SectionTitle/EducationItem/AwardItem/SkillGroup，纯数据 props）
 │   ├── BackgroundOrbs.tsx      # 3 个模糊光球背景层（2 个自主漂移 + 1 个鼠标跟随琥珀金；边界碰撞 + 滚动视差 + 视口 clamp）
+│   ├── ScrollSnap.tsx          # proximity 滚动吸附（lenis/snap 扩展，仅 home 路由挂载；reduced-motion/coarse-pointer 不启用）
 │   ├── LiquidGlassButton.tsx   # 圆形 48px 液态玻璃按钮（Hero + Contact 社交行复用）
 │   ├── Hero.tsx                # 头像 + 4 个 LiquidGlassButton 社交链接 + CTA 按钮（useLenis 滚到 Contact）
 │   ├── Skills.tsx              # 按类别分组展示技能标签
@@ -84,9 +86,9 @@ src/
 │   ├── skills.ts       # 技能数据及按类别查询函数
 │   ├── timeline.ts     # 教育经历时间线数据
 │   ├── achievements.ts # 竞赛/学术成就数据
-│   ├── projects.ts     # 项目作品数据（占位中，TODO 标记）
+│   ├── projects.ts     # 项目作品数据（title/description 走 i18n 的 data.projects.<id>.*）
 │   ├── social.ts       # 社交媒体链接（SocialLink 自带结构，icon 必填）
-│   ├── contact.ts      # 联系页面链接（ContactLink 自带结构，部分占位 url: '#'）
+│   ├── contact.ts      # 联系页面链接（ContactLink 自带结构，icon 可选；部分占位 url: '#'）
 │   ├── redirects.ts    # 短链接重定向规则（如 /google、/the-book-of-answers）
 │   └── resume.ts       # 简历专属字段（头像/电话/技能选择）；Education/Awards/Skills 复用 home 数据源
 └── test/
@@ -132,7 +134,7 @@ MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。实现拆分�
 
 ## Lenis 平滑滚动
 
-- 包：`lenis`（`lenis/react` 提供 `<ReactLenis>` + `useLenis`）
+- 包：`lenis`（`lenis/react` 提供 `<ReactLenis>` + `useLenis`；`lenis/snap` 提供 proximity 吸附扩展）
 - CSS：在 `src/main.tsx` 顶部 `import 'lenis/dist/lenis.css';`
 - 包裹：在 `App.tsx` 用 `<ReactLenis root options={lenisOptions}>` 包住整棵子树（`root` 模式让 `<html>` 当滚动容器）
 - **`useLenis` 双调用模式**：
@@ -140,6 +142,7 @@ MUI 主题支持亮/暗模式，通过 `useColorScheme()` 切换。实现拆分�
   - `useLenis((lenis) => { ... })` —— 订阅滚动事件，更新派生状态（如返回顶部按钮透明度）
   - `lenis` 初始可能 undefined，所有调用用 `lenis?.scrollTo(...)`
 - **`prefers-reduced-motion` 配置**（`App.tsx`）：用 `useState + useEffect` 订阅 `matchMedia` 的 `change` 事件以响应运行时变化（不要一次性 useState 捕获）。reduced 时传 `{ duration: 0, smoothWheel: false }`，正常时传 `{ lerp: 0.1 }`
+- **滚动吸附**（`src/components/ScrollSnap.tsx`，仅 home 路由在 `<ReactLenis>` 内挂载）：`lenis/snap` 官方扩展，`type: 'proximity'` + `distanceThreshold: '20%'`（库默认 50% 在 500-800px 的区块间距下近似 mandatory，已收紧）。**`ignoreTransform: true` 必传**——区块挂载时带 reveal 的 translateY(24px)，默认 rect 计算会把这 24px 永久烘焙进吸附点。吸附元素复用 `SECTION_IDS`（与 useActiveSection 同源）。reduced-motion / `pointer: coarse` 双门控关闭（touch 滚动 Lenis 不接管，snap 会与原生动量滚动打架）
 
 ## 毛玻璃模式
 
@@ -184,32 +187,31 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 
 所有动效遵循"克制"原则：
 
-- **卡片 3D 倾斜**用 `src/hooks/useTilt.ts`，最大 ±5°，rAF 平滑插值。已应用到的卡片：Hero CTA、SkillCategory、DesktopTimelineItem / MobileTimelineItem、AchievementCardView、StyledProjectCard、Contact。
+- **卡片 3D 倾斜**用 `src/hooks/useTilt.ts`，最大 ±5°，rAF 平滑插值。已应用到的卡片：Hero CTA、SkillCategory、TimelineItemCard（Qualifications 桌面+移动共用）、AchievementCardView、StyledProjectCard、Contact（connect + links 两卡）、NotFound、RedirectPage。
 - **挂 `useTilt` ref 的元素，hover 不得再叠 `transform: translateY/translateX`**（inline transform 冲突）。**非倾斜元素**（如 nav button、avatar、social icon、Chip）可以自由加 hover transform。
-- **背景光球**：固定 2 个（紫色：亮 `#7c3aed`/暗 `#a78bfa`，**硬编码在 `BackgroundOrbs.tsx`、与 `primary` 解耦** + 蓝绿 `info.main`），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。暗色模式下透明度显著降低（0.16 / 0.12），避免光球在黑色背景上过于抢眼干扰阅读。
-- **鼠标跟随光球（第 3 个）**：琥珀金（`MOUSE_ORB` token，亮 `#f59e0b`/暗 `#fbbf24`——全站唯一暖色），240px + `blur(100px)`，rAF + lerp 0.1 惯性拖尾。**`pointer: coarse` 或 `prefers-reduced-motion` 不渲染**（`useMediaFlag` hook 响应运行时 change）。首次 mousemove 瞬移吸附到光标再 opacity 淡入（600ms），避免从 (0,0) 横穿全屏飞入。独立 rAF + `window` passive `mousemove`，与漂移球视差 rAF 解耦；无滚动视差（光标本身就是视口坐标）。
+- **背景光球**：固定 2 个（紫色：亮 `ACCENT.light`/暗 `ACCENT.orbDark`，引用 `colors.ts`、与 `primary` 解耦 + 蓝绿 `info.main`），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。暗色模式下透明度显著降低（0.16 / 0.12），避免光球在黑色背景上过于抢眼干扰阅读。
+- **鼠标跟随光球（第 3 个）**：琥珀金（`MOUSE_ORB` token，亮 `#f59e0b`/暗 `#fbbf24`——全站唯一暖色），240px + `blur(100px)`，rAF + lerp 0.15 惯性拖尾。**`pointer: coarse` 或 `prefers-reduced-motion` 不渲染**（`useMediaFlag` hook 响应运行时 change）。首次 mousemove 瞬移吸附到光标再 opacity 淡入（600ms），避免从 (0,0) 横穿全屏飞入。独立 rAF + `window` passive `mousemove`，与漂移球视差 rAF 解耦；无滚动视差（光标本身就是视口坐标）。
 - **移动端（`pointer: coarse`）自动退化**：3D 倾斜不触发（无 mousemove）；视差改为滚动驱动所以移动端也工作。
 - **所有动效尊重 `prefers-reduced-motion: reduce`**：`useTilt` 订阅 `change` 事件动态启停（关闭时清 transform、取消 rAF）；`BackgroundOrbs` 通过 CSS 媒体查询关闭 keyframe；Lenis 配置 `duration: 0`；`handleBackToTop` 用 `useMediaQuery` 决定 `duration: 0` 还是 `1.2`。
 - **Scroll-reveal（`useReveal`）**：6 个 section + 区块内卡片错位渐现。opacity 0→1 + translateY(24px)→0，缓动 `cubic-bezier(0.22, 1, 0.36, 1)`，1200ms。`useReveal` 包装 `react-intersection-observer` 的 `useInView`（threshold 0.2、rootMargin `'0px 0px 0px 0px'`、triggerOnce true）+ MUI `useMediaQuery`；`prefers-reduced-motion: reduce` 时直接 `isVisible: true` 无 observer。错位 stagger：同区块卡片 `transitionDelay: ${index * 100}ms`，由调用方传 `delayMs`（如 `revealSx(isVisible, index * 100)`），hook 不传 delay。**那段 sx 统一用 `src/styles/reveal.ts` 的 `revealSx(isVisible, delayMs)` 生成**，不要手写重复的 transition 字符串。
 - **transform 写入隔离**：`useTilt`（写 `rotate3d`）和 `useReveal`（写 `translate3d`）**不允许挂在同一 DOM 元素**。reveal 写外层 wrapper Box，tilt 写内层卡片 DOM。
 - **Academic Accordion 特殊处理**：accordion 内的 `AchievementCardView` **不** stagger。`<AccordionDetails>` 折叠时 `height: 0` 但 DOM 存在，IntersectionObserver 立即 fire `inView: true`，展开时卡片已 visible，再 stagger 反而闪烁。仅 `Academic` 区块整体渐现。
-- **LiquidGlassButton 动效**：hover `transform: scale(1.08)` + 加深 inset highlight；active `scale(0.96)`；`focus-visible` 焦点环 `outline: 2px solid primary.main; outline-offset: 4px`；`@media (pointer: coarse)` 禁用 scale；`prefers-reduced-motion: reduce` 时 transition 全部清零。**不挂 useTilt**（与 scale transform 冲突）。
-- **Nav active-section 高亮**（`useActiveSection`）：IntersectionObserver 监听 6 个 section，视口内占比最高者高亮。`SECTION_IDS` 必须是模块级稳定引用（`src/sections.ts`），否则 effect 每次渲染 teardown+recreate observer。404/redirect 页 nav 退化为普通链接。
+- **LiquidGlassButton 动效**：hover `transform: scale(1.08)` + 加深 inset highlight；active `scale(0.96)`；`focus-visible` 焦点环 `outline: 2px solid primary.main; outline-offset: 2`；`@media (pointer: coarse)` 禁用 scale；`prefers-reduced-motion: reduce` 时 transition 全部清零。**不挂 useTilt**（与 scale transform 冲突）。
+- **Nav active-section 高亮**（`useActiveSection`）：IntersectionObserver 监听 6 个 section，视口内占比最高者高亮。`SECTION_IDS` 必须是模块级稳定引用（`src/sections.ts`），否则 effect 每次渲染 teardown+recreate observer（ScrollSnap 的吸附点也复用同一 `SECTION_IDS`）。404/redirect 页 nav 退化为普通链接。
 
 ## 占位数据约定
 
 - **JSON 翻译文件**：`en.json` / `zh.json` 中未实现区块的 key 用 `_TODO_` 前缀（如 `_TODO_about_title`）。
 - **TypeScript 数据文件**：未填充的内容在附近加 `// TODO: ...` 注释说明。已标记的：
-  - `src/data/contact.ts`（2 个 `url: '#'` 行上方）
   - `src/theme/palette.ts`（`secondary` 调色板）
 
-  其余历史标记（projects.ts、achievements.ts、skills.ts）已随内容填充清理；JSON 侧 `_TODO_` 前缀机制保留，当前 en/zh 均无实例。
+  `src/data/contact.ts` 仍有 2 个占位 `url: '#'`（portfolio-website / blog）但 TODO 注释已在重构中丢失；历史标记（projects.ts、achievements.ts、skills.ts）已随内容填充清理。JSON 侧 `_TODO_` 前缀机制保留，当前 en/zh 均无实例。
 
 ## TypeScript 注意事项
 
 `tsconfig.app.json` 启用了 `strict`、`noUnusedLocals`、`noUnusedParameters`、`verbatimModuleSyntax`。常见踩坑：
 
-- **循环里需要 ref 必须抽子组件**：`useTilt()` / `useReveal()`（或任何 hook）只能在组件顶层调用，不能写在 `.map()` 里。要给循环渲染的每张卡片抽一个子组件（如 `SkillCategory`、`AchievementCardView`、`ProjectCardView`、`ProjectCardCell`、`DesktopTimelineItem` / `MobileTimelineItem`）。
+- **循环里需要 ref 必须抽子组件**：`useTilt()` / `useReveal()`（或任何 hook）只能在组件顶层调用，不能写在 `.map()` 里。要给循环渲染的每张卡片抽一个子组件（如 `SkillCategory`、`AchievementCardView`、`ProjectCardView`、`ProjectCardCell`、`TimelineItemCard`）。
 - **`useRef<T>(null)` 实际返回 `RefObject<T | null>`**：泛型 hook 想暴露 `RefObject<T>` 给消费者（这样能直接 `<Component ref={ref} />` 透传到任意元素类型），需要在 return 处加 `return ref as RefObject<T>` 断言。
 - **同名类型冲突**：`TimelineItem` 在 `@mui/lab` 和 `../data/timeline` 都存在，用 `import type { TimelineItem as TimelineDataItem } from '../data/timeline'` 别名区分。
 - **OS 级媒体查询用 `useState` + `useEffect` 订阅 `change` 事件**（不要用 `useState(() => mq.matches)` 一次性捕获）。模式：
@@ -230,7 +232,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
   - `push` 到 `main` → build + deploy（生产）
   - `pull_request` → build + deploy（PR 预览，URL 见 workflow run 输出，PR 关闭/合并后清理）
   - `workflow_dispatch` → 手动触发
-  - `actions/deploy-pages@v4` 配 `enablement: true` 才能在 PR 上部署（GitHub 默认禁止）
+  - PR 预览部署依赖 `github-pages` environment 的分支策略：需在仓库设置里允许 `refs/pull/*/merge`（GitHub 默认只允许部署分支）——workflow 里 `actions/deploy-pages@v4` 的 `enablement` 输入已不存在（v4 的 action.yml 只有 token/timeout/error_count/reporting_interval/artifact_name/preview），现存的 `enablement: true` 行会被忽略并产生 warning，下次动 workflow 时可删
 - 自定义域名 `raymondzylei.me`（在 `CNAME` 文件中配置）
 - 构建输出到 `dist/` 目录
 - `vite.config.ts` 显式声明 `base: '/'`（自定义域名部署需要根相对路径），含自定义插件在构建后将 `index.html` 复制为 `404.html`（GitHub Pages SPA fallback）
@@ -240,5 +242,5 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - `.gitignore` 防 `*.bak` / `*.tsxbak` / `*.orig` / `.playwright-mcp/` / `.claude/`（Claude Code 本地配置如 plans/）等产物
 - `.gitattributes`：`* text=auto eol=lf`（统一 LF 行尾，Windows 开发不会被 CRLF 污染）
 - 代码风格用 Prettier（`.prettierrc`：单引号、分号、2 空格、`trailingComma: all`、`printWidth: 100`），`pnpm run format` 格式化；ESLint 末尾接 `eslint-config-prettier` 关闭冲突规则
-- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact/BackgroundOrbs.test.tsx`、`resume/ResumeBits.test.tsx`
+- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`（glass/easing/typography/焦点环 overrides）、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact/BackgroundOrbs/ScrollSnap.test.tsx`、`resume/ResumeBits.test.tsx`
 - 包管理只用 pnpm（不混用 npm / yarn）
