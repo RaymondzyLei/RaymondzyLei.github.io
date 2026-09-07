@@ -76,9 +76,19 @@ describe('useHashScroll', () => {
 
   it('scrolls to the section matching the current hash on mount', () => {
     window.location.hash = 'skills';
+    // The initial scroll is deferred two rAFs so the first-paint layout
+    // settles (see useHashScroll) — stub rAF to run callbacks synchronously
+    // before mounting.
+    const rafSpy = vi
+      .spyOn(window, 'requestAnimationFrame')
+      .mockImplementation((cb: FrameRequestCallback) => {
+        cb(performance.now());
+        return 0;
+      });
     renderHook(() => useHashScroll());
     expect(scrollTo).toHaveBeenCalledTimes(1);
     expect(scrollTo.mock.calls[0][0]).toBe(document.getElementById('skills'));
+    rafSpy.mockRestore();
   });
 
   it('scrolls when the hashchange listener fires at runtime', () => {
