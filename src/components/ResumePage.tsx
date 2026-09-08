@@ -2,7 +2,8 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import Avatar from '@mui/material/Avatar';
+// Avatar import hidden alongside the header avatar JSX (restore together).
+// import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -13,7 +14,7 @@ import { achievementsData } from '../data/achievements';
 import { skillsData, type Skill } from '../data/skills';
 import { socialLinks, type SocialLink } from '../data/social';
 import {
-  resumeAvatar,
+  // resumeAvatar, // hidden with the header avatar; restore together
   resumePhone,
   resumeContactIds,
   resumeSkillIds,
@@ -151,13 +152,15 @@ export const ResumePage: React.FC = () => {
               {t('resume.location')}
             </Typography>
           </Box>
-          <Avatar
+          {/* TODO: avatar hidden for now; restore with a real photo. Keep in sync with
+              resumeAvatar in src/data/resume.ts. */}
+          {/* <Avatar
             src={resumeAvatar.src}
             srcSet={resumeAvatar.srcSet}
             alt={t('resume.avatarAlt')}
             variant="rounded"
             sx={{ width: 96, height: 96, flexShrink: 0 }}
-          />
+          /> */}
         </Box>
 
         {/* Contact icons */}
