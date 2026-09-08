@@ -82,14 +82,21 @@
 = Awards & Achievements
 
 #resume-entry(
-  title: "Second Prize, China Algorithm Capability Competition(Final Contest)",
+  title: "Second Prize, National College Computer System Development Capability Competition",
+  location: "National Level, China",
+  date: "Summer 2026",
+  description: "2026 Session, First-Year Undergraduate Period, Operating System Design - Functional Challenge Track",
+)
+
+#resume-entry(
+  title: "Second Prize, China Algorithm Capability Competition (Final Contest)",
   location: "National Level, China",
   date: "Spring 2026",
   description: "The 2nd Session, First-Year Undergraduate Period",
 )
 
 #resume-entry(
-  title: "Second Prize, China Algorithm Capability Competition(Regional Contest)",
+  title: "Second Prize, China Algorithm Capability Competition (Regional Contest)",
   location: "National Level, China",
   date: "Fall 2025",
   description: "The 2nd Session, First-Year Undergraduate Period",
@@ -111,7 +118,7 @@
 
 = Academic Profile
 
-- Overall GPA 3.72/4.30, Major Ranking 27/147
+- Overall GPA 3.74/4.30, Major Ranking 27/147
 
 
 = Skills
@@ -126,7 +133,7 @@
     //"Java",
     //"C#",
     //"JavaScript",
-    "TypeScript",
+    "TypeScript", // JS/TS on the site; kept as "TypeScript" for resume readers
   ),
 )
 #resume-skill-item("Languages", ("TOEFL: 97",))
