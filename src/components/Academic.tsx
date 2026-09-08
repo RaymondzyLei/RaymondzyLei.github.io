@@ -107,7 +107,7 @@ export const Academic: React.FC = () => {
     <Section id="academic" title={t('academic.title')} maxWidth="md">
       <Stack spacing={2}>
         {groupedByCategory.map(([category, achievements]) => (
-          <StyledAccordion key={category}>
+          <StyledAccordion key={category} defaultExpanded={category === 'Competition'}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
               <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
               <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
