@@ -2,8 +2,8 @@
 
 #show: resume.with(
   author: (
-    firstname: "Lei",
-    lastname: "Zhangyue",
+    firstname: "Zhangyue",
+    lastname: "Lei",
     email: "raymond.lei@mail.ustc.edu.cn",
     //homepage: "https://example.com",
     phone: "(+86) 15918530509",
