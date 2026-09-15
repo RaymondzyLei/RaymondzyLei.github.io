@@ -7,7 +7,11 @@ describe('resolveRoute', () => {
   });
 
   it('returns resume for "/resume"', () => {
-    expect(resolveRoute('/resume')).toEqual({ type: 'resume' });
+    expect(resolveRoute('/resume')).toEqual({ type: 'resume', lang: 'en' });
+  });
+
+  it('returns zh resume for "/resume/zh"', () => {
+    expect(resolveRoute('/resume/zh')).toEqual({ type: 'resume', lang: 'zh' });
   });
 
   it('returns redirect for a path listed in REDIRECTS', () => {

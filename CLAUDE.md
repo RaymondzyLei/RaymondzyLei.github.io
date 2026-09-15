@@ -40,7 +40,7 @@ src/
 ├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404；home 路由挂载 <ScrollSnap>
 ├── theme.ts          # MUI 主题桶文件（re-export，实现拆在 theme/ 目录）
 ├── theme/            # 主题实现：tokens.ts（动效/z-index/字体 token）、glass.ts（glass/glassHoverShadow/focusVisibleRing/ctaButtonSx）、palette.ts（createTheme + colorSchemes）、overrides.ts（组件级 styleOverrides）——色值全部引用 styles/colors.ts
-├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume、REDIRECTS 命中→redirect、其余→notFound
+├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume(en)、'/resume/zh'→resume(zh)、REDIRECTS 命中→redirect、其余→notFound
 ├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
 ├── theme.test.ts      # 主题单元测试（glass() 亮/暗、easing/duration token、排版 optical sizing、按钮 active scale + focus-visible overrides）
@@ -78,7 +78,7 @@ src/
 │   ├── Contact.tsx             # 联系信息 + LiquidGlassButton 社交行 + 有用链接
 │   ├── NotFound.tsx            # 404 页面（毛玻璃卡片 + 返回首页链接）
 │   ├── RedirectPage.tsx        # 重定向中间页（3 秒倒计时自动跳转）
-│   ├── ResumePage.tsx          # /resume 数据驱动简历页（固定英文 getFixedT('en')，复用 timeline/achievements/skills/social + data/resume.ts，硬编码浅色打印主题）
+│   ├── ResumePage.tsx          # /resume 与 /resume/zh 数据驱动简历页（语言由 URL 决定 getFixedT(lang)，复用 timeline/achievements/skills/social + data/resume.ts，硬编码浅色打印主题）
 │   └── layout/
 │       ├── Navbar.tsx          # 吸顶毛玻璃 AppBar + 导航 + 主题切换 + 移动抽屉
 │       ├── LanguageMenu.tsx    # 语言切换下拉菜单（en/zh）
@@ -104,7 +104,7 @@ src/
 
 **未实现区块的 key 用 `_TODO_` 前缀标记**（JSON 不支持注释，所以用 key 命名做标记）：`en.json` / `zh.json` 里以下划线开头的 key 是占位，搜索 `_TODO_` 可定位。
 
-**ResumePage 固定英文**：`src/components/ResumePage.tsx` 用 `i18n.getFixedT('en')` 读取 en 资源，不响应语言切换（简历始终英文）。resume 专属文本在 `resume.*` namespace（en/zh 对称补齐，运行时只读 en）；Education/Awards/Skills/联系方式 复用 home 的 `src/data` + `data.*` i18n，避免与首页内容漂移。`resume.typ`（Typst 源）手动同步，不自动读 data。
+**ResumePage 语言由 URL 决定**：`src/components/ResumePage.tsx` 接收 `lang` prop（`'en' | 'zh'`，来自路由 `/resume` / `/resume/zh`），用 `i18n.getFixedT(lang)` 读取对应资源，不响应语言切换（每个 URL 渲染一份稳定文档，如打印简历）。resume 专属文本在 `resume.*` namespace（en/zh 对称，含 `resume.skillLabels.*` 技能分组标签）；Education/Awards/Skills/联系方式 复用 home 的 `src/data` + `data.*` i18n，避免与首页内容漂移。`resume.typ`（Typst 源）手动同步，不自动读 data。
 
 ## 主题
 

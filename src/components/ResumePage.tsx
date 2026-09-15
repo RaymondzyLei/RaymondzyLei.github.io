@@ -9,6 +9,7 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PhoneIcon from '@mui/icons-material/Phone';
 import i18n from '../i18n/i18n';
+import type { ResumeLang } from '../routing';
 import { timelineData } from '../data/timeline';
 import { achievementsData } from '../data/achievements';
 import { skillsData, type Skill } from '../data/skills';
@@ -21,17 +22,10 @@ import {
   resumeStrongSkillIds,
 } from '../data/resume';
 import { RESUME as C } from '../styles/colors';
-import {
-  SectionTitle,
-  EducationItem,
-  AwardItem,
-  SkillGroup,
-  PROGRAMMING_LANGUAGES_LABEL,
-  LANGUAGES_LABEL,
-} from './resume/ResumeBits';
+import { SectionTitle, EducationItem, AwardItem, SkillGroup } from './resume/ResumeBits';
 
 /**
- * Standalone resume preview page (/resume).
+ * Standalone resume preview page (/resume = English, /resume/zh = Chinese).
  *
  * Data-driven: education / awards / skills / social contacts are reused from
  * src/data (timelineData, achievementsData, skillsData, socialLinks) so this
@@ -39,12 +33,13 @@ import {
  * location, phone, about, GPA, TOEFL, which skills to bold) live in
  * src/data/resume.ts + the i18n `resume.*` namespace.
  *
- * Fixed English via i18n.getFixedT('en') - the page ignores the active language
- * so it always reads like a printed English résumé. Deliberately decoupled from
- * <Layout>: no Navbar / background orbs / back-to-top / Lenis reveal. Hardcoded
- * light theme (white paper, dark ink) - ignores useColorScheme. Print via
- * browser (Ctrl+P) uses the inline @media print rules below. resume.typ (Typst
- * source) is kept in sync manually for PDF export.
+ * Language is fixed per URL via i18n.getFixedT(lang) - the page ignores the
+ * active language picker so each URL always renders one stable document
+ * (like a printed résumé). Deliberately decoupled from <Layout>: no Navbar /
+ * background orbs / back-to-top / Lenis reveal. Hardcoded light theme (white
+ * paper, dark ink) - ignores useColorScheme. Print via browser (Ctrl+P) uses
+ * the inline @media print rules below. resume.typ (Typst source) is kept in
+ * sync manually for PDF export.
  *
  * Display sub-components (SectionTitle / EducationItem / AwardItem /
  * SkillGroup) live in ./resume/ResumeBits and take plain-string props.
@@ -56,9 +51,10 @@ const INK = C.ink;
 const LINE = C.line;
 const PAPER = C.paper;
 
-export const ResumePage: React.FC = () => {
-  // Fixed English: read en resources regardless of the active language.
-  const t = i18n.getFixedT('en');
+export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang = 'en' }) => {
+  // Fixed language per URL: read that language's resources regardless of the
+  // active language picker.
+  const t = i18n.getFixedT(lang);
 
   const contactSocials = resumeContactIds
     .map((id) => socialLinks.find((s) => s.id === id))
@@ -250,8 +246,11 @@ export const ResumePage: React.FC = () => {
         {/* Skills */}
         <section>
           <SectionTitle>{t('resume.section.skills')}</SectionTitle>
-          <SkillGroup label={PROGRAMMING_LANGUAGES_LABEL} items={programmingItems} />
-          <SkillGroup label={LANGUAGES_LABEL} items={[{ text: t('resume.languages') }]} />
+          <SkillGroup label={t('resume.skillLabels.programming')} items={programmingItems} />
+          <SkillGroup
+            label={t('resume.skillLabels.languages')}
+            items={[{ text: t('resume.languages') }]}
+          />
         </section>
       </Box>
     </>

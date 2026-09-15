@@ -18,10 +18,6 @@ const LINE = C.line;
 const CHIP_BG = C.chipBg;
 const CHIP_INK = C.chipInk;
 
-// Skill sub-group labels (fixed English; resume doesn't translate).
-export const PROGRAMMING_LANGUAGES_LABEL = 'Programming Languages';
-export const LANGUAGES_LABEL = 'Languages';
-
 export const SectionTitle: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <Typography
     sx={{

@@ -73,7 +73,7 @@ function App() {
           {route.type === 'home' && <ScrollSnap />}
           <Suspense fallback={null}>
             {route.type === 'resume' ? (
-              <ResumePage />
+              <ResumePage lang={route.lang} />
             ) : (
               <Layout isNotFound={isNotFound}>
                 {route.type === 'redirect' ? (

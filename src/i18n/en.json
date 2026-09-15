@@ -163,7 +163,7 @@
   },
   "resume": {
     "avatarAlt": "Lei Zhangyue",
-    "backHome": "Back to Home",
+    "backHome": "Back to Raymond's HomePage",
     "fullName": "Lei Zhangyue",
     "tagline": "Student & Developer",
     "location": "Hefei, Anhui, China",
@@ -181,6 +181,10 @@
       "1": "Hefei, Anhui, China",
       "2": "Guangzhou, Guangdong, China",
       "3": "Singapore"
+    },
+    "skillLabels": {
+      "programming": "Programming Languages",
+      "languages": "Languages"
     }
   },
   "notFound": {
