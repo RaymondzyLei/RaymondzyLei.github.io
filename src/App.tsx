@@ -54,7 +54,8 @@ function App() {
   const lenisOptions = reducedMotion ? { duration: 0, smoothWheel: false } : { lerp: 0.1 };
 
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
-  const route = resolveRoute(pathname);
+  const search = typeof window !== 'undefined' ? window.location.search : '';
+  const route = resolveRoute(pathname, search);
   const isNotFound = route.type !== 'home';
 
   return (

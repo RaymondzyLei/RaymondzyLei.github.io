@@ -5,6 +5,8 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import LanguageIcon from '@mui/icons-material/Language';
 import { LANGUAGE_OPTIONS } from '../../i18n/i18n';
+import type { SupportedLanguage } from '../../i18n/languages';
+import { langQueryUrl } from '../../routing';
 
 /** Language picker (IconButton + dropdown). Persists via i18n's languageChanged listener. */
 export const LanguageMenu: React.FC = () => {
@@ -15,8 +17,17 @@ export const LanguageMenu: React.FC = () => {
     setAnchor(event.currentTarget);
   };
   const handleClose = () => setAnchor(null);
-  const handleChange = (lang: string) => {
+  const handleChange = (lang: SupportedLanguage) => {
     i18n.changeLanguage(lang);
+    // Mirror the choice into the URL at the action point (NOT in the
+    // languageChanged listener — i18next fires it during init(), which would
+    // rewrite every bare URL to the saved language). Relative replaceState
+    // keeps the current path and hash: '/#skills' -> '/?lang=zh#skills'.
+    history.replaceState(
+      null,
+      '',
+      langQueryUrl(window.location.pathname, lang, window.location.hash.replace(/^#/, '')),
+    );
     handleClose();
   };
 

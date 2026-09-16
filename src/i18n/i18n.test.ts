@@ -1,5 +1,29 @@
 import { describe, it, expect } from 'vitest';
-import { isSupportedLanguage, default as i18n } from './i18n';
+import { isSupportedLanguage, resolveInitialLanguage, default as i18n } from './i18n';
+
+describe('resolveInitialLanguage', () => {
+  it('prefers a valid URL language over the saved preference', () => {
+    expect(resolveInitialLanguage('zh', 'en')).toBe('zh');
+    expect(resolveInitialLanguage('en', 'zh')).toBe('en');
+  });
+
+  it('falls back to the saved preference when the URL has no lang', () => {
+    expect(resolveInitialLanguage(null, 'zh')).toBe('zh');
+  });
+
+  it('falls back to the saved preference when the URL lang is invalid', () => {
+    expect(resolveInitialLanguage('fr', 'zh')).toBe('zh');
+  });
+
+  it('is case-sensitive on the URL language', () => {
+    expect(resolveInitialLanguage('ZH', 'en')).toBe('en');
+  });
+
+  it('defaults to English when both inputs are missing or invalid', () => {
+    expect(resolveInitialLanguage(null, null)).toBe('en');
+    expect(resolveInitialLanguage('fr', 'ja')).toBe('en');
+  });
+});
 
 describe('isSupportedLanguage', () => {
   it('accepts "en" and "zh"', () => {

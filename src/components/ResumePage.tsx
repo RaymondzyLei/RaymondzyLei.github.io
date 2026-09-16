@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
@@ -9,7 +9,8 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PhoneIcon from '@mui/icons-material/Phone';
 import i18n from '../i18n/i18n';
-import type { ResumeLang } from '../routing';
+import { LANGUAGE_OPTIONS } from '../i18n/languages';
+import { resumeLangUrl, type ResumeLang } from '../routing';
 import { timelineData } from '../data/timeline';
 import { achievementsData } from '../data/achievements';
 import { skillsData, type Skill } from '../data/skills';
@@ -25,7 +26,10 @@ import { RESUME as C } from '../styles/colors';
 import { SectionTitle, EducationItem, AwardItem, SkillGroup } from './resume/ResumeBits';
 
 /**
- * Standalone resume preview page (/resume = English, /resume/zh = Chinese).
+ * Standalone resume preview page (/resume). Language comes from the `?lang=`
+ * query (default English); an in-page toggle rewrites the query via
+ * history.replaceState so the URL can be shared with the chosen language
+ * baked in (like a printed résumé).
  *
  * Data-driven: education / awards / skills / social contacts are reused from
  * src/data (timelineData, achievementsData, skillsData, socialLinks) so this
@@ -33,9 +37,9 @@ import { SectionTitle, EducationItem, AwardItem, SkillGroup } from './resume/Res
  * location, phone, about, GPA, TOEFL, which skills to bold) live in
  * src/data/resume.ts + the i18n `resume.*` namespace.
  *
- * Language is fixed per URL via i18n.getFixedT(lang) - the page ignores the
- * active language picker so each URL always renders one stable document
- * (like a printed résumé). Deliberately decoupled from <Layout>: no Navbar /
+ * Language is fixed per render via i18n.getFixedT(lang) - the page ignores the
+ * active language picker so each URL always renders one stable document.
+ * Deliberately decoupled from <Layout>: no Navbar /
  * background orbs / back-to-top / Lenis reveal. Hardcoded light theme (white
  * paper, dark ink) - ignores useColorScheme. Print via browser (Ctrl+P) uses
  * the inline @media print rules below. resume.typ (Typst source) is kept in
@@ -51,10 +55,30 @@ const INK = C.ink;
 const LINE = C.line;
 const PAPER = C.paper;
 
-export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang = 'en' }) => {
-  // Fixed language per URL: read that language's resources regardless of the
-  // active language picker.
+export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang: initialLang = 'en' }) => {
+  // App resolves the URL once on mount; the in-page toggle takes over from
+  // there (replaceState + local state, no reload).
+  const [lang, setLang] = useState<ResumeLang>(initialLang);
+  // Fixed language per render: read that language's resources regardless of
+  // the active language picker.
   const t = i18n.getFixedT(lang);
+
+  // Keep <html lang> on the resume language for screen readers (i18n init set
+  // it to the picker language; navigation back is a full reload, so the
+  // cleanup below is a belt-and-braces restore).
+  useEffect(() => {
+    const prev = document.documentElement.lang;
+    document.documentElement.lang = lang;
+    return () => {
+      document.documentElement.lang = prev;
+    };
+  }, [lang]);
+
+  const handleLangChange = (next: ResumeLang) => {
+    if (next === lang) return;
+    history.replaceState(null, '', resumeLangUrl(next));
+    setLang(next);
+  };
 
   const contactSocials = resumeContactIds
     .map((id) => socialLinks.find((s) => s.id === id))
@@ -111,6 +135,44 @@ export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang = 'en' }) => 
           <ArrowBackIcon sx={{ fontSize: '1.1rem' }} />
           {t('resume.backHome')}
         </Link>
+      </Box>
+
+      {/* Language toggle — mirrors back-home on the right; hidden in print.
+          Labels reuse nav.* self-named entries (English / 中文). */}
+      <Box
+        className="no-print"
+        sx={{
+          position: 'fixed',
+          top: 16,
+          right: 16,
+          zIndex: 10,
+          display: 'inline-flex',
+          gap: 1.5,
+        }}
+        role="group"
+        aria-label={t('layout.changeLanguage')}
+      >
+        {LANGUAGE_OPTIONS.map(({ code, labelKey }) => {
+          const active = code === lang;
+          return (
+            <Link
+              key={code}
+              component="button"
+              type="button"
+              onClick={() => handleLangChange(code)}
+              sx={{
+                color: active ? INK : C.sub,
+                fontWeight: active ? 700 : 500,
+                fontSize: '0.9rem',
+                textDecoration: 'none',
+                cursor: 'pointer',
+                '&:hover': { color: INK },
+              }}
+            >
+              {t(labelKey)}
+            </Link>
+          );
+        })}
       </Box>
 
       <Box

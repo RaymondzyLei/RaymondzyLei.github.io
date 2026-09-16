@@ -1,7 +1,8 @@
 import { REDIRECTS, type RedirectRule } from './data/redirects';
+import { isSupportedLanguage, type SupportedLanguage } from './i18n/languages';
 
 /** Language of a resume page — determined by the URL, not the language picker. */
-export type ResumeLang = 'en' | 'zh';
+export type ResumeLang = SupportedLanguage;
 
 export type Route =
   | { type: 'home' }
@@ -11,15 +12,35 @@ export type Route =
 
 /**
  * Resolve a pathname to a route. Pure function (no DOM access) - callers pass
- * `window.location.pathname`. '/' -> home, '/resume' -> resume (English),
- * '/resume/zh' -> resume (Chinese), a path listed in REDIRECTS -> redirect,
- * anything else -> 404. No popstate, no router lib.
+ * `window.location.pathname` (+ `window.location.search`). '/' -> home,
+ * '/resume' -> resume (language from the `?lang=` query, default English),
+ * a path listed in REDIRECTS -> redirect, anything else -> 404.
+ * No popstate, no router lib.
  */
-export const resolveRoute = (pathname: string): Route => {
+export const resolveRoute = (pathname: string, search = ''): Route => {
   if (pathname === '/') return { type: 'home' };
-  if (pathname === '/resume') return { type: 'resume', lang: 'en' };
-  if (pathname === '/resume/zh') return { type: 'resume', lang: 'zh' };
+  if (pathname === '/resume') {
+    const lang = new URLSearchParams(search).get('lang');
+    return { type: 'resume', lang: isSupportedLanguage(lang) ? lang : 'en' };
+  }
   const rule = REDIRECTS.find((r) => r.path === pathname);
   if (rule) return { type: 'redirect', rule };
   return { type: 'notFound' };
 };
+
+/**
+ * Canonical URL encoding for a language choice: English stays bare (the
+ * default), Chinese appends '?lang=zh'. `hash` is a bare fragment (no '#'),
+ * e.g. 'skills' -> '/?lang=zh#skills'. Shared by LanguageMenu and the resume
+ * page's language toggle via history.replaceState.
+ */
+export const langQueryUrl = (pathname: string, lang: ResumeLang, hash = ''): string => {
+  const suffix = hash ? `#${hash}` : '';
+  return lang === 'en' ? `${pathname}${suffix}` : `${pathname}?lang=zh${suffix}`;
+};
+
+/**
+ * Canonical URL for a resume language. Thin wrapper over langQueryUrl so the
+ * "English bare, Chinese ?lang=zh" convention lives in one place.
+ */
+export const resumeLangUrl = (lang: ResumeLang): string => langQueryUrl('/resume', lang);

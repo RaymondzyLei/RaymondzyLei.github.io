@@ -40,7 +40,7 @@ src/
 ├── App.tsx           # 根组件：MUI 主题 + <ReactLenis> 包裹 + resolveRoute() 分发 home/resume/redirect/404；home 路由挂载 <ScrollSnap>
 ├── theme.ts          # MUI 主题桶文件（re-export，实现拆在 theme/ 目录）
 ├── theme/            # 主题实现：tokens.ts（动效/z-index/字体 token）、glass.ts（glass/glassHoverShadow/focusVisibleRing/ctaButtonSx）、palette.ts（createTheme + colorSchemes）、overrides.ts（组件级 styleOverrides）——色值全部引用 styles/colors.ts
-├── routing.ts        # 纯函数 resolveRoute(pathname)：'/'→home、'/resume'→resume(en)、'/resume/zh'→resume(zh)、REDIRECTS 命中→redirect、其余→notFound
+├── routing.ts        # 纯函数 resolveRoute(pathname, search)：'/'→home、'/resume'→resume（语言取 ?lang= 查询，默认 en）、REDIRECTS 命中→redirect、其余→notFound；langQueryUrl()/resumeLangUrl() 生成语言规范 URL（en 裸 / zh 带 ?lang=zh，hash 保留）
 ├── sections.ts        # 首页区块注册表（SECTIONS single source + SECTION_IDS 稳定引用供 useActiveSection）
 ├── routing.test.ts   # resolveRoute 单元测试（Vitest）
 ├── theme.test.ts      # 主题单元测试（glass() 亮/暗、easing/duration token、排版 optical sizing、按钮 active scale + focus-visible overrides）
@@ -55,7 +55,7 @@ src/
 │   ├── useScrollToSection.ts # 共享滚动定位 helper：点击时实测 .MuiAppBar-root 高度作 lenis offset（Navbar 导航 + Hero CTA 复用）
 │   └── useActiveSection.ts   # IntersectionObserver 驱动的 nav active-section 高亮（sectionIds 稳定引用,避免 observer 重建）
 ├── i18n/
-│   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage，export isSupportedLanguage 类型守卫
+│   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage（初始语言优先级 URL ?lang= > localStorage > en），export isSupportedLanguage 类型守卫
 │   ├── i18n.test.ts  # isSupportedLanguage 单元测试（en/zh → true, null/空/未知 → false）
 │   ├── en.json       # 英文翻译
 │   └── zh.json       # 中文翻译
@@ -78,10 +78,10 @@ src/
 │   ├── Contact.tsx             # 联系信息 + LiquidGlassButton 社交行 + 有用链接
 │   ├── NotFound.tsx            # 404 页面（毛玻璃卡片 + 返回首页链接）
 │   ├── RedirectPage.tsx        # 重定向中间页（3 秒倒计时自动跳转）
-│   ├── ResumePage.tsx          # /resume 与 /resume/zh 数据驱动简历页（语言由 URL 决定 getFixedT(lang)，复用 timeline/achievements/skills/social + data/resume.ts，硬编码浅色打印主题）
+│   ├── ResumePage.tsx          # /resume 数据驱动简历页（语言由 ?lang= 查询决定 getFixedT(lang)，页内切换 replaceState 回写 URL，复用 timeline/achievements/skills/social + data/resume.ts，硬编码浅色打印主题）
 │   └── layout/
 │       ├── Navbar.tsx          # 吸顶毛玻璃 AppBar + 导航 + 主题切换 + 移动抽屉
-│       ├── LanguageMenu.tsx    # 语言切换下拉菜单（en/zh）
+│       ├── LanguageMenu.tsx    # 语言切换下拉菜单（en/zh；切换时 langQueryUrl + replaceState 把语言镜像进 URL query）
 │       └── BackToTopButton.tsx # 固定返回顶部按钮（订阅 Lenis 滚动更新透明度）
 ├── data/
 │   ├── skills.ts       # 技能数据及按类别查询函数
@@ -102,9 +102,17 @@ src/
 
 **初始化时校验 localStorage**：`src/i18n/i18n.ts` 启动时读 `language` 键，**仅接受 `en` / `zh`**，其他值一律回退到 `en`（用 `isSupportedLanguage` 类型守卫实现，不要用 `|| 'en'` 这种 fallback，养成显式校验习惯）。`SUPPORTED_LANGUAGES` 数组是 single source of truth。
 
+**语言镜像到 URL query（`?lang=`）**：全局语言（主页/404/redirect 等走 `useTranslation` 的页面）与简历页共用同一约定——**en = 裸地址（默认，不写 query）、zh = `?lang=zh`**，由 `routing.ts` 的 `langQueryUrl(pathname, lang, hash)` 统一生成（`resumeLangUrl` 是其薄封装）。
+
+- **初始化优先级：URL `?lang=` > localStorage `language` > `'en'`**（`languages.ts` 的 `resolveInitialLanguage` 纯函数，大小写敏感显式校验）。URL 合法时**回写 localStorage**（种子偏好）——访问带语言的链接后，后续裸导航保持该语言（`/resume?lang=zh` 同样种子：看过中文简历的人主页默认中文，有意为之）。裸 `/` 不主动补写 query（localStorage=zh 的用户打开裸 `/` 渲染中文但 URL 保持干净）。
+- **切换时镜像 URL 的位置在 `LanguageMenu.handleChange` / `ResumePage` 切换器（动作点），绝不挂 `languageChanged` 监听器**——i18next `init()` 内部会触发该事件，挂上去会把每个裸 URL 重写成已存语言（破坏「简历 URL = 稳定文档」契约）。`history.replaceState` 保留 path + hash（`/#skills` 切中文 → `/?lang=zh#skills`）。
+- **Navbar 的 `replaceState('#skills')` 是相对 URL**，只替换 fragment，天然保留 `?lang=`，无需处理。
+- 简历页的 `?lang=` 是独立的 per-URL 文档参数（`resolveRoute` 解析、页内切换器独立 replaceState），不走全局 i18n，与上面的全局镜像互不干扰。
+- 语言常量（`isSupportedLanguage`/`resolveInitialLanguage`/`LANGUAGE_OPTIONS`）在无副作用的 `src/i18n/languages.ts`（`i18n.ts` re-export 保持旧 import 路径），routing 这类纯模块只 import languages 不 import i18n.ts。
+
 **未实现区块的 key 用 `_TODO_` 前缀标记**（JSON 不支持注释，所以用 key 命名做标记）：`en.json` / `zh.json` 里以下划线开头的 key 是占位，搜索 `_TODO_` 可定位。
 
-**ResumePage 语言由 URL 决定**：`src/components/ResumePage.tsx` 接收 `lang` prop（`'en' | 'zh'`，来自路由 `/resume` / `/resume/zh`），用 `i18n.getFixedT(lang)` 读取对应资源，不响应语言切换（每个 URL 渲染一份稳定文档，如打印简历）。resume 专属文本在 `resume.*` namespace（en/zh 对称，含 `resume.skillLabels.*` 技能分组标签）；Education/Awards/Skills/联系方式 复用 home 的 `src/data` + `data.*` i18n，避免与首页内容漂移。`resume.typ`（Typst 源）手动同步，不自动读 data。
+**ResumePage 语言由 URL 查询决定**：`src/components/ResumePage.tsx` 接收 `lang` prop（`'en' | 'zh'`，来自 `resolveRoute(pathname, search)` 对 `?lang=` 的校验解析，非法值/缺省 → `en`），用 `i18n.getFixedT(lang)` 读取对应资源，不响应全局语言切换（每个 URL 渲染一份稳定文档，如打印简历）。页内右上角语言切换（复用 `nav.langEn`/`nav.langZh` 自名标签）用 `history.replaceState(null, '', resumeLangUrl(next))` + 本地 state 更新，与 Navbar hash 回写同模式；`<html lang>` 由组件 effect 同步、卸载恢复。**`/resume/zh` 路径已移除**（2026-09-14 改为 `?lang=` 方案时用户决定不留兼容别名，现返回 404）。resume 专属文本在 `resume.*` namespace（en/zh 对称，含 `resume.skillLabels.*` 技能分组标签）；Education/Awards/Skills/联系方式 复用 home 的 `src/data` + `data.*` i18n，避免与首页内容漂移。语言常量（`isSupportedLanguage` 等）在无副作用的 `src/i18n/languages.ts`（`i18n.ts` re-export 保持旧 import 路径可用），routing 这类纯模块只 import languages 不 import i18n.ts。`resume.typ`（Typst 源）手动同步，不自动读 data。
 
 ## 主题
 

@@ -2,30 +2,35 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import enTranslations from './en.json';
 import zhTranslations from './zh.json';
+// Re-exported so existing consumers keep importing from './i18n'.
+import {
+  SUPPORTED_LANGUAGES,
+  LANGUAGE_OPTIONS,
+  isSupportedLanguage,
+  resolveInitialLanguage,
+  type SupportedLanguage,
+} from './languages';
 
-const SUPPORTED_LANGUAGES = ['en', 'zh'] as const;
-type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
-
-/**
- * Single source of truth for the language picker. code derives the type;
- * labelKey is the i18n key for the menu item label. Add a language here only
- * (plus en.json/zh.json translations).
- */
-export const LANGUAGE_OPTIONS = [
-  { code: 'en', labelKey: 'nav.langEn' },
-  { code: 'zh', labelKey: 'nav.langZh' },
-] as const;
-
-export const isSupportedLanguage = (value: string | null): value is SupportedLanguage =>
-  value !== null && (SUPPORTED_LANGUAGES as readonly string[]).includes(value);
+export { SUPPORTED_LANGUAGES, LANGUAGE_OPTIONS, isSupportedLanguage, resolveInitialLanguage };
+export type { SupportedLanguage };
 
 const resources = {
   en: { translation: enTranslations },
   zh: { translation: zhTranslations },
 };
 
+// Initial language: a valid `?lang=` URL query wins, then the saved
+// preference, then English. A valid URL language also seeds localStorage so
+// following bare navigations keep it. The URL is read once here — runtime
+// language changes mirror to the URL at the action point (LanguageMenu),
+// never in the languageChanged listener (i18next fires it during init(),
+// which would rewrite every bare URL to the saved language).
+const urlLang = new URLSearchParams(window.location.search).get('lang');
 const saved = localStorage.getItem('language');
-const initialLng: SupportedLanguage = isSupportedLanguage(saved) ? saved : 'en';
+const initialLng = resolveInitialLanguage(urlLang, saved);
+if (isSupportedLanguage(urlLang) && urlLang !== saved) {
+  localStorage.setItem('language', urlLang);
+}
 
 // Keep <html lang> in sync with the active language so screen readers pronounce
 // content correctly and search engines index the right language.
