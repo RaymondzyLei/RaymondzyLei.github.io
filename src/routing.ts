@@ -29,18 +29,21 @@ export const resolveRoute = (pathname: string, search = ''): Route => {
 };
 
 /**
- * Canonical URL encoding for a language choice: English stays bare (the
- * default), Chinese appends '?lang=zh'. `hash` is a bare fragment (no '#'),
- * e.g. 'skills' -> '/?lang=zh#skills'. Shared by LanguageMenu and the resume
+ * Canonical URL for a language choice: the explicit choice mirrors into the
+ * `?lang=` query (en and zh alike) so the URL states which language it is
+ * serving. Bare URLs (no query) keep resolving through the init priority
+ * chain (URL > saved preference > browser language > English) — nothing
+ * rewrites them on first visit. `hash` is a bare fragment (no '#'), e.g.
+ * 'skills' -> '/?lang=zh#skills'. Shared by LanguageMenu and the resume
  * page's language toggle via history.replaceState.
  */
 export const langQueryUrl = (pathname: string, lang: ResumeLang, hash = ''): string => {
   const suffix = hash ? `#${hash}` : '';
-  return lang === 'en' ? `${pathname}${suffix}` : `${pathname}?lang=zh${suffix}`;
+  return `${pathname}?lang=${lang}${suffix}`;
 };
 
 /**
  * Canonical URL for a resume language. Thin wrapper over langQueryUrl so the
- * "English bare, Chinese ?lang=zh" convention lives in one place.
+ * "explicit choice mirrors ?lang=<code>" convention lives in one place.
  */
 export const resumeLangUrl = (lang: ResumeLang): string => langQueryUrl('/resume', lang);

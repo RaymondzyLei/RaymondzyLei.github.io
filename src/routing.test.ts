@@ -45,8 +45,8 @@ describe('resolveRoute', () => {
 });
 
 describe('resumeLangUrl', () => {
-  it('keeps English bare (default, no query)', () => {
-    expect(resumeLangUrl('en')).toBe('/resume');
+  it('mirrors an explicit English choice into the query', () => {
+    expect(resumeLangUrl('en')).toBe('/resume?lang=en');
   });
 
   it('encodes Chinese as the ?lang= query', () => {
@@ -55,19 +55,16 @@ describe('resumeLangUrl', () => {
 });
 
 describe('langQueryUrl', () => {
-  it('keeps English bare on any pathname', () => {
-    expect(langQueryUrl('/', 'en')).toBe('/');
-    expect(langQueryUrl('/resume', 'en')).toBe('/resume');
-  });
-
-  it('appends ?lang=zh for Chinese', () => {
+  it('mirrors both languages into ?lang= on any pathname', () => {
+    expect(langQueryUrl('/', 'en')).toBe('/?lang=en');
     expect(langQueryUrl('/', 'zh')).toBe('/?lang=zh');
+    expect(langQueryUrl('/resume', 'en')).toBe('/resume?lang=en');
     expect(langQueryUrl('/resume', 'zh')).toBe('/resume?lang=zh');
   });
 
   it('preserves the hash fragment', () => {
     expect(langQueryUrl('/', 'zh', 'skills')).toBe('/?lang=zh#skills');
-    expect(langQueryUrl('/', 'en', 'skills')).toBe('/#skills');
+    expect(langQueryUrl('/', 'en', 'skills')).toBe('/?lang=en#skills');
     expect(langQueryUrl('/resume', 'zh', 'skills')).toBe('/resume?lang=zh#skills');
   });
 });

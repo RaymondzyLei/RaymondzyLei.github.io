@@ -5,8 +5,10 @@ import { LanguageMenu } from './LanguageMenu';
 import { renderWithTheme } from '../../test/render';
 
 // Locks the real contract: picking a language mirrors it into the URL query
-// (history.replaceState) while keeping path + hash. en = bare URL, zh =
-// ?lang=zh — same convention as the resume page.
+// (history.replaceState) while keeping path + hash. Both languages write
+// ?lang=<code> — same convention as the resume page. Bare URLs (no query)
+// resolve through the init priority chain, so nothing is written on a
+// first visit.
 
 beforeEach(async () => {
   // i18n is a module-level singleton; tests above may have switched it.
@@ -30,7 +32,7 @@ describe('LanguageMenu', () => {
     expect(window.location.hash).toBe('#skills');
   });
 
-  it('restores a bare URL on switching back to English', () => {
+  it('writes ?lang=en into the URL on switching to English, keeping the hash', () => {
     window.history.replaceState(null, '', '/?lang=zh#skills');
     renderWithTheme(<LanguageMenu />);
 
@@ -38,7 +40,7 @@ describe('LanguageMenu', () => {
     fireEvent.click(screen.getByRole('menuitem', { name: 'English' }));
 
     expect(window.location.pathname).toBe('/');
-    expect(window.location.search).toBe('');
+    expect(window.location.search).toBe('?lang=en');
     expect(window.location.hash).toBe('#skills');
   });
 });
