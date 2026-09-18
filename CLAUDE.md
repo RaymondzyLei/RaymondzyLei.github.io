@@ -55,7 +55,7 @@ src/
 │   ├── useScrollToSection.ts # 共享滚动定位 helper：点击时实测 .MuiAppBar-root 高度作 lenis offset（Navbar 导航 + Hero CTA 复用）
 │   └── useActiveSection.ts   # IntersectionObserver 驱动的 nav active-section 高亮（sectionIds 稳定引用,避免 observer 重建）
 ├── i18n/
-│   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage（初始语言优先级 URL ?lang= > localStorage > en），export isSupportedLanguage 类型守卫
+│   ├── i18n.ts       # i18next 初始化，语言偏好持久化到 localStorage（初始语言优先级 URL ?lang= > localStorage > 浏览器语言 > en），export isSupportedLanguage 类型守卫
 │   ├── i18n.test.ts  # isSupportedLanguage 单元测试（en/zh → true, null/空/未知 → false）
 │   ├── en.json       # 英文翻译
 │   └── zh.json       # 中文翻译
@@ -104,11 +104,11 @@ src/
 
 **语言镜像到 URL query（`?lang=`）**：全局语言（主页/404/redirect 等走 `useTranslation` 的页面）与简历页共用同一约定——**en = 裸地址（默认，不写 query）、zh = `?lang=zh`**，由 `routing.ts` 的 `langQueryUrl(pathname, lang, hash)` 统一生成（`resumeLangUrl` 是其薄封装）。
 
-- **初始化优先级：URL `?lang=` > localStorage `language` > `'en'`**（`languages.ts` 的 `resolveInitialLanguage` 纯函数，大小写敏感显式校验）。URL 合法时**回写 localStorage**（种子偏好）——访问带语言的链接后，后续裸导航保持该语言（`/resume?lang=zh` 同样种子：看过中文简历的人主页默认中文，有意为之）。裸 `/` 不主动补写 query（localStorage=zh 的用户打开裸 `/` 渲染中文但 URL 保持干净）。
+- **初始化优先级：URL `?lang=` > localStorage `language` > 浏览器语言 > `'en'`**（`languages.ts` 的 `resolveInitialLanguage` 纯函数，大小写敏感显式校验；浏览器语言由 `matchBrowserLanguage(navigator.languages)` 按主子标签匹配 `en`/`zh`，如 `zh-CN`→`zh`，仅首次访问无存储偏好时生效）。URL 合法时**回写 localStorage**（种子偏好）——访问带语言的链接后，后续裸导航保持该语言（`/resume?lang=zh` 同样种子：看过中文简历的人主页默认中文，有意为之）。裸 `/` 不主动补写 query（localStorage=zh 的用户打开裸 `/` 渲染中文但 URL 保持干净）。
 - **切换时镜像 URL 的位置在 `LanguageMenu.handleChange` / `ResumePage` 切换器（动作点），绝不挂 `languageChanged` 监听器**——i18next `init()` 内部会触发该事件，挂上去会把每个裸 URL 重写成已存语言（破坏「简历 URL = 稳定文档」契约）。`history.replaceState` 保留 path + hash（`/#skills` 切中文 → `/?lang=zh#skills`）。
 - **Navbar 的 `replaceState('#skills')` 是相对 URL**，只替换 fragment，天然保留 `?lang=`，无需处理。
 - 简历页的 `?lang=` 是独立的 per-URL 文档参数（`resolveRoute` 解析、页内切换器独立 replaceState），不走全局 i18n，与上面的全局镜像互不干扰。
-- 语言常量（`isSupportedLanguage`/`resolveInitialLanguage`/`LANGUAGE_OPTIONS`）在无副作用的 `src/i18n/languages.ts`（`i18n.ts` re-export 保持旧 import 路径），routing 这类纯模块只 import languages 不 import i18n.ts。
+- 语言常量（`isSupportedLanguage`/`resolveInitialLanguage`/`matchBrowserLanguage`/`LANGUAGE_OPTIONS`）在无副作用的 `src/i18n/languages.ts`（`i18n.ts` re-export 保持旧 import 路径），routing 这类纯模块只 import languages 不 import i18n.ts。
 
 **未实现区块的 key 用 `_TODO_` 前缀标记**（JSON 不支持注释，所以用 key 命名做标记）：`en.json` / `zh.json` 里以下划线开头的 key 是占位，搜索 `_TODO_` 可定位。
 
