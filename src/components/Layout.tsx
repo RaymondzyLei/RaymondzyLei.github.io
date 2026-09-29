@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { BackgroundOrbs } from './BackgroundOrbs';
 import { Navbar } from './layout/Navbar';
 import { BackToTopButton } from './layout/BackToTopButton';
+import { ScrollHint } from './layout/ScrollHint';
 import { useHashScroll } from '../hooks/useHashScroll';
 
 interface LayoutProps {
@@ -31,8 +32,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
           top: 8,
           left: 8,
           zIndex: 'tooltip',
-          px: 2,
-          py: 1,
+          p: 0,
           borderRadius: 1,
           bgcolor: 'primary.main',
           color: 'primary.contrastText',
@@ -41,11 +41,15 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
           // Visually hidden until focused (standard skip-link pattern).
           clipPath: 'inset(50%)',
           clip: 'rect(0 0 0 0)',
-          width: 1,
-          height: 1,
+          width: '1px',
+          height: '1px',
           overflow: 'hidden',
           whiteSpace: 'nowrap',
           '&:focus': {
+            px: 2,
+            py: 1,
+            maxWidth: 'calc(100% - 16px)',
+            whiteSpace: 'normal',
             clipPath: 'inset(0)',
             clip: 'auto',
             width: 'auto',
@@ -61,6 +65,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
       <Box component="main" id="main-content" sx={{ flex: 1, width: '100%' }}>
         {children}
       </Box>
+      {!isNotFound && <ScrollHint />}
       <BackToTopButton />
     </Box>
   );

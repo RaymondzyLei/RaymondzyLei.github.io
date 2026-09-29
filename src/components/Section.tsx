@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { SectionHeading } from './SectionHeading';
+import { SECTIONS } from '../sections';
 
 export interface SectionProps {
   id: string;
@@ -27,6 +28,7 @@ export const Section: React.FC<SectionProps> = ({
   children,
 }) => {
   const { ref, isVisible } = useReveal();
+  const sectionIndex = SECTIONS.findIndex((section) => section.id === id);
   return (
     <Box
       id={id}
@@ -41,7 +43,10 @@ export const Section: React.FC<SectionProps> = ({
       }}
     >
       <Container maxWidth={maxWidth}>
-        <SectionHeading title={title} />
+        <SectionHeading
+          title={title}
+          number={sectionIndex < 0 ? undefined : String(sectionIndex + 1).padStart(2, '0')}
+        />
         {children}
       </Container>
     </Box>

@@ -18,6 +18,7 @@ import { SECTIONS, SECTION_IDS } from '../../sections';
 import { useActiveSection } from '../../hooks/useActiveSection';
 import { useScrollToSection } from '../../hooks/useScrollToSection';
 import { LanguageMenu } from './LanguageMenu';
+import { ScrollProgress } from './ScrollProgress';
 
 interface NavbarProps {
   isNotFound?: boolean;
@@ -68,7 +69,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
   const { t } = useTranslation();
   const { mode, setMode } = useColorScheme();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const reducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const scrollToSection = useScrollToSection();
@@ -114,6 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
         return (
           <StyledNavButton
             key={section.id}
+            aria-current={isActive ? 'location' : undefined}
             {...(isNotFound
               ? { component: 'a', href: '/' }
               : { onClick: () => handleNavClick(section.id) })}
@@ -121,7 +123,8 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
               color: isActive ? 'primary.main' : 'text.primary',
               textTransform: 'none',
               fontSize: '0.95rem',
-              fontWeight: isActive ? 600 : 500,
+              fontWeight: isActive ? 700 : 500,
+              borderRadius: 1,
               // Active: keep the underline scaled in permanently.
               ...(isActive && {
                 '&::before': {
@@ -150,14 +153,16 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
           // a hard cut; the material itself is the divider.
         })}
       >
-        <Toolbar>
-          <Box sx={{ flexGrow: 1 }}>
+        <Toolbar sx={{ px: { xs: 1, sm: 3 } }}>
+          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Button
               {...(isNotFound
                 ? { component: 'a', href: '/' }
                 : { onClick: () => handleNavClick('hero') })}
               sx={{
-                fontSize: '1.5rem',
+                fontSize: { xs: 'clamp(1rem, 5vw, 1.2rem)', sm: '1.5rem' },
+                px: { xs: 0.5, sm: 1 },
+                whiteSpace: 'nowrap',
                 fontWeight: 'bold',
                 color: 'primary.main',
                 textTransform: 'none',
@@ -170,7 +175,11 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
 
           {!isMobile && <Box sx={{ display: 'flex', gap: 1 }}>{navContent}</Box>}
 
-          <Stack direction="row" spacing={1} sx={{ ml: 2 }}>
+          <Stack
+            direction="row"
+            spacing={{ xs: 0, sm: 1 }}
+            sx={{ ml: { xs: 0.5, sm: 2 }, flexShrink: 0 }}
+          >
             <LanguageMenu />
             <IconButton
               onClick={handleModeChange}
@@ -192,13 +201,14 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
             )}
           </Stack>
         </Toolbar>
+        {!isNotFound && <ScrollProgress />}
       </AppBar>
 
       <Drawer
         anchor="top"
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
-        sx={{ display: { xs: 'block', md: 'none' } }}
+        sx={{ display: { xs: 'block', lg: 'none' } }}
       >
         <Box sx={{ p: 2 }}>{navContent}</Box>
       </Drawer>

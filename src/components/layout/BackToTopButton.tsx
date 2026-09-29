@@ -7,7 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { easing, zIndex } from '../../theme';
 
 /**
- * Fixed back-to-top button. Fades in as the user scrolls (opacity =
+ * Back-to-top button, in normal flow on mobile to avoid covering content.
+ * Fades in as the user scrolls (opacity =
  * min(scroll/300, 1)), subscribes to Lenis scroll events for the opacity
  * update, and respects prefers-reduced-motion for the scroll duration.
  */
@@ -32,7 +33,9 @@ export const BackToTopButton: React.FC = () => {
       aria-label={t('layout.backToTop')}
       title={t('layout.backToTop')}
       sx={{
-        position: 'fixed',
+        position: { xs: 'static', md: 'fixed' },
+        alignSelf: 'flex-end',
+        m: { xs: 3, md: 0 },
         bottom: 24,
         right: 24,
         backgroundColor: 'primary.main',
@@ -47,6 +50,10 @@ export const BackToTopButton: React.FC = () => {
         },
         transition: `opacity 0.3s ${easing.easeOut}, transform 0.3s ${easing.easeOut}`,
         zIndex: zIndex.backToTop,
+        '@media (prefers-reduced-motion: reduce)': {
+          transition: 'none',
+          '&:hover': { transform: 'none' },
+        },
       }}
     >
       <KeyboardArrowUpIcon />

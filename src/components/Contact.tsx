@@ -17,7 +17,7 @@ import { easing, default as theme } from '../theme';
 /** Card header: title + description, shared by both contact cards. */
 const CardIntro: React.FC<{ title: string; description: string }> = ({ title, description }) => (
   <>
-    <Typography variant="h6" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
+    <Typography variant="h5" component="h3" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
       {title}
     </Typography>
     <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.6 }}>
@@ -28,7 +28,7 @@ const CardIntro: React.FC<{ title: string; description: string }> = ({ title, de
 
 /** Right-side text block of a link row (name + label), shared by both cards. */
 const LinkText: React.FC<{ name: string; label: string }> = ({ name, label }) => (
-  <Box>
+  <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
     <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
       {name}
     </Typography>
@@ -46,18 +46,19 @@ export const Contact: React.FC = () => {
   const { ref: linksCellRef, isVisible: linksVisible } = useReveal();
 
   return (
-    <Section id="contact" title={t('contact.title')} maxWidth="md" revealDelay={0}>
+    <Section id="contact" title={t('contact.title')} maxWidth="lg" revealDelay={0}>
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
+          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'minmax(0, 1.4fr) minmax(0, 1fr)' },
+          alignItems: 'start',
           gap: 4,
         }}
       >
         <Box ref={connectCellRef} sx={revealSx(connectVisible, 0)}>
-          <GlassCard ref={connectTiltRef} sx={{ p: 3, height: '100%' }}>
+          <GlassCard accent="top" ref={connectTiltRef} sx={{ p: { xs: 3, md: 5 } }}>
             <CardIntro title={t('contact.connectTitle')} description={t('contact.connectDesc')} />
-            <Stack spacing={2}>
+            <Stack spacing={3}>
               {socialLinks.map((link) => {
                 const Icon = link.icon;
                 return (
@@ -86,7 +87,7 @@ export const Contact: React.FC = () => {
         </Box>
 
         <Box ref={linksCellRef} sx={revealSx(linksVisible, 60)}>
-          <GlassCard ref={linksTiltRef} sx={{ p: 3, height: '100%' }}>
+          <GlassCard ref={linksTiltRef} sx={{ p: 3, mt: { md: 6 } }}>
             <CardIntro title={t('contact.linksTitle')} description={t('contact.linksDesc')} />
             <Stack spacing={2}>
               {contactLinks.map((link) => {
@@ -118,6 +119,7 @@ export const Contact: React.FC = () => {
                     <Box
                       sx={{
                         width: 40,
+                        flexShrink: 0,
                         height: 40,
                         borderRadius: 1,
                         backgroundColor: 'primary.main',

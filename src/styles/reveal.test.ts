@@ -15,6 +15,16 @@ describe('revealSx', () => {
     expect(s.transform).toBe('translate3d(0, 24px, 0)');
   });
 
+  it('makes reduced-motion content immediately readable without a transition', () => {
+    expect(revealSx(false, 200)).toHaveProperty('@media (prefers-reduced-motion: reduce)', {
+      opacity: 1,
+      transform: 'none',
+      transition: 'none',
+      transitionDelay: '0ms',
+      willChange: 'auto',
+    });
+  });
+
   it('respects delayMs parameter for stagger', () => {
     expect(revealSx(true, 100).transitionDelay).toBe('100ms');
     expect(revealSx(false, 250).transitionDelay).toBe('250ms');

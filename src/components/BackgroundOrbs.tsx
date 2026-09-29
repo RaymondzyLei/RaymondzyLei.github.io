@@ -75,11 +75,13 @@ const MouseOrb: React.FC<{ isDark: boolean }> = ({ isDark }) => {
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       targetRef.current = { x: e.clientX, y: e.clientY };
+      if (!rafId) rafId = requestAnimationFrame(animate);
     };
     window.addEventListener('mousemove', onMove, { passive: true });
 
     let rafId = 0;
     const animate = () => {
+      rafId = 0;
       const target = targetRef.current;
       const el = wrapperRef.current;
       if (target && el) {
@@ -93,11 +95,15 @@ const MouseOrb: React.FC<{ isDark: boolean }> = ({ isDark }) => {
           pos.x += (target.x - pos.x) * MOUSE_ORB_LERP;
           pos.y += (target.y - pos.y) * MOUSE_ORB_LERP;
         }
+        const settled = Math.abs(target.x - pos.x) < 0.1 && Math.abs(target.y - pos.y) < 0.1;
+        if (settled) {
+          pos.x = target.x;
+          pos.y = target.y;
+        }
         el.style.transform = `translate3d(${pos.x - MOUSE_ORB_SIZE / 2}px, ${pos.y - MOUSE_ORB_SIZE / 2}px, 0)`;
+        if (!settled) rafId = requestAnimationFrame(animate);
       }
-      rafId = requestAnimationFrame(animate);
     };
-    rafId = requestAnimationFrame(animate);
 
     return () => {
       cancelAnimationFrame(rafId);
@@ -148,7 +154,7 @@ export const BackgroundOrbs: React.FC = () => {
   const orbsRef = useRef<OrbData[]>(initialOrbs.map((o) => ({ ...o })));
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (prefersReducedMotion) return;
 
     const onResize = () => {
       const newMaxX = Math.max(0, window.innerWidth - ORB_SIZE);
@@ -202,7 +208,7 @@ export const BackgroundOrbs: React.FC = () => {
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   // Orb1 is a fixed violet brand color, intentionally decoupled from
   // palette.primary (dark-mode text accents use ACCENT.dark instead).

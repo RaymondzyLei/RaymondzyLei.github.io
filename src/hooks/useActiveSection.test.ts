@@ -45,15 +45,21 @@ describe('useActiveSection', () => {
     vi.unstubAllGlobals();
   });
 
-  it('updates to the section with the highest intersection ratio', () => {
+  it('updates to the section occupying the most visible viewport space', () => {
     vi.stubGlobal('IntersectionObserver', IOObserver);
-    // Create real DOM elements with ids so getElementById resolves them.
-    for (const id of ['hero', 'skills', 'contact']) {
+    const ids = ['hero', 'skills', 'contact'];
+    const bounds = [
+      { top: -500, bottom: 100 },
+      { top: 100, bottom: 700 },
+      { top: 700, bottom: 1300 },
+    ];
+    for (const [index, id] of ids.entries()) {
       const el = document.createElement('div');
       el.id = id;
+      el.getBoundingClientRect = () => bounds[index] as DOMRect;
       document.body.appendChild(el);
     }
-    const { result } = renderHook(() => useActiveSection(['hero', 'skills', 'contact']));
+    const { result } = renderHook(() => useActiveSection(ids));
 
     // skills is most in view
     act(() => {
@@ -64,6 +70,27 @@ describe('useActiveSection', () => {
       ]);
     });
     expect(result.current).toBe('skills');
+    vi.unstubAllGlobals();
+  });
+
+  it('prefers the visible body of a tall section over the tail of a short section', () => {
+    vi.stubGlobal('IntersectionObserver', IOObserver);
+    const ids = ['skills', 'qualifications'];
+    for (const [index, id] of ids.entries()) {
+      const el = document.createElement('section');
+      el.id = id;
+      el.getBoundingClientRect = () =>
+        ({ top: index === 0 ? -400 : 130, bottom: index === 0 ? 130 : 1630 }) as DOMRect;
+      document.body.appendChild(el);
+    }
+    const { result } = renderHook(() => useActiveSection(ids, 64));
+    act(() => {
+      IOObserver.instances[0].fire([
+        { id: 'skills', isIntersecting: true, ratio: 0.25 },
+        { id: 'qualifications', isIntersecting: true, ratio: 0.18 },
+      ]);
+    });
+    expect(result.current).toBe('qualifications');
     vi.unstubAllGlobals();
   });
 

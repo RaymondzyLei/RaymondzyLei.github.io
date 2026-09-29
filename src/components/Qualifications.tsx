@@ -8,6 +8,7 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
 import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
 import SchoolIcon from '@mui/icons-material/School';
 import { CertDownloadButton } from './CertDownloadButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -19,11 +20,6 @@ import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
 import { Section } from './Section';
 
-/**
- * Single card renderer for both layouts. Desktop: accent='left' + caption date
- * under the institution; mobile: accent='top' + icon+date row above the title.
- * Content JSX is otherwise identical (was ~90% duplicated before).
- */
 const TimelineItemCard: React.FC<{
   item: TimelineDataItem;
   index: number;
@@ -36,7 +32,7 @@ const TimelineItemCard: React.FC<{
   const p = `data.timeline.${item.id}`;
   return (
     <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
-      <GlassCard accent={isMobile ? 'top' : 'left'} ref={tiltRef} sx={{ p: 3 }}>
+      <GlassCard accent={isMobile ? 'top' : 'left'} ref={tiltRef} sx={{ p: { xs: 3, md: 4 } }}>
         {isMobile && (
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
             <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
@@ -51,14 +47,9 @@ const TimelineItemCard: React.FC<{
         <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
           {t(`${p}.institution`)}
         </Typography>
-        {!isMobile && (
-          <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 0.5 }}>
-            {t(`${p}.date`)}
-          </Typography>
-        )}
         <Typography
           variant="body2"
-          sx={{ mt: 1, color: 'text.secondary', lineHeight: 1.6, whiteSpace: 'pre-line' }}
+          sx={{ mt: 2, color: 'text.secondary', lineHeight: 1.8, whiteSpace: 'pre-line' }}
         >
           {t(`${p}.description`)}
         </Typography>
@@ -81,7 +72,7 @@ export const Qualifications: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Section id="qualifications" title={t('qualifications.title')} maxWidth="md">
+    <Section id="qualifications" title={t('qualifications.title')} maxWidth="lg">
       {isMobile ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
           {timelineData.map((item, index) => (
@@ -89,18 +80,32 @@ export const Qualifications: React.FC = () => {
           ))}
         </Box>
       ) : (
-        <Timeline position="alternate">
+        <Timeline position="right" sx={{ p: 0, m: 0 }}>
           {timelineData.map((item, index) => (
             <TimelineItem key={item.id}>
+              <TimelineOppositeContent
+                sx={{
+                  flex: '0 0 22%',
+                  pl: 0,
+                  pr: 3,
+                  pt: 3,
+                  color: 'primary.main',
+                  fontWeight: 600,
+                }}
+              >
+                {t('data.timeline.' + item.id + '.date')}
+              </TimelineOppositeContent>
               <TimelineSeparator>
                 <TimelineDot
                   sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', boxShadow: 1 }}
                 >
                   <SchoolIcon />
                 </TimelineDot>
-                {index < timelineData.length - 1 && <TimelineConnector />}
+                {index < timelineData.length - 1 && (
+                  <TimelineConnector sx={{ bgcolor: 'divider' }} />
+                )}
               </TimelineSeparator>
-              <TimelineContent sx={{ py: 2 }}>
+              <TimelineContent sx={{ pb: 4, pt: 0, pl: 3, pr: 0, minWidth: 0 }}>
                 <TimelineItemCard item={item} index={index} variant="desktop" />
               </TimelineContent>
             </TimelineItem>

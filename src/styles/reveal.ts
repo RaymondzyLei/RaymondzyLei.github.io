@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import type { CSSObject } from '@mui/material/styles';
 
 /**
  * Shared scroll-reveal style fragment.
@@ -12,11 +12,18 @@ import type { CSSProperties } from 'react';
  * Stagger via `delayMs` (callers pass `index * 100`); section-level reveals
  * pass 0 (default).
  */
-export const revealSx = (isVisible: boolean, delayMs = 0): CSSProperties => ({
+export const revealSx = (isVisible: boolean, delayMs = 0): CSSObject => ({
   opacity: isVisible ? 1 : 0,
   transform: isVisible ? 'translate3d(0, 0, 0)' : 'translate3d(0, 24px, 0)',
   transition:
     'opacity 1200ms cubic-bezier(0.22, 1, 0.36, 1), transform 1200ms cubic-bezier(0.22, 1, 0.36, 1)',
   transitionDelay: `${delayMs}ms`,
   willChange: 'opacity, transform',
+  '@media (prefers-reduced-motion: reduce)': {
+    opacity: 1,
+    transform: 'none',
+    transition: 'none',
+    transitionDelay: '0ms',
+    willChange: 'auto',
+  },
 });

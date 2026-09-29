@@ -52,17 +52,21 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
   const certLabel = t(`${prefix}.certLabel`, '');
 
   return (
-    <GlassCard accent="top" ref={tiltRef}>
+    <GlassCard
+      accent="left"
+      ref={tiltRef}
+      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+    >
       <CardHeader
         title={title}
         subheader={date}
         sx={{ px: 3, pt: 3, pb: 1 }}
         slotProps={{
-          title: { variant: 'h6', sx: { fontWeight: 600 } },
+          title: { variant: 'h6', component: 'h3', sx: { fontWeight: 600, lineHeight: 1.45 } },
           subheader: { sx: { color: 'text.secondary' } },
         }}
       />
-      <CardContent sx={{ px: 3, pt: 1 }}>
+      <CardContent sx={{ px: 3, pt: 1, flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
           {description}
         </Typography>
@@ -72,7 +76,15 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
           </Typography>
         )}
         <Box
-          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', mt: 1 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-end',
+            mt: 'auto',
+            pt: 3,
+            gap: 1,
+            flexWrap: 'wrap',
+          }}
         >
           <SoftChip label={t(`data.achievements.category.${category}`)} size="small" />
           {achievement.file && (
@@ -104,24 +116,35 @@ export const Academic: React.FC = () => {
   }, []);
 
   return (
-    <Section id="academic" title={t('academic.title')} maxWidth="md">
+    <Section id="academic" title={t('academic.title')} maxWidth="lg">
       <Stack spacing={2}>
         {groupedByCategory.map(([category, achievements]) => (
           <StyledAccordion key={category} defaultExpanded={category === 'Competition'}>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              id={'academic-' + encodeURIComponent(category) + '-header'}
+              aria-controls={'academic-' + encodeURIComponent(category) + '-content'}
+              sx={{ px: { xs: 1, md: 2 }, minHeight: 80 }}
+            >
               <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
               <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {t(`data.achievements.category.${category}`)}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails>
-              <Stack spacing={2}>
+            <AccordionDetails sx={{ px: { xs: 0, md: 2 }, pb: 3 }}>
+              <Box
+                sx={{
+                  display: 'grid',
+                  gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
+                  gap: 3,
+                }}
+              >
                 {achievements.map((achievement) => (
                   <Box key={achievement.id}>
                     <AchievementCardView achievement={achievement} category={category} />
                   </Box>
                 ))}
-              </Stack>
+              </Box>
             </AccordionDetails>
           </StyledAccordion>
         ))}

@@ -12,14 +12,15 @@ import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { useScrollToSection } from '../hooks/useScrollToSection';
 import { revealSx } from '../styles/reveal';
-import { DISPLAY_FONT } from '../theme';
+import { DISPLAY_FONT, glass } from '../theme';
 import { LiquidGlassButton } from './LiquidGlassButton';
+import { resumeLangUrl } from '../routing';
+import { isSupportedLanguage } from '../i18n/languages';
 
 const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
   transition: theme.transitions.create(['transform', 'boxShadow'], {
     duration: theme.transitions.duration.standard,
   }),
-  cursor: 'pointer',
   '&:hover': {
     transform: 'scale(1.06)',
     boxShadow: theme.shadows[12],
@@ -47,7 +48,8 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 export const Hero: React.FC = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const resumeLang = isSupportedLanguage(i18n.language) ? i18n.language : 'en';
   const ctaTiltRef = useTilt<HTMLButtonElement>();
   const { ref: heroRef, isVisible: heroVisible } = useReveal();
   const scrollToSection = useScrollToSection();
@@ -64,7 +66,7 @@ export const Hero: React.FC = () => {
       ref={heroRef}
       component="section"
       sx={{
-        py: { xs: 8, md: 12 },
+        py: 8,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -72,10 +74,10 @@ export const Hero: React.FC = () => {
         ...revealSx(heroVisible),
       }}
     >
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <Stack
           direction={{ xs: 'column', md: 'row' }}
-          spacing={10}
+          spacing={{ xs: 6, md: 8 }}
           sx={{
             alignItems: 'center',
             justifyContent: { xs: 'center', md: 'flex-start' },
@@ -85,15 +87,33 @@ export const Hero: React.FC = () => {
           <Stack
             spacing={2}
             sx={{
-              alignItems: { xs: 'center', md: 'flex-start' },
-              textAlign: { xs: 'center', md: 'left' },
+              alignItems: 'flex-start',
+              textAlign: 'left',
+              minWidth: 0,
+              flex: 1.5,
               width: '100%',
-              order: { xs: 2, md: 1 },
+              order: 1,
             }}
           >
             <Typography
-              variant="h4"
-              component="h2"
+              component="span"
+              aria-hidden="true"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '3.5rem' },
+                fontWeight: 300,
+                lineHeight: 1,
+                letterSpacing: '-0.06em',
+                color: 'primary.main',
+                opacity: 0.55,
+                pointerEvents: 'none',
+                fontVariantNumeric: 'tabular-nums',
+              }}
+            >
+              01
+            </Typography>
+            <Typography
+              variant="h5"
+              component="p"
               sx={{
                 fontWeight: 'bold',
                 color: 'text.primary',
@@ -108,6 +128,10 @@ export const Hero: React.FC = () => {
                 fontFamily: DISPLAY_FONT,
                 fontWeight: 'bold',
                 fontStyle: 'italic',
+                fontSize: { xs: 'clamp(1.8rem, 8vw, 3rem)', md: 'clamp(2.5rem, 4.6vw, 3.6rem)' },
+                lineHeight: 1.12,
+                letterSpacing: '-0.04em',
+                overflowWrap: 'anywhere',
                 color: 'primary.main',
               }}
             >
@@ -115,6 +139,7 @@ export const Hero: React.FC = () => {
             </Typography>
             <Typography
               variant="h5"
+              component="p"
               sx={{
                 color: 'primary.main',
                 fontWeight: 600,
@@ -127,9 +152,9 @@ export const Hero: React.FC = () => {
               variant="body1"
               sx={{
                 color: 'text.secondary',
-                maxWidth: '600px',
+                maxWidth: '36ch',
                 fontSize: '1.1rem',
-                lineHeight: 1.6,
+                lineHeight: 1.8,
               }}
             >
               {t('hero.bio')}
@@ -147,35 +172,87 @@ export const Hero: React.FC = () => {
                 );
               })}
             </Stack>
-            <StyledButton
-              ref={ctaTiltRef}
-              variant="contained"
-              size="large"
-              onClick={handleContactClick}
-              sx={{
-                mt: 2,
-                px: 4,
-                py: 1.5,
-                textTransform: 'none',
-                fontSize: '1rem',
-              }}
+            <Stack
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={2}
+              sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
             >
-              {t('hero.cta')}
-            </StyledButton>
+              <StyledButton variant="contained" size="large" href={resumeLangUrl(resumeLang)}>
+                {t('hero.resumeCta')}
+              </StyledButton>
+              <StyledButton
+                ref={ctaTiltRef}
+                variant="outlined"
+                size="large"
+                onClick={handleContactClick}
+                sx={{
+                  mt: 2,
+                  px: 4,
+                  py: 1.5,
+                  textTransform: 'none',
+                  fontSize: '1rem',
+                }}
+              >
+                {t('hero.cta')}
+              </StyledButton>
+            </Stack>
           </Stack>
-          <AnimatedAvatar
-            src="/avatar.webp"
-            srcSet="/avatar.webp 1x, /avatar-2x.webp 2x"
-            alt={t('hero.avatarAlt')}
-            slotProps={{ img: { decoding: 'async' } }}
+          <Box
             sx={{
-              width: { xs: 200, md: 320 },
-              height: { xs: 200, md: 320 },
-              fontSize: '3rem',
-              fontWeight: 'bold',
-              order: { xs: 1, md: 2 },
+              position: 'relative',
+              width: { xs: 'calc(100% - 32px)', md: '100%' },
+              maxWidth: { xs: 280, md: 380 },
+              flex: 1,
+              order: 2,
+              p: 2,
             }}
-          />
+          >
+            <Box
+              aria-hidden="true"
+              sx={(theme) => ({
+                ...glass(theme),
+                position: 'absolute',
+                inset: 0,
+                borderRadius: 3,
+                transform: 'rotate(-6deg)',
+                pointerEvents: 'none',
+              })}
+            />
+            <Box
+              sx={(theme) => ({
+                position: 'relative',
+                p: 2,
+                borderRadius: 3,
+                bgcolor: 'background.paper',
+                border: '1px solid',
+                borderColor: 'divider',
+                boxShadow: theme.shadows[8],
+              })}
+            >
+              <AnimatedAvatar
+                src="/avatar.webp"
+                srcSet="/avatar.webp 1x, /avatar-2x.webp 2x"
+                alt={t('hero.avatarAlt')}
+                slotProps={{ img: { decoding: 'async' } }}
+                sx={{
+                  width: '100%',
+                  height: 'auto',
+                  aspectRatio: '1',
+                  borderRadius: 2,
+                  fontSize: '3rem',
+                  fontWeight: 'bold',
+                  order: { xs: 1, md: 2 },
+                }}
+              />
+              <Typography
+                component="p"
+                variant="overline"
+                sx={{ mt: 2, textAlign: 'center', color: 'text.secondary' }}
+              >
+                {t('hero.subtitle')}
+              </Typography>
+            </Box>
+          </Box>
         </Stack>
       </Container>
     </Box>

@@ -2,7 +2,8 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
+import CodeIcon from '@mui/icons-material/Code';
+import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
 import { getSkillsByCategory, type Skill } from '../data/skills';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
@@ -19,12 +20,20 @@ const SkillCategory: React.FC<{ label: string; skills: Skill[]; index: number }>
   const tiltRef = useTilt();
   const { ref: revealRef, isVisible } = useReveal();
   return (
-    <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
-      <GlassCard accent="left" ref={tiltRef} sx={{ p: 3 }}>
+    <Box ref={revealRef} sx={{ minWidth: 0, ...revealSx(isVisible, index * 60) }}>
+      <GlassCard accent="top" ref={tiltRef} sx={{ p: { xs: 3, md: 4 }, height: '100%' }}>
+        <Box sx={{ color: 'primary.main', mb: 4 }} aria-hidden="true">
+          {index === 0 ? (
+            <CodeIcon sx={{ fontSize: 36 }} />
+          ) : (
+            <BuildOutlinedIcon sx={{ fontSize: 36 }} />
+          )}
+        </Box>
         <Typography
           variant="h6"
+          component="h3"
           sx={{
-            mb: 2,
+            mb: 3,
             fontWeight: 600,
             color: 'primary.main',
           }}
@@ -50,12 +59,18 @@ export const Skills: React.FC = () => {
   ] as const;
 
   return (
-    <Section id="skills" title={t('skills.title')} maxWidth="md">
-      <Stack spacing={4}>
+    <Section id="skills" title={t('skills.title')} maxWidth="lg">
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
+          gap: 3,
+        }}
+      >
         {categories.map(({ key, label }, index) => (
           <SkillCategory key={key} label={label} skills={getSkillsByCategory(key)} index={index} />
         ))}
-      </Stack>
+      </Box>
     </Section>
   );
 };

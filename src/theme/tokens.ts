@@ -22,5 +22,6 @@ export const duration = {
  */
 export const zIndex = {
   backgroundOrb: 0, // behind all content
+  scrollHint: 1050, // above content, below navigation and its overlays
   backToTop: 1150, // above AppBar (1100), below drawer/modal
 } as const;

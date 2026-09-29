@@ -1,15 +1,6 @@
 import { useEffect, useState } from 'react';
 
-/**
- * Tracks which section is currently active in the viewport, for nav highlighting
- * (apple-design §16 wayfinding: "Where am I?").
- *
- * Uses IntersectionObserver on the section roots. The section whose root is
- * most in view wins; we pick the topmost entry when several intersect, with a
- * small threshold so the active item updates just before a section fully arrives.
- *
- * No-op safe: returns the first id until the observer fires.
- */
+/** Tracks the section occupying the most visible space below the sticky navigation. */
 export const useActiveSection = (sectionIds: string[], offset = 0): string => {
   const [active, setActive] = useState<string>(sectionIds[0] ?? '');
 
@@ -21,37 +12,24 @@ export const useActiveSection = (sectionIds: string[], offset = 0): string => {
       .filter((el): el is HTMLElement => el !== null);
     if (elements.length === 0) return;
 
-    // Pick the section whose top is closest to (but above) the offset line,
-    // favoring the topmost intersecting section for ties.
-    const visible = new Map<string, number>();
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            visible.set(entry.target.id, entry.intersectionRatio);
-          } else {
-            visible.delete(entry.target.id);
-          }
-        }
-        if (visible.size === 0) return;
-        // Choose the section with the highest intersection ratio; tie-break by
-        // document order (the first one in sectionIds).
+      () => {
         let best = '';
-        let bestRatio = -1;
-        for (const id of sectionIds) {
-          const ratio = visible.get(id);
-          if (ratio !== undefined && ratio > bestRatio) {
-            best = id;
-            bestRatio = ratio;
+        let bestHeight = 0;
+        for (const element of elements) {
+          // Ratios favor short sections and cached entries go stale between thresholds.
+          const rect = element.getBoundingClientRect();
+          const height = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, offset);
+          if (height > bestHeight) {
+            best = element.id;
+            bestHeight = height;
           }
         }
         if (best) setActive(best);
       },
       {
-        // Trigger near the top of the viewport (account for sticky AppBar ~64px).
-        rootMargin: `-${offset}px 0px -55% 0px`,
-        threshold: [0, 0.25, 0.5, 1],
+        rootMargin: `-${offset}px 0px 0px 0px`,
+        threshold: Array.from({ length: 101 }, (_, index) => index / 100),
       },
     );
 

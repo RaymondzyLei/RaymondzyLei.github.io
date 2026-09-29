@@ -25,6 +25,8 @@ dist-ssr
 
 # Playwright MCP test artifacts
 .playwright-mcp/
+.playwright-cli/
+output/playwright/
 
 # Claude Code local config
 .claude/
