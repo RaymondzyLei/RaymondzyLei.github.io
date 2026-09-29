@@ -1,14 +1,44 @@
 ---
 feature: spatial-portfolio
-status: in-progress
+status: delivered
 updated: 2026-09-29
 branch: feat/spatial-portfolio
 commits:
+  - a742bf9ef2c3a0067f54bef170811ad5474383d6
+  - 82c1d3c38a0b4aed8e340d3ce0ebdb434504a5d5
 ---
 
 # Spatial Portfolio
 
 ## Report
+
+### Accepted delivery — 2026-09-29
+
+- User accepted the final preview and explicitly requested service shutdown, merge, and push. The port 4173 preview has been stopped; feature commits are ready for fast-forward integration into `main`. No worktree or branch removal is requested.
+- Implementation range: `7c30f8bd6a93229af103d6f4b28f8034fa01f99a..82c1d3c38a0b4aed8e340d3ce0ebdb434504a5d5`, excluding the final documentation-only commit. This captures the reviewed working-tree implementation and the accepted Hero/navigation refinement.
+- Latest validation: 28 test files / 134 tests; typecheck, lint, formatting, production build, browser acceptance, and focused independent follow-up review passed. No unresolved review findings remain.
+- Main-checkout local changes (`CLAUDE.md` deletion, untracked `AGENTS.md` and `introduction.md`) are excluded from feature commits and must remain intact during integration.
+
+### Requested refinement — 2026-09-29
+
+- User follow-up supersedes the original Hero projects CTA and active-ring styling: the primary action now says `See my resume` / `查看我的简历` and links to `/resume?lang=<current language>`. Contact action is unchanged.
+- A small glass down-arrow breathes through opacity at the page top, disappears once scrolled, and reappears on return. Clicking uses `useScrollToSection` for Skills. It sits bottom-center on desktop and bottom-right on mobile to avoid the portrait; reduced motion disables the pulse. It is home-only and hidden from print.
+- Navbar active items retain their bottom highlight but no longer have a persistent outline/shadow ring; keyboard focus indicators remain.
+- Follow-up validation: 28 test files / 134 tests passed; typecheck, lint, format, and production build passed. English/Chinese resume navigation, top/scroll/return cue behavior, breathing opacity, reduced motion, underline-only nav, and 390/320px layout were checked in the independent browser. Screenshots `hero-update-desktop.png`, `hero-update-scrolled.png`, and `hero-update-mobile-final.png` were viewed. The user-facing preview ran on port 4173 for acceptance and was stopped on the subsequent merge/push request.
+
+### Verification — 2026-09-29
+
+- Baseline: `7c30f8bd6a93229af103d6f4b28f8034fa01f99a`. At the initial verification gate the feature HEAD was `a742bf9ef2c3a0067f54bef170811ad5474383d6`, with the remaining implementation in the worktree and seven new source/test files. No merge, push, deployment, or worktree removal occurred before explicit user acceptance.
+- Final repository checks: `pnpm run test:run` passed (27 files / 131 tests); `typecheck`, `lint`, `format:check`, `build` (1029 modules), and `git diff --check` passed. Active-section and reduced-motion reveal regressions were observed failing before their fixes.
+- Browser environment: one exclusively controlled, independent Playwright browser; local feature server on port 4173. Baseline checkout served on 4174 only for the final resume comparison. No personal browser profile, external submissions, or dependency changes. Both servers and the testing page were stopped before code review.
+- Homepage layout matrix: English/Chinese × light/dark × 1440×900, 390×844, 320×844. All six sections inspected in section and full-page screenshots; incomplete off-screen reveal captures supplemented by real scrolling. Additional navbar width checks at 900, 1024, and 1200px passed. Final 320px horizontal-wheel check returned `scrollX: 0`; document scrollWidth equalled clientWidth.
+- Verified interaction paths: desktop navigation, mobile drawer, both Hero actions, initial and runtime hash navigation, language query/hash preservation and localStorage, theme switching, academic category expansion, mobile page-end back-to-top, section-active highlighting, and reading progress. Project/contact/certificate hrefs and project image aspect ratio were inspected; external destinations and mail handlers were not opened. Existing two `#` contact placeholders were retained.
+- Motion: actual pointer input produced ±3° tilt, exit returned to rest; runtime reduced-motion cleared tilt, stopped both background transforms and CSS animations, removed the mouse orb, and made all sections opacity 1 with 0s transitions. Restoring motion re-enabled tilt. Coarse-pointer emulation disabled tilt and the mouse orb. Unit tests cover angle bounds, scheduling, listener cleanup, and idle mouse-orb frames.
+- Auxiliary routes: 404 return action passed; `/google` displayed its three-second countdown and navigated to an intercepted external document (no request to the external destination). Resume English/Chinese screen and print CSS were inspected. A screenshot right-edge concern reproduces on baseline: all 100 resume elements in each language have identical text, rectangles, font, color, and display between baseline and feature. No resume source/data changes; actual PDF pagination was not tested or changed.
+- Responsive acceptance fixes: compact mobile navbar and tablet drawer; visible-pixel section selection instead of stale relative intersection ratios; <=359px headings stack the number above the title; mobile back-to-top sits after content rather than covering text/actions; reduced-motion reveal styles remove transitions; mobile portrait reserves rotation space; hidden skip-link uses literal 1px dimensions with padding only when focused. Section vertical padding remains 64px.
+- Evidence is local and ignored under `output/playwright/`: `zcode-matrix-{en,zh}-{light,dark}-1440-*`, `zcode-final-{en,zh}-{light,dark}-{390,320}-*`, and focused `zcode-fixed-*` / `zcode-verified-*` captures. The original timed-out `zcode-matrix-en-dark-*` set is invalid (light theme) and superseded by `zcode-final-en-dark-1440-*`. Focused education/footer captures supersede incomplete off-screen reveal content; fixed menu captures wait for the drawer animation. Latest `zcode-final-light-overflow.png` supersedes earlier subpixel-scrollbar screenshots; after reserving the portrait rotation margin the horizontal-wheel check returned exactly `scrollX: 0`. Keyboard skip-link focus and runtime hash evidence are `zcode-skip-focused.png` and `zcode-runtime-hash.png`. Screen/print comparison evidence: `zcode-print-comparison-{4174,4173}.png`.
+- Independent review: separate standards and spec/correctness reviewers inspected baseline `7c30f8b` through the complete integrated worktree, including all seven new source/test files (not only committed HEAD). Both identified invalid whitespace-containing Academic Award ARIA references and stale reading progress after content resizing. Both were reproduced with failing tests, fixed, and independently rereviewed; no unresolved correctness, standards, consistency, or critical spec findings remain. The final browser regression confirmed the named Academic Award region and progress changing from 0.647609 to 0.620933 at unchanged scroll position, matching current geometry. `zcode-review-before.png` and `zcode-review-fixed.png` are the viewed evidence.
+- The initial delivery was the verified local worktree on `feat/spatial-portfolio`; the subsequent user-authorized implementation commit and closing action are recorded above. The original main checkout remains unchanged (`CLAUDE.md` deleted; `AGENTS.md` and `introduction.md` untracked). No package/lockfile or resume/data modifications. Repository checks were rerun after review fixes; the final type-only test-option correction also passed typecheck, lint, formatting, and production build. Test previews and browsers are stopped.
 
 ## [S1] Problem
 
@@ -63,7 +93,7 @@ The portfolio already provides glass materials, tilt, reveal, and smooth scrolli
 
 ## Tasks
 
-- [ ] T1: Strengthen shared depth and motion foundations — acceptance: consistent surfaces, correct bounded tilt, live input/reduced-motion gating, and cleanup regression tests pass. (covers: S2)
-- [ ] T2: Recompose hero and six-section content — acceptance: layered hero and featured project render with all original content and working actions; skills, education, academic, and contact have responsive differentiated layouts. (covers: S2; depends: T1)
-- [ ] T3: Integrate navigation and route compatibility — acceptance: active states, progress, theme/language controls, hash navigation, and mobile drawer work; resume and auxiliary routes retain their contracts. (covers: S2; depends: T1)
-- [ ] T4: Verify integrated experience and resolve independent review — acceptance: repository checks pass or baseline failures are explicitly evidenced; the browser matrix is inspected; no unresolved critical review findings remain. (covers: S2; depends: T2, T3)
+- [x] T1: Strengthen shared depth and motion foundations — acceptance: consistent surfaces, correct bounded tilt, live input/reduced-motion gating, and cleanup regression tests pass. (covers: S2)
+- [x] T2: Recompose hero and six-section content — acceptance: layered hero and featured project render with all original content and working actions; skills, education, academic, and contact have responsive differentiated layouts. (covers: S2; depends: T1)
+- [x] T3: Integrate navigation and route compatibility — acceptance: active states, progress, theme/language controls, hash navigation, and mobile drawer work; resume and auxiliary routes retain their contracts. (covers: S2; depends: T1)
+- [x] T4: Verify integrated experience and resolve independent review — acceptance: repository checks pass or baseline failures are explicitly evidenced; the browser matrix is inspected; no unresolved critical review findings remain. (covers: S2; depends: T2, T3)
