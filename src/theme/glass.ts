@@ -17,8 +17,8 @@ export const glass = (theme: Theme): CSSProperties => ({
   borderColor: alpha(theme.palette.common.white, theme.palette.mode === 'dark' ? 0.12 : 0.5),
   boxShadow:
     theme.palette.mode === 'dark'
-      ? `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.08)}`
-      : `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.6)}, 0 8px 32px ${alpha(ACCENT.light, 0.08)}`,
+      ? `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.1)}, 0 2px 6px ${alpha(theme.palette.common.black, 0.18)}, 0 20px 56px ${alpha(ACCENT.dark, 0.035)}`
+      : `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.8)}, 0 2px 6px ${alpha(ACCENT.light, 0.035)}, 0 20px 56px ${alpha(ACCENT.light, 0.09)}`,
 });
 
 /**
@@ -28,8 +28,8 @@ export const glass = (theme: Theme): CSSProperties => ({
  */
 export const glassHoverShadow = (theme: Theme): string =>
   theme.palette.mode === 'dark'
-    ? `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.1)}, 0 12px 36px ${alpha(ACCENT.dark, 0.1)}`
-    : `0 12px 40px ${alpha(ACCENT.light, 0.16)}`;
+    ? `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.16)}, 0 4px 12px ${alpha(theme.palette.common.black, 0.22)}, 0 24px 64px ${alpha(ACCENT.dark, 0.12)}`
+    : `inset 0 1px 0 0 ${alpha(theme.palette.common.white, 0.9)}, 0 4px 12px ${alpha(ACCENT.light, 0.06)}, 0 24px 64px ${alpha(ACCENT.light, 0.16)}`;
 
 /**
  * Focus-visible ring (ui-ux-pro-max `focus-states`). Static dual-selector CSS

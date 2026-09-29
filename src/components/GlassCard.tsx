@@ -21,7 +21,7 @@ export const GlassCard = styled(Paper, {
   shouldForwardProp: (prop) => prop !== 'accent',
 })<GlassCardProps>(({ theme, accent = 'none' }) => ({
   ...glass(theme),
-  transition: theme.transitions.create(['boxShadow'], {
+  transition: theme.transitions.create(['boxShadow', 'borderColor'], {
     duration: theme.transitions.duration.standard,
   }),
   ...(accent === 'left' && {
@@ -32,5 +32,11 @@ export const GlassCard = styled(Paper, {
   }),
   '&:hover': {
     boxShadow: glassHoverShadow(theme),
+  },
+  '&:focus-within': {
+    boxShadow: glassHoverShadow(theme),
+  },
+  '@media (prefers-reduced-motion: reduce)': {
+    transition: 'none',
   },
 }));
