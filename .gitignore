@@ -28,8 +28,12 @@ dist-ssr
 .playwright-cli/
 output/playwright/
 
-# Claude Code local config
+# Local agent config and runtime artifacts
 .claude/
+.video_agent/
+
+# Local Git worktrees
+.worktrees/
 
 # Superpowers scratch (brainstorm mockups, SDD ledger)
 .superpowers/

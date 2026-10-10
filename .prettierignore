@@ -6,4 +6,9 @@ package-lock.json
 .claude
 .remember
 .superpowers
+.worktrees
+.video_agent
+.playwright-mcp
+.playwright-cli
+output/playwright
 *.md

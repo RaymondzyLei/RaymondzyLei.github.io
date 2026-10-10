@@ -6,7 +6,7 @@ import type { CSSObject } from '@mui/material/styles';
  * Apply via `sx={{ ...revealSx(isVisible, delayMs) }}` on the OUTER wrapper
  * element (the one holding the useReveal ref). Do NOT attach to the same
  * element as useTilt — reveal writes `translate3d`, tilt writes `rotate3d`
- * (see CLAUDE.md "transform 写入隔离").
+ * (see AGENTS.md "transform 写入隔离").
  *
  * opacity 0->1 + translateY(24px)->0, 1200ms cubic-bezier(0.22,1,0.36,1).
  * Stagger via `delayMs` (callers pass `index * 100`); section-level reveals

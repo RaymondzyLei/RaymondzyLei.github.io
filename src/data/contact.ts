@@ -12,8 +12,10 @@ export interface ContactLink {
 }
 
 export const contactLinks: ContactLink[] = [
+  // TODO: replace the placeholder with the portfolio website URL.
   { id: 'portfolio-website', url: '#', icon: WebIcon },
   { id: 'github-repos', url: 'https://github.com/RaymondzyLei?tab=repositories', icon: CodeIcon },
+  // TODO: replace the placeholder with the blog URL.
   { id: 'blog', url: '#', icon: ArticleIcon },
   { id: 'resume-download', url: '/resume', icon: DescriptionIcon },
 ];

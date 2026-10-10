@@ -6,6 +6,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   test: {
+    // Keep nested worktrees and local tool artifacts out of test discovery.
+    dir: './src',
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
   },

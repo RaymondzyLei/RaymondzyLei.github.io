@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件为在此仓库中工作的编码代理提供项目约定。修改首页空间布局或动效前，阅读 `docs/compose/spec/spatial-portfolio.md` 的设计与交互契约；其中验收记录是历史证据，当前实现以源码为准。
 
 ## 项目概述
 
@@ -60,7 +60,7 @@ src/
 │   ├── en.json       # 英文翻译
 │   └── zh.json       # 中文翻译
 ├── components/
-│   ├── Layout.tsx              # 页面骨架：编排 <Navbar> + <BackgroundOrbs> + <main> + <BackToTopButton>
+│   ├── Layout.tsx              # 页面骨架：Navbar + BackgroundOrbs + main + 首页 ScrollHint + BackToTopButton
 │   ├── GlassCard.tsx           # 共享液态玻璃卡片（`glass(theme)` + hover elevation，`accent` 控制左/上边线）
 │   ├── SectionHeading.tsx     # 共享区块标题（variant h3/h2 + mb/居中）
 │   ├── Section.tsx            # 共享区块外壳（scroll-reveal Box + Container + SectionHeading + scrollMarginTop 兜底原生锚点，5 个 section 复用）
@@ -70,11 +70,11 @@ src/
 │   ├── BackgroundOrbs.tsx      # 3 个模糊光球背景层（2 个自主漂移 + 1 个鼠标跟随琥珀金；边界碰撞 + 滚动视差 + 视口 clamp）
 │   ├── ScrollSnap.tsx          # proximity 滚动吸附（lenis/snap 扩展，仅 home 路由挂载；reduced-motion/coarse-pointer 不启用）
 │   ├── LiquidGlassButton.tsx   # 圆形 48px 液态玻璃按钮（Hero + Contact 社交行复用）
-│   ├── Hero.tsx                # 头像 + 4 个 LiquidGlassButton 社交链接 + CTA 按钮（useScrollToSection 滚到 Contact）
+│   ├── Hero.tsx                # 响应式空间布局 + 分层头像 + 社交链接；主 CTA 按当前语言链接简历，Contact CTA 用 useScrollToSection
 │   ├── Skills.tsx              # 按类别分组展示技能标签
 │   ├── Qualifications.tsx      # 教育经历时间线（桌面端交替布局，移动端卡片）
 │   ├── Academic.tsx            # 学术成就/竞赛（按类别折叠面板）
-│   ├── Portfolio.tsx           # 项目卡片网格
+│   ├── Portfolio.tsx           # 单项目 featured 展示（响应式截图 + 内容布局），仍支持多项目
 │   ├── Contact.tsx             # 联系信息 + LiquidGlassButton 社交行 + 有用链接
 │   ├── NotFound.tsx            # 404 页面（毛玻璃卡片 + 返回首页链接）
 │   ├── RedirectPage.tsx        # 重定向中间页（3 秒倒计时自动跳转）
@@ -82,7 +82,9 @@ src/
 │   └── layout/
 │       ├── Navbar.tsx          # 吸顶毛玻璃 AppBar + 导航 + 主题切换 + 移动抽屉
 │       ├── LanguageMenu.tsx    # 语言切换下拉菜单（en/zh；切换时 langQueryUrl + replaceState 把语言镜像进 URL query）
-│       └── BackToTopButton.tsx # 固定返回顶部按钮（订阅 Lenis 滚动更新透明度）
+│       ├── ScrollProgress.tsx  # Navbar 内装饰性阅读进度（Lenis + ResizeObserver，直接更新 transform）
+│       ├── ScrollHint.tsx      # 首页顶部呼吸箭头；滚动后隐藏，点击用 useScrollToSection 到 Skills
+│       └── BackToTopButton.tsx # 订阅 Lenis 滚动更新透明度；桌面固定，移动端在内容后
 ├── data/
 │   ├── skills.ts       # 技能数据及按类别查询函数
 │   ├── timeline.ts     # 教育经历时间线数据
@@ -100,7 +102,7 @@ src/
 
 所有面向用户的文本必须通过 `useTranslation()` 的 `t()` 函数获取，并在 `en.json` 和 `zh.json` 中同时添加翻译条目。语言选择自动保存到 `localStorage` 的 `language` 键。
 
-**初始化时校验 localStorage**：`src/i18n/i18n.ts` 启动时读 `language` 键，**仅接受 `en` / `zh`**，其他值一律回退到 `en`（用 `isSupportedLanguage` 类型守卫实现，不要用 `|| 'en'` 这种 fallback，养成显式校验习惯）。`SUPPORTED_LANGUAGES` 数组是 single source of truth。
+**初始化时校验 localStorage**：`src/i18n/i18n.ts` 启动时读 `language` 键，用 `isSupportedLanguage` 类型守卫**仅接受 `en` / `zh`**，缺省或非法存储值按下述优先级继续回退到浏览器语言，再到 `en`。`SUPPORTED_LANGUAGES` 数组是 single source of truth。
 
 **语言镜像到 URL query（`?lang=`）**：全局语言（主页/404/redirect 等走 `useTranslation` 的页面）与简历页共用同一约定——**显式选择（菜单/切换器动作）镜像为 `?lang=<code>`，en 和 zh 都写 query；裸地址（无 query）走初始化优先级链**，由 `routing.ts` 的 `langQueryUrl(pathname, lang, hash)` 统一生成（`resumeLangUrl` 是其薄封装）。
 
@@ -184,7 +186,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 
 ## 导航滚动约定
 
-**所有区块定位统一走 `useScrollToSection`**（`src/hooks/useScrollToSection.ts`）：点击时实测 `.MuiAppBar-root` 高度作 lenis offset（不缓存，断点/语言切换/缩放都保持正确），让区块标题落在 AppBar 正下方。当前使用方：Navbar 导航按钮、Hero CTA。**禁止**用 `element.scrollIntoView()` 或 `window.scrollTo()`（会和 Lenis 冲突，要么双滚动要么不丝滑）。**注意 `lenis.scrollTo(element)` 默认不带 AppBar offset**——直接调会把标题滚到栏底下（PR #4 前的历史行为），所以不要绕过 helper。
+**所有区块定位统一走 `useScrollToSection`**（`src/hooks/useScrollToSection.ts`）：点击时实测 `.MuiAppBar-root` 高度作 lenis offset（不缓存，断点/语言切换/缩放都保持正确），让区块标题落在 AppBar 正下方。当前使用方：Navbar 导航按钮、Hero Contact CTA、ScrollHint。**禁止**用 `element.scrollIntoView()` 或 `window.scrollTo()`（会和 Lenis 冲突，要么双滚动要么不丝滑）。**注意 `lenis.scrollTo(element)` 默认不带 AppBar offset**——直接调会把标题滚到栏底下（PR #4 前的历史行为），所以不要绕过 helper。
 
 - 返回顶部：`lenis?.scrollTo(0, { duration: reducedMotion ? 0 : 1.2 })`（滚到 0 无需 offset；用 `useMediaQuery('(prefers-reduced-motion: reduce)')` 读 `reducedMotion`）
 - 返回顶部按钮透明度：`Math.min(lenis.scroll / 300, 1)`（用 `useLenis((lenis) => ...)` 订阅更新）
@@ -201,13 +203,13 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - **挂 `useTilt` ref 的元素，hover 不得再叠 `transform: translateY/translateX`**（inline transform 冲突）。**非倾斜元素**（如 nav button、avatar、social icon、Chip）可以自由加 hover transform。
 - **背景光球**：固定 2 个（紫色：亮 `ACCENT.light`/暗 `ACCENT.orbDark`，引用 `colors.ts`、与 `primary` 解耦 + 蓝绿 `info.main`），速度 0.35-0.55 px/frame，撞视口边缘反弹；滚动视差（见上）。暗色模式下透明度显著降低（0.16 / 0.12），避免光球在黑色背景上过于抢眼干扰阅读。
 - **鼠标跟随光球（第 3 个）**：琥珀金（`MOUSE_ORB` token，亮 `#f59e0b`/暗 `#fbbf24`——全站唯一暖色），240px + `blur(100px)`，rAF + lerp 0.15 惯性拖尾。**`pointer: coarse` 或 `prefers-reduced-motion` 不渲染**（`useMediaFlag` hook 响应运行时 change）。首次 mousemove 瞬移吸附到光标再 opacity 淡入（600ms），避免从 (0,0) 横穿全屏飞入。独立 rAF + `window` passive `mousemove`，与漂移球视差 rAF 解耦；无滚动视差（光标本身就是视口坐标）。
-- **移动端（`pointer: coarse`）自动退化**：3D 倾斜不触发（无 mousemove）；视差改为滚动驱动所以移动端也工作。
-- **所有动效尊重 `prefers-reduced-motion: reduce`**：`useTilt` 订阅 `change` 事件动态启停（关闭时清 transform、取消 rAF）；`BackgroundOrbs` 通过 CSS 媒体查询关闭 keyframe；Lenis 配置 `duration: 0`；`handleBackToTop` 用 `useMediaQuery` 决定 `duration: 0` 还是 `1.2`。
+- **移动端（`pointer: coarse`）自动退化**：3D 倾斜仅在 `(hover: hover) and (pointer: fine)` 时启用，并忽略 touch PointerEvent；滚动视差仍工作。
+- **所有动效尊重 `prefers-reduced-motion: reduce`**：`useTilt` 订阅 `change` 事件动态启停（关闭时清 transform、取消 rAF）；`BackgroundOrbs` 同时停止 JavaScript 漂移/视差循环和 CSS keyframe；Lenis 配置 `duration: 0`；`handleBackToTop` 用 `useMediaQuery` 决定 `duration: 0` 还是 `1.2`。
 - **Scroll-reveal（`useReveal`）**：6 个 section + 区块内卡片错位渐现。opacity 0→1 + translateY(24px)→0，缓动 `cubic-bezier(0.22, 1, 0.36, 1)`，1200ms。`useReveal` 包装 `react-intersection-observer` 的 `useInView`（threshold 0.2、rootMargin `'0px 0px 0px 0px'`、triggerOnce true）+ MUI `useMediaQuery`；`prefers-reduced-motion: reduce` 时直接 `isVisible: true` 无 observer。错位 stagger：同区块卡片 `transitionDelay: ${index * 100}ms`，由调用方传 `delayMs`（如 `revealSx(isVisible, index * 100)`），hook 不传 delay。**那段 sx 统一用 `src/styles/reveal.ts` 的 `revealSx(isVisible, delayMs)` 生成**，不要手写重复的 transition 字符串。
 - **transform 写入隔离**：`useTilt`（写 `rotate3d`）和 `useReveal`（写 `translate3d`）**不允许挂在同一 DOM 元素**。reveal 写外层 wrapper Box，tilt 写内层卡片 DOM。
 - **Academic Accordion 特殊处理**：accordion 内的 `AchievementCardView` **不** stagger。`<AccordionDetails>` 折叠时 `height: 0` 但 DOM 存在，IntersectionObserver 立即 fire `inView: true`，展开时卡片已 visible，再 stagger 反而闪烁。仅 `Academic` 区块整体渐现。
 - **LiquidGlassButton 动效**：hover `transform: scale(1.08)` + 加深 inset highlight；active `scale(0.96)`；`focus-visible` 焦点环 `outline: 2px solid primary.main; outline-offset: 2`；`@media (pointer: coarse)` 禁用 scale；`prefers-reduced-motion: reduce` 时 transition 全部清零。**不挂 useTilt**（与 scale transform 冲突）。
-- **Nav active-section 高亮**（`useActiveSection`）：IntersectionObserver 监听 6 个 section，视口内占比最高者高亮。`SECTION_IDS` 必须是模块级稳定引用（`src/sections.ts`），否则 effect 每次渲染 teardown+recreate observer（ScrollSnap 的吸附点也复用同一 `SECTION_IDS`）。404/redirect 页 nav 退化为普通链接。
+- **Nav active-section 高亮**（`useActiveSection`）：IntersectionObserver 监听 6 个 section，按导航栏下方当前可见高度选择高亮，不使用缓存的交叉比例。`SECTION_IDS` 必须是模块级稳定引用（`src/sections.ts`），否则 effect 每次渲染 teardown+recreate observer（ScrollSnap 的吸附点也复用同一 `SECTION_IDS`）。404/redirect 页 nav 退化为普通链接。
 
 ## 占位数据约定
 
@@ -215,7 +217,7 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - **TypeScript 数据文件**：未填充的内容在附近加 `// TODO: ...` 注释说明。已标记的：
   - `src/theme/palette.ts`（`secondary` 调色板）
 
-  `src/data/contact.ts` 仍有 2 个占位 `url: '#'`（portfolio-website / blog）但 TODO 注释已在重构中丢失；历史标记（projects.ts、achievements.ts、skills.ts）已随内容填充清理。JSON 侧 `_TODO_` 前缀机制保留，当前 en/zh 均无实例。
+  `src/data/contact.ts` 仍有 2 个带 TODO 的占位 `url: '#'`（portfolio-website / blog）；获得真实地址后替换，不凭空补写。JSON 侧 `_TODO_` 前缀机制保留，当前 en/zh 均无实例。
 
 ## TypeScript 注意事项
 
@@ -240,9 +242,9 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 
 - GitHub Actions：`.github/workflows/deploy-pages.yml`
   - `push` 到 `main` → build + deploy（生产）
-  - `pull_request` → build + deploy（PR 预览，URL 见 workflow run 输出，PR 关闭/合并后清理）
+  - `pull_request` → checks + build + deploy（当前复用同一 `github-pages` environment，未配置独立 PR 预览或关闭后清理）
   - `workflow_dispatch` → 手动触发
-  - PR 预览部署依赖 `github-pages` environment 的分支策略：需在仓库设置里允许 `refs/pull/*/merge`（GitHub 默认只允许部署分支）——workflow 里 `actions/deploy-pages@v4` 的 `enablement` 输入已不存在（v4 的 action.yml 只有 token/timeout/error_count/reporting_interval/artifact_name/preview），现存的 `enablement: true` 行会被忽略并产生 warning，下次动 workflow 时可删
+  - PR 部署受 `github-pages` environment 的分支策略限制；工作流不传已移除的 `enablement` 输入。修改部署策略前核对仓库设置与 action 的实际能力。
 - 自定义域名 `raymondzylei.me`（在 `CNAME` 文件中配置）
 - 构建输出到 `dist/` 目录
 - `vite.config.ts` 显式声明 `base: '/'`（自定义域名部署需要根相对路径），含自定义插件在构建后将 `index.html` 复制为 `404.html`（GitHub Pages SPA fallback）
@@ -252,5 +254,5 @@ hover 反馈继续用 `boxShadow` / `border` / `color`，**不要改 `background
 - `.gitignore` 防 `*.bak` / `*.tsxbak` / `*.orig` / `.playwright-mcp/` / `.claude/`（Claude Code 本地配置如 plans/）等产物
 - `.gitattributes`：`* text=auto eol=lf`（统一 LF 行尾，Windows 开发不会被 CRLF 污染）
 - 代码风格用 Prettier（`.prettierrc`：单引号、分号、2 空格、`trailingComma: all`、`printWidth: 100`），`pnpm run format` 格式化；ESLint 末尾接 `eslint-config-prettier` 关闭冲突规则
-- 测试用 Vitest（`vitest.config.ts`，jsdom 环境），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`（glass/easing/typography/焦点环 overrides）、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact/BackgroundOrbs/ScrollSnap.test.tsx`、`resume/ResumeBits.test.tsx`
+- 测试用 Vitest（`vitest.config.ts`，jsdom 环境，发现目录限定为 `src`，避免扫描本地工作树），`pnpm run test:run` 单次运行；纯函数优先测试。现有测试文件：`routing.test.ts`、`theme.test.ts`（glass/easing/typography/焦点环 overrides）、`i18n.test.ts`、`i18n-keys.test.ts`、`reveal.test.ts`、`useReveal.test.tsx`、`useHashScroll.test.ts`、`useActiveSection.test.ts`、`useTilt.test.tsx`、`redirects.test.ts`、组件测试 `CertDownloadButton/GlassCard/LiquidGlassButton/SectionHeading/SoftChip/Qualifications/Contact/BackgroundOrbs/ScrollSnap.test.tsx`、`resume/ResumeBits.test.tsx`
 - 包管理只用 pnpm（不混用 npm / yarn）

@@ -7,7 +7,17 @@ import prettierConfig from 'eslint-config-prettier';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist', '.remember', '.claude', '.superpowers']),
+  globalIgnores([
+    'dist',
+    '.remember',
+    '.claude',
+    '.superpowers',
+    '.worktrees',
+    '.video_agent',
+    '.playwright-mcp',
+    '.playwright-cli',
+    'output/playwright',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -27,18 +37,18 @@ export default defineConfig([
         'error',
         {
           name: 'scrollTo',
-          message: 'Use lenis?.scrollTo instead of window.scrollTo (see CLAUDE.md)',
+          message: 'Use lenis?.scrollTo instead of window.scrollTo (see AGENTS.md)',
         },
       ],
       'no-restricted-syntax': [
         'error',
         {
           selector: "CallExpression[callee.property.name='scrollIntoView']",
-          message: 'Use lenis?.scrollTo(element) instead of element.scrollIntoView (see CLAUDE.md)',
+          message: 'Use lenis?.scrollTo(element) instead of element.scrollIntoView (see AGENTS.md)',
         },
         {
           selector: "CallExpression[callee.object.name='window'][callee.property.name='scrollTo']",
-          message: 'Use lenis?.scrollTo instead of window.scrollTo (see CLAUDE.md)',
+          message: 'Use lenis?.scrollTo instead of window.scrollTo (see AGENTS.md)',
         },
       ],
       'no-console': 'warn',
