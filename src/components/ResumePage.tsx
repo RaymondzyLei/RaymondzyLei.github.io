@@ -14,6 +14,7 @@ import i18n from '../i18n/i18n';
 import { LANGUAGE_OPTIONS } from '../i18n/languages';
 import { resumeLangUrl, type ResumeLang } from '../routing';
 import { timelineData } from '../data/timeline';
+import { researchProjects } from '../data/projects';
 import { achievementsData } from '../data/achievements';
 import { skillsData, type Skill } from '../data/skills';
 import { socialLinks, type SocialLink } from '../data/social';
@@ -115,10 +116,15 @@ export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang: initialLang 
       <Box
         className="no-print"
         sx={{
-          position: 'fixed',
-          top: 16,
-          left: 16,
-          zIndex: 10,
+          maxWidth: 768,
+          mx: 'auto',
+          px: 2,
+          pt: 2,
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: 2,
         }}
       >
         <Link
@@ -137,44 +143,39 @@ export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang: initialLang 
           <ArrowBackIcon sx={{ fontSize: '1.1rem' }} />
           {t('resume.backHome')}
         </Link>
-      </Box>
 
-      {/* Language toggle — mirrors back-home on the right; hidden in print.
-          Labels reuse nav.* self-named entries (English / 中文). */}
-      <Box
-        className="no-print"
-        sx={{
-          position: 'fixed',
-          top: 16,
-          right: 16,
-          zIndex: 10,
-          display: 'inline-flex',
-          gap: 1.5,
-        }}
-        role="group"
-        aria-label={t('layout.changeLanguage')}
-      >
-        {LANGUAGE_OPTIONS.map(({ code, labelKey }) => {
-          const active = code === lang;
-          return (
-            <Link
-              key={code}
-              component="button"
-              type="button"
-              onClick={() => handleLangChange(code)}
-              sx={{
-                color: active ? INK : C.sub,
-                fontWeight: active ? 700 : 500,
-                fontSize: '0.9rem',
-                textDecoration: 'none',
-                cursor: 'pointer',
-                '&:hover': { color: INK },
-              }}
-            >
-              {t(labelKey)}
-            </Link>
-          );
-        })}
+        {/* In-flow controls never cover the longer research content.
+            Labels reuse nav.* self-named entries (English / 中文). */}
+        <Box
+          sx={{
+            display: 'inline-flex',
+            gap: 1.5,
+          }}
+          role="group"
+          aria-label={t('layout.changeLanguage')}
+        >
+          {LANGUAGE_OPTIONS.map(({ code, labelKey }) => {
+            const active = code === lang;
+            return (
+              <Link
+                key={code}
+                component="button"
+                type="button"
+                onClick={() => handleLangChange(code)}
+                sx={{
+                  color: active ? INK : C.sub,
+                  fontWeight: active ? 700 : 500,
+                  fontSize: '0.9rem',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                  '&:hover': { color: INK },
+                }}
+              >
+                {t(labelKey)}
+              </Link>
+            );
+          })}
+        </Box>
       </Box>
 
       <Box
@@ -292,6 +293,58 @@ export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang: initialLang 
                 period={t(`${p}.date`)}
                 bullets={bullets}
               />
+            );
+          })}
+        </section>
+
+        {/* Research — shared project facts and translations with Portfolio. */}
+        <section aria-labelledby="resume-research-heading">
+          <Box id="resume-research-heading" sx={{ breakAfter: 'avoid' }}>
+            <SectionTitle>{t('resume.section.research')}</SectionTitle>
+          </Box>
+          {researchProjects.map((project) => {
+            const p = `data.projects.${project.id}`;
+            return (
+              <Box
+                component="article"
+                key={project.id}
+                sx={{ mb: 3, breakInside: 'avoid', overflowWrap: 'anywhere' }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
+                    gap: 1,
+                    breakAfter: 'avoid',
+                  }}
+                >
+                  <Typography
+                    component="h3"
+                    sx={{ fontWeight: 700, color: INK, fontSize: '1rem', flex: '1 1 280px' }}
+                  >
+                    {t(`${p}.title`)}
+                  </Typography>
+                  <Typography sx={{ color: C.sub, fontSize: '0.8rem' }}>
+                    {t(`${p}.period`)}
+                  </Typography>
+                </Box>
+                <Typography sx={{ color: C.sub, fontSize: '0.85rem', mt: 0.5 }}>
+                  {t(`${p}.description`)}
+                </Typography>
+                <Box component="ul" sx={{ m: 0, pl: 3, mt: 0.5 }}>
+                  {project.contributionIds?.map((id) => (
+                    <Box
+                      component="li"
+                      key={id}
+                      sx={{ color: INK, fontSize: '0.85rem', lineHeight: 1.6, mt: 0.5 }}
+                    >
+                      {t(`${p}.contributions.${id}`)}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
             );
           })}
         </section>

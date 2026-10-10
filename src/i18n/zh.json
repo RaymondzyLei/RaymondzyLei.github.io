@@ -160,6 +160,36 @@
       "1": {
         "title": "USTC 选课工具",
         "description": "为学生提供丰富的选课、排课功能，解决选课过程中教务系统难以使用、选课结果不直观等困难。"
+      },
+      "nexos": {
+        "title": "NexOS Agent-OS — 面向 RISC-V 教学操作系统的 Agent 原生内核扩展",
+        "period": "2026 年 3 月 – 8 月",
+        "description": "Agent 原生操作系统扩展与可复现研究流水线。",
+        "contributions": {
+          "kernel": "设计内核级 Agent 抽象：基于能力的身份、进程独立 Context 空间、结构化 Tool Call，以及支持心跳、IPC、文件事件和优先级 + 老化机制的事件驱动 Loop。",
+          "agentfs": "扩展文件系统，实现 AgentFS 语义属性、索引与批量元数据操作。在 20 次 QEMU 启动中进行 10 个区块的 AB/BA 实验，元数据开销降低 3.98 倍（提速 74.9%，0 次失败）。",
+          "reprolab": "构建四角色 ReproLab 可复现研究流水线，通过 SHA-256 绑定证据；AgentOS 路径相较应用层索引实现 16.2 倍加速，并实现 virtio-serial LLM 代理。",
+          "award": "获得全国大学生计算机系统能力大赛全国二等奖。"
+        }
+      },
+      "vit-retinamnist": {
+        "title": "基于蒸馏引导量化的 RetinaMNIST 医学图像分类 ViT 压缩",
+        "period": "2026 年 4 月",
+        "description": "结合知识蒸馏与低比特量化进行医学图像分类。",
+        "contributions": {
+          "classifier": "构建用于 RetinaMNIST 糖尿病视网膜病变分级的轻量级 ViT-Small 分类器，结合知识蒸馏与 GPTQ/AWQ 低比特量化。",
+          "distillation": "将全精度教师模型的知识蒸馏至量化学生模型，在 4 比特压缩下恢复精度，并保持 F1 分数高于基线。",
+          "competition": "在第二届中国算法能力大赛全国决赛 AI 赛道模型轻量化挑战中，成绩位居参赛队伍前列。"
+        }
+      },
+      "cs229": {
+        "title": "CS229 深度学习作业 — PyTorch（Python）与 Burn（Rust）双框架实现",
+        "period": "2026 年 3 月 – 7 月",
+        "description": "通过双框架实现深度学习模型，探索神经网络原理。",
+        "contributions": {
+          "implementation": "分别使用 Python 的 PyTorch 与 Rust 的 Burn 框架实现深度学习模型，展现两种语言在深度学习任务中的实践能力。",
+          "training": "积累深度学习模型训练与评估的实践经验，并理解神经网络的底层原理。"
+        }
       }
     }
   },
@@ -176,6 +206,7 @@
     "section": {
       "about": "关于",
       "education": "教育经历",
+      "research": "研究与项目经历",
       "awards": "奖项与成就",
       "academicProfile": "学术概况",
       "skills": "技能"

@@ -6,6 +6,20 @@ import { renderWithTheme } from '../../test/render';
 afterEach(cleanup);
 
 describe('EducationItem', () => {
+  it('allows long institution and date rows to wrap on narrow screens', () => {
+    renderWithTheme(
+      <EducationItem
+        institution="National University of Singapore, School of Computing"
+        location="Singapore"
+        degree="Summer Workshop"
+        period="May 2026 – July 2026"
+        bullets={[]}
+      />,
+    );
+    const date = screen.getByText('May 2026 – July 2026');
+    expect(date.parentElement).toHaveStyle({ display: 'flex', flexWrap: 'wrap' });
+  });
+
   it('renders institution, location, degree, period and bullet list', () => {
     renderWithTheme(
       <EducationItem

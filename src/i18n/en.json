@@ -160,6 +160,36 @@
       "1": {
         "title": "USTC Course Arrangement Tool",
         "description": "A course selection and scheduling tool that solves the pain points of USTC's official system — helping students browse courses intuitively and plan their timetables with ease."
+      },
+      "nexos": {
+        "title": "NexOS Agent-OS — Agent-Native Kernel Extensions for a RISC-V Teaching OS",
+        "period": "March – August 2026",
+        "description": "Agent-native operating system extensions and a reproducible research pipeline.",
+        "contributions": {
+          "kernel": "Designed a kernel-level Agent abstraction with capability-based identity, per-process Context space, structured Tool Calls, and an event-driven Loop supporting heartbeat, IPC, file events, and priority + aging.",
+          "agentfs": "Extended the filesystem with AgentFS semantic attributes, indexing, and batch metadata. A 10-block AB/BA experiment across 20 QEMU boots achieved a 3.98× reduction in metadata cost (74.9% faster, 0 failures).",
+          "reprolab": "Built the four-role ReproLab reproducible research pipeline with SHA-256 evidence binding. The AgentOS path achieved a 16.2× speedup over application-level indexing; also implemented a virtio-serial LLM proxy.",
+          "award": "Achieved Second Prize in the National College Computer System Development Capability Competition."
+        }
+      },
+      "vit-retinamnist": {
+        "title": "ViT Compression for RetinaMNIST via Distillation-Guided Quantization",
+        "period": "April 2026",
+        "description": "Medical image classification with knowledge distillation and low-bit quantization.",
+        "contributions": {
+          "classifier": "Engineered a lightweight ViT-Small classifier for diabetic retinopathy grading on RetinaMNIST, combining knowledge distillation with GPTQ/AWQ low-bit quantization.",
+          "distillation": "Distilled knowledge from a full-precision teacher into a quantized student, recovering accuracy under 4-bit compression and keeping F1 above the baseline.",
+          "competition": "Achieved a top-tier ranking among participating teams in the 2nd China Algorithm Capability Competition National Final AI Track Model Lightweight Challenge."
+        }
+      },
+      "cs229": {
+        "title": "CS229 Deep Learning Assignments — PyTorch (Python) and Burn (Rust)",
+        "period": "March – July 2026",
+        "description": "Dual-framework implementation of deep learning models and exploration of neural network principles.",
+        "contributions": {
+          "implementation": "Implemented deep learning models in both PyTorch (Python) and Burn (Rust), demonstrating proficiency in both languages for deep learning tasks.",
+          "training": "Gained hands-on experience in training and evaluating deep learning models and understanding the underlying principles of neural networks."
+        }
       }
     }
   },
@@ -176,6 +206,7 @@
     "section": {
       "about": "About",
       "education": "Education",
+      "research": "Research & Projects",
       "awards": "Awards & Achievements",
       "academicProfile": "Academic Profile",
       "skills": "Skills"

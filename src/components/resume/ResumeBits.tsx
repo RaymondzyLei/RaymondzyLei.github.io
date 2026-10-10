@@ -44,8 +44,16 @@ export const EducationItem: React.FC<{
   bullets: string[];
 }> = ({ institution, location, degree, period, bullets }) => (
   <Box sx={{ mb: 2.5 }}>
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 2 }}>
-      <Box>
+    <Box
+      sx={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        gap: 1,
+      }}
+    >
+      <Box sx={{ flex: '1 1 240px', minWidth: 0 }}>
         <Typography component="span" sx={{ fontWeight: 700, color: INK, fontSize: '1rem' }}>
           {institution}
         </Typography>

@@ -10,6 +10,15 @@ afterEach(() => {
 });
 
 describe('ResumePage PDF download', () => {
+  it('keeps navigation controls in a wrapping toolbar outside the resume body', () => {
+    renderWithTheme(<ResumePage lang="en" />);
+    const backHome = screen.getByRole('link', { name: "Back to Raymond's HomePage" });
+    const toolbar = backHome.closest('.no-print');
+    expect(toolbar).toHaveStyle({ display: 'flex', flexWrap: 'wrap' });
+    expect(toolbar).not.toHaveStyle({ position: 'fixed' });
+    expect(toolbar).toContainElement(screen.getByRole('button', { name: '中文' }));
+  });
+
   it.each(['en', 'zh'] as const)('links to the English PDF in the %s page', (lang) => {
     renderWithTheme(<ResumePage lang={lang} />);
     const download = screen.getByRole('link', { name: i18n.getFixedT(lang)('resume.downloadPdf') });

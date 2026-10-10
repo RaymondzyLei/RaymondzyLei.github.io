@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
+import { GlassCard } from './GlassCard';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { styled, alpha } from '@mui/material/styles';
@@ -67,40 +67,57 @@ const ProjectCardView: React.FC<{ project: Project }> = ({ project }) => {
   const tiltRef = useTilt();
   const prefix = `data.projects.${project.id}`;
   const img = project.imageUrl;
+  if (!img) {
+    return (
+      <Box component="article">
+        <GlassCard ref={tiltRef} accent="left" sx={{ p: { xs: 2.5, md: 4 } }}>
+          <Typography
+            component="h3"
+            variant="h5"
+            sx={{ fontWeight: 600, overflowWrap: 'anywhere' }}
+          >
+            {t(`${prefix}.title`)}
+          </Typography>
+          <Typography sx={{ color: 'text.secondary', mt: 1, mb: 1 }}>
+            {t(`${prefix}.period`)}
+          </Typography>
+          <Typography sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+            {t(`${prefix}.description`)}
+          </Typography>
+          <Box component="ul" sx={{ pl: 3, my: 2 }}>
+            {project.contributionIds?.map((id) => (
+              <Typography component="li" key={id} sx={{ lineHeight: 1.7, mb: 1 }}>
+                {t(`${prefix}.contributions.${id}`)}
+              </Typography>
+            ))}
+          </Box>
+          <Stack direction="row" sx={{ flexWrap: 'wrap', gap: 1 }}>
+            {project.technologies.map((tech) => (
+              <SoftChip key={tech} label={tech} size="small" />
+            ))}
+          </Stack>
+        </GlassCard>
+      </Box>
+    );
+  }
   return (
     <StyledProjectCard ref={tiltRef}>
       <Box sx={{ p: { xs: 2, md: 3 }, minWidth: 0 }}>
-        {img ? (
-          <Box
-            component="img"
-            src={img}
-            alt={t('portfolio.projectAlt', { title: t(`${prefix}.title`) })}
-            loading="lazy"
-            decoding="async"
-            sx={{
-              width: '100%',
-              height: 'auto',
-              objectFit: 'contain',
-              borderRadius: 1,
-              boxShadow: 3,
-              display: 'block',
-            }}
-          />
-        ) : (
-          <Paper
-            sx={{
-              height: 200,
-              backgroundColor: 'primary.main',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'primary.contrastText',
-              fontSize: '3rem',
-            }}
-          >
-            P{project.id}
-          </Paper>
-        )}
+        <Box
+          component="img"
+          src={img}
+          alt={t('portfolio.projectAlt', { title: t(`${prefix}.title`) })}
+          loading="lazy"
+          decoding="async"
+          sx={{
+            width: '100%',
+            height: 'auto',
+            objectFit: 'contain',
+            borderRadius: 1,
+            boxShadow: 3,
+            display: 'block',
+          }}
+        />
       </Box>
       <Box sx={{ minWidth: 0, p: { xs: 1, md: 2 } }}>
         <CardContent>
