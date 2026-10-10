@@ -14,7 +14,7 @@
   name: "University of Science and Technology of China (USTC)",
   degree: [B.Eng. in Computer Science, School of the Gifted Young College
     #linebreak()
-    Huaxia Talented Program in Computer Science (founded and led by Prof. Hong An; 60 students selected from 2116 students of the whole grade at enrollment)],
+    Huaxia Talented Program in Computer Science (founded and led by Prof. Hong An; 60 students selected from 2116 students of the whole grade)],
   location: "Hefei, Anhui, China",
   date: "September 2025 to present",
 )
