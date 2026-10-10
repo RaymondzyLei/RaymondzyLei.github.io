@@ -5,6 +5,8 @@ import Link from '@mui/material/Link';
 // Avatar import hidden alongside the header avatar JSX (restore together).
 // import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import DownloadIcon from '@mui/icons-material/Download';
 import GlobalStyles from '@mui/material/GlobalStyles';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PhoneIcon from '@mui/icons-material/Phone';
@@ -42,8 +44,8 @@ import { SectionTitle, EducationItem, AwardItem, SkillGroup } from './resume/Res
  * Deliberately decoupled from <Layout>: no Navbar /
  * background orbs / back-to-top / Lenis reveal. Hardcoded light theme (white
  * paper, dark ink) - ignores useColorScheme. Print via browser (Ctrl+P) uses
- * the inline @media print rules below. resume.typ (Typst source) is kept in
- * sync manually for PDF export.
+ * the inline @media print rules below. resume/resume.typ is the separately
+ * maintained Typst source for the downloadable English PDF.
  *
  * Display sub-components (SectionTitle / EducationItem / AwardItem /
  * SkillGroup) live in ./resume/ResumeBits and take plain-string props.
@@ -190,6 +192,24 @@ export const ResumePage: React.FC<{ lang?: ResumeLang }> = ({ lang: initialLang 
           minHeight: '100vh',
         }}
       >
+        <Box className="no-print" sx={{ display: 'flex', justifyContent: 'flex-end', mb: 3 }}>
+          <Button
+            component="a"
+            href="/files/zhangyue-lei-resume.pdf"
+            download="Zhangyue-Lei-Resume.pdf"
+            variant="outlined"
+            startIcon={<DownloadIcon />}
+            sx={{
+              color: INK,
+              borderColor: LINE,
+              '&:hover': { borderColor: INK },
+              '&:focus-visible': { outline: `2px solid ${INK}`, outlineOffset: 2 },
+            }}
+          >
+            {t('resume.downloadPdf')}
+          </Button>
+        </Box>
+
         {/* Header */}
         <Box
           sx={{
