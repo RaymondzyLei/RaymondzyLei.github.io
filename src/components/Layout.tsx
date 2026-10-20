@@ -1,5 +1,6 @@
 import React from 'react';
 import Box from '@mui/material/Box';
+import Link from '@mui/material/Link';
 import { useTranslation } from 'react-i18next';
 import { BackgroundOrbs } from './BackgroundOrbs';
 import { Navbar } from './layout/Navbar';
@@ -13,9 +14,9 @@ interface LayoutProps {
 }
 
 /**
- * Page shell: sticky glass Navbar, the drifting background orbs, the main
- * content slot, and the fixed back-to-top button. All interactive pieces
- * (nav, language, theme, back-to-top) own their own state in sub-components.
+ * Page shell: sticky glass Navbar, drifting background orbs, main content,
+ * back-to-top button, and filing footer. All interactive pieces (nav,
+ * language, theme, back-to-top) own their own state in sub-components.
  */
 export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) => {
   const { t } = useTranslation();
@@ -67,6 +68,21 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
       </Box>
       {!isNotFound && <ScrollHint />}
       <BackToTopButton />
+      <Box
+        component="footer"
+        sx={{ px: 2, py: 3, textAlign: 'center', '@media print': { display: 'none' } }}
+      >
+        <Link
+          href="https://beian.miit.gov.cn/"
+          target="_blank"
+          rel="noopener noreferrer"
+          variant="body2"
+          color="text.secondary"
+          underline="hover"
+        >
+          {t('layout.icpFiling')}
+        </Link>
+      </Box>
     </Box>
   );
 };

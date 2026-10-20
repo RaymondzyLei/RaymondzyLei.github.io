@@ -1,7 +1,7 @@
 ---
 feature: spatial-portfolio
 status: delivered
-updated: 2026-09-29
+updated: 2026-10-21
 branch: feat/spatial-portfolio
 commits:
   - a742bf9ef2c3a0067f54bef170811ad5474383d6
@@ -11,6 +11,12 @@ commits:
 # Spatial Portfolio
 
 ## Report
+
+### Shared filing footer — 2026-10-21
+
+- The shared `Layout` ends with a centered `粤ICP备2026161085号` link to `https://beian.miit.gov.cn/`, opening in a new tab. Both language resources retain the official Chinese filing number. The footer stays in normal flow and is hidden from print; the standalone resume layout is unchanged.
+- Placement follows Article 13 of the [Non-commercial Internet Information Service Filing Measures (2024 revision)](https://amr.sz.gov.cn/xxgk/zcwj/scjgfg/content/post_12816886.html), which requires the filing number at the bottom center of the homepage and a link to the MIIT filing system.
+- Verification: production build passed; browser checks at 1440×900 (Chinese, dark) and 390×844 (English, light) confirmed the visible filing number, correct destination, and no horizontal overflow.
 
 ### Accepted delivery — 2026-09-29
 
