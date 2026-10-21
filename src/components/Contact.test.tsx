@@ -20,31 +20,22 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('Contact', () => {
-  it('renders both card intros', () => {
+  it('keeps email contact available while GitHub and X are hidden during review', () => {
     renderWithTheme(<Contact />);
-    expect(screen.getByText('Connect With Me')).toBeInTheDocument();
-    expect(screen.getByText('Useful Links')).toBeInTheDocument();
-    // Double-quoted string: the copy contains an apostrophe (I'm).
     expect(
-      screen.getByText(
-        "Feel free to reach out through any of these channels. I'm always happy to connect and discuss opportunities.",
-      ),
-    ).toBeInTheDocument();
-  });
-
-  it('renders a LiquidGlassButton per social link with its href', () => {
-    renderWithTheme(<Contact />);
-    // aria-label of LiquidGlassButton = label i18n (the URL text in en.json).
-    expect(screen.getByRole('link', { name: 'https://github.com/RaymondzyLei' })).toHaveAttribute(
+      screen.queryByRole('link', { name: 'https://github.com/RaymondzyLei' }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('link', { name: 'https://x.com/RaymondzyLei' }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'raymond.lei@mail.ustc.edu.cn' })).toHaveAttribute(
       'href',
-      'https://github.com/RaymondzyLei',
+      'mailto:raymond.lei@mail.ustc.edu.cn',
     );
-    expect(screen.getByRole('link', { name: 'https://x.com/RaymondzyLei' })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: 'raymond.zy.lei@outlook.com' })).toHaveAttribute(
       'href',
-      'https://x.com/RaymondzyLei',
+      'mailto:raymond.zy.lei@outlook.com',
     );
-    expect(screen.getByText('Email (School)')).toBeInTheDocument();
-    expect(screen.getByText('Email (Personal)')).toBeInTheDocument();
   });
 
   it('renders useful-link rows as anchors with their hrefs', () => {

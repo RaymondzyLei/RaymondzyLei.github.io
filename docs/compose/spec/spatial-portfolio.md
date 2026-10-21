@@ -12,6 +12,11 @@ commits:
 
 ## Report
 
+### Temporary contact visibility during filing review — 2026-10-21
+
+- The `Contact` component locally filters GitHub and X out of the “Connect With Me” card while the site is under review. Both email links remain. Shared social data, Hero links, the Useful Links card, and resume links are unchanged. Remove the local `contactSocialLinks` filter after review to restore the two profiles.
+- Verification: 30 test files / 143 tests and the production build passed. A browser smoke check confirmed the card contains only the two email destinations; Hero profiles, the useful repository link, and the filing footer remain present.
+
 ### Shared filing footer — 2026-10-21
 
 - The shared `Layout` ends with a centered `粤ICP备2026161085号` link to `https://beian.miit.gov.cn/`, opening in a new tab. Both language resources retain the official Chinese filing number. The footer stays in normal flow and is hidden from print; the standalone resume layout is unchanged.

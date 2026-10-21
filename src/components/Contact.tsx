@@ -14,6 +14,9 @@ import { LiquidGlassButton } from './LiquidGlassButton';
 import { Section } from './Section';
 import { easing, default as theme } from '../theme';
 
+// Temporarily hide GitHub and X in this card while the site is under review.
+const contactSocialLinks = socialLinks.filter(({ id }) => id !== 'github' && id !== 'x');
+
 /** Card header: title + description, shared by both contact cards. */
 const CardIntro: React.FC<{ title: string; description: string }> = ({ title, description }) => (
   <>
@@ -59,7 +62,7 @@ export const Contact: React.FC = () => {
           <GlassCard accent="top" ref={connectTiltRef} sx={{ p: { xs: 3, md: 5 } }}>
             <CardIntro title={t('contact.connectTitle')} description={t('contact.connectDesc')} />
             <Stack spacing={3}>
-              {socialLinks.map((link) => {
+              {contactSocialLinks.map((link) => {
                 const Icon = link.icon;
                 return (
                   <Box
