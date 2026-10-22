@@ -52,7 +52,9 @@
     "connectTitle": "Connect With Me",
     "connectDesc": "Feel free to reach out through any of these channels. I'm always happy to connect and discuss opportunities.",
     "linksTitle": "Useful Links",
-    "linksDesc": "Here are some of my selected projects and articles you might find interesting."
+    "linksDesc": "Here are some of my selected projects and articles you might find interesting.",
+    "friendsTitle": "Friends",
+    "friendsDesc": "Personal websites of classmates and friends."
   },
   "data": {
     "social": {
@@ -89,6 +91,12 @@
       "resume-download": {
         "name": "Resume Download",
         "label": "Get my latest resume"
+      }
+    },
+    "friends": {
+      "nick-shu": {
+        "name": "Nick Shu · nicholasshu.com",
+        "label": "Mathematics undergraduate at USTC's School of the Gifted Young."
       }
     },
     "achievements": {

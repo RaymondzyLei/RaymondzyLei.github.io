@@ -5,19 +5,20 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import FolderIcon from '@mui/icons-material/Folder';
 import { socialLinks } from '../data/social';
-import { contactLinks } from '../data/contact';
+import { contactLinks, friendLinks } from '../data/contact';
+import type { ContactLink } from '../data/contact';
 import { useTilt } from '../hooks/useTilt';
 import { useReveal } from '../hooks/useReveal';
 import { revealSx } from '../styles/reveal';
 import { GlassCard } from './GlassCard';
 import { LiquidGlassButton } from './LiquidGlassButton';
 import { Section } from './Section';
-import { easing, default as theme } from '../theme';
+import { easing, focusVisibleRing, default as theme } from '../theme';
 
 // Temporarily hide GitHub and X in this card while the site is under review.
 const contactSocialLinks = socialLinks.filter(({ id }) => id !== 'github' && id !== 'x');
 
-/** Card header: title + description, shared by both contact cards. */
+/** Card header: title + description, shared by the contact cards. */
 const CardIntro: React.FC<{ title: string; description: string }> = ({ title, description }) => (
   <>
     <Typography variant="h5" component="h3" sx={{ fontWeight: 600, mb: 2, color: 'text.primary' }}>
@@ -29,7 +30,7 @@ const CardIntro: React.FC<{ title: string; description: string }> = ({ title, de
   </>
 );
 
-/** Right-side text block of a link row (name + label), shared by both cards. */
+/** Right-side text block of a link row (name + label), shared by the cards. */
 const LinkText: React.FC<{ name: string; label: string }> = ({ name, label }) => (
   <Box sx={{ minWidth: 0, overflowWrap: 'anywhere' }}>
     <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
@@ -41,12 +42,67 @@ const LinkText: React.FC<{ name: string; label: string }> = ({ name, label }) =>
   </Box>
 );
 
+const ContactLinkRow: React.FC<{
+  link: ContactLink;
+  translationGroup: 'contact' | 'friends';
+}> = ({ link, translationGroup }) => {
+  const { t } = useTranslation();
+  const Icon = link.icon;
+
+  return (
+    <Box
+      component="a"
+      href={link.url}
+      {...(link.url.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+      sx={{
+        ...focusVisibleRing(2),
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        minHeight: 44,
+        textDecoration: 'none',
+        p: 1,
+        borderRadius: 1,
+        transition: theme.transitions.create(['background-color'], {
+          duration: theme.transitions.duration.shorter,
+          easing: easing.easeOut,
+        }),
+        '&:hover': {
+          backgroundColor: 'action.hover',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          width: 40,
+          flexShrink: 0,
+          height: 40,
+          borderRadius: 1,
+          backgroundColor: 'primary.main',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'primary.contrastText',
+        }}
+      >
+        {Icon ? <Icon /> : <FolderIcon />}
+      </Box>
+      <LinkText
+        name={t(`data.${translationGroup}.${link.id}.name`)}
+        label={t(`data.${translationGroup}.${link.id}.label`)}
+      />
+    </Box>
+  );
+};
+
 export const Contact: React.FC = () => {
   const { t } = useTranslation();
   const connectTiltRef = useTilt();
   const linksTiltRef = useTilt();
+  const friendsTiltRef = useTilt();
   const { ref: connectCellRef, isVisible: connectVisible } = useReveal();
   const { ref: linksCellRef, isVisible: linksVisible } = useReveal();
+  const { ref: friendsCellRef, isVisible: friendsVisible } = useReveal();
 
   return (
     <Section id="contact" title={t('contact.title')} maxWidth="lg" revealDelay={0}>
@@ -58,89 +114,61 @@ export const Contact: React.FC = () => {
           gap: 4,
         }}
       >
-        <Box ref={connectCellRef} sx={revealSx(connectVisible, 0)}>
-          <GlassCard accent="top" ref={connectTiltRef} sx={{ p: { xs: 3, md: 5 } }}>
-            <CardIntro title={t('contact.connectTitle')} description={t('contact.connectDesc')} />
-            <Stack spacing={3}>
-              {contactSocialLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <Box
-                    key={link.id}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                    }}
-                  >
-                    <LiquidGlassButton
-                      icon={<Icon />}
-                      label={t(`data.social.${link.id}.label`)}
-                      href={link.url}
-                    />
-                    <LinkText
-                      name={t(`data.social.${link.id}.name`)}
-                      label={t(`data.social.${link.id}.label`)}
-                    />
-                  </Box>
-                );
-              })}
-            </Stack>
-          </GlassCard>
-        </Box>
+        <Stack spacing={4} sx={{ minWidth: 0 }}>
+          <Box ref={connectCellRef} sx={revealSx(connectVisible, 0)}>
+            <GlassCard accent="top" ref={connectTiltRef} sx={{ p: { xs: 3, md: 5 } }}>
+              <CardIntro title={t('contact.connectTitle')} description={t('contact.connectDesc')} />
+              <Stack spacing={3}>
+                {contactSocialLinks.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <Box
+                      key={link.id}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                      }}
+                    >
+                      <LiquidGlassButton
+                        icon={<Icon />}
+                        label={t(`data.social.${link.id}.label`)}
+                        href={link.url}
+                      />
+                      <LinkText
+                        name={t(`data.social.${link.id}.name`)}
+                        label={t(`data.social.${link.id}.label`)}
+                      />
+                    </Box>
+                  );
+                })}
+              </Stack>
+            </GlassCard>
+          </Box>
+          <Box
+            component="section"
+            aria-label={t('contact.friendsTitle')}
+            ref={friendsCellRef}
+            sx={revealSx(friendsVisible, 60)}
+          >
+            <GlassCard ref={friendsTiltRef} sx={{ p: 3 }}>
+              <CardIntro title={t('contact.friendsTitle')} description={t('contact.friendsDesc')} />
+              <Stack spacing={2}>
+                {friendLinks.map((link) => (
+                  <ContactLinkRow key={link.id} link={link} translationGroup="friends" />
+                ))}
+              </Stack>
+            </GlassCard>
+          </Box>
+        </Stack>
 
         <Box ref={linksCellRef} sx={revealSx(linksVisible, 60)}>
           <GlassCard ref={linksTiltRef} sx={{ p: 3, mt: { md: 6 } }}>
             <CardIntro title={t('contact.linksTitle')} description={t('contact.linksDesc')} />
             <Stack spacing={2}>
-              {contactLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <Box
-                    key={link.id}
-                    component="a"
-                    href={link.url}
-                    {...(link.url.startsWith('http')
-                      ? { target: '_blank', rel: 'noopener noreferrer' }
-                      : {})}
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 2,
-                      textDecoration: 'none',
-                      p: 1,
-                      borderRadius: 1,
-                      transition: theme.transitions.create(['background-color'], {
-                        duration: theme.transitions.duration.shorter,
-                        easing: easing.easeOut,
-                      }),
-                      '&:hover': {
-                        backgroundColor: 'action.hover',
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        width: 40,
-                        flexShrink: 0,
-                        height: 40,
-                        borderRadius: 1,
-                        backgroundColor: 'primary.main',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'primary.contrastText',
-                      }}
-                    >
-                      {Icon ? <Icon /> : <FolderIcon />}
-                    </Box>
-                    <LinkText
-                      name={t(`data.contact.${link.id}.name`)}
-                      label={t(`data.contact.${link.id}.label`)}
-                    />
-                  </Box>
-                );
-              })}
+              {contactLinks.map((link) => (
+                <ContactLinkRow key={link.id} link={link} translationGroup="contact" />
+              ))}
             </Stack>
           </GlassCard>
         </Box>

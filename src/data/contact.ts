@@ -19,3 +19,7 @@ export const contactLinks: ContactLink[] = [
   { id: 'blog', url: '#', icon: ArticleIcon },
   { id: 'resume-download', url: '/resume', icon: DescriptionIcon },
 ];
+
+export const friendLinks: ContactLink[] = [
+  { id: 'nick-shu', url: 'https://nicholasshu.com/', icon: WebIcon },
+];

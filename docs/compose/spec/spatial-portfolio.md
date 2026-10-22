@@ -1,7 +1,7 @@
 ---
 feature: spatial-portfolio
 status: delivered
-updated: 2026-10-21
+updated: 2026-10-22
 branch: feat/spatial-portfolio
 commits:
   - a742bf9ef2c3a0067f54bef170811ad5474383d6
@@ -11,6 +11,13 @@ commits:
 # Spatial Portfolio
 
 ## Report
+
+### Friend links in the contact column — 2026-10-22
+
+- A separate Friends / 友情链接 glass card sits below Connect With Me in the left desktop column. Mobile order is Connect With Me, Friends, Useful Links. The six homepage sections, navigation, useful-link destinations, review-time social filtering, Hero profiles, resume, and filing footer are unchanged.
+- `friendLinks` in `src/data/contact.ts` holds the static `https://nicholasshu.com/` destination. Both languages display Nick Shu / 舒屹扬, the domain, and his mathematics undergraduate identity at USTC's School of the Gifted Young. Friend and useful-link rows share an accessible anchor component with a focus-visible ring; external links retain `target="_blank"` and `rel="noopener noreferrer"`.
+- Verification: the four existing Contact and translation-key tests, production build, and changed-source formatting check passed. Browser checks at 1440×900 Chinese and 390×844 English confirmed placement, wrapping without horizontal overflow, light/dark themes, keyboard focus, reduced-motion reveal/tilt behavior, both email links, unchanged Hero profiles/useful links, and the visible filing footer. Desktop and mobile screenshots were inspected.
+- Pressing Enter on the focused friend link opened a new tab, but the target site returned `ERR_CONNECTION_CLOSED` in the verification browser. The configured href and external-link attributes were verified; the user-provided destination remains unchanged.
 
 ### Temporary contact visibility during filing review — 2026-10-21
 
