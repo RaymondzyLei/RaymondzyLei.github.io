@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { screen, cleanup } from '@testing-library/react';
 
 // Same react-intersection-observer mock rationale as Qualifications.test.tsx
-// (useReveal runs inside Section + both cards).
+// (useReveal runs inside Section + the contact cards).
 const { useInViewMock } = vi.hoisted(() => ({ useInViewMock: vi.fn() }));
 vi.mock('react-intersection-observer', () => ({
   useInView: (opts: unknown) => useInViewMock(opts),
@@ -20,14 +20,16 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('Contact', () => {
-  it('keeps email contact available while GitHub and X are hidden during review', () => {
+  it('offers GitHub, X, and both email contact destinations', () => {
     renderWithTheme(<Contact />);
-    expect(
-      screen.queryByRole('link', { name: 'https://github.com/RaymondzyLei' }),
-    ).not.toBeInTheDocument();
-    expect(
-      screen.queryByRole('link', { name: 'https://x.com/RaymondzyLei' }),
-    ).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'https://github.com/RaymondzyLei' })).toHaveAttribute(
+      'href',
+      'https://github.com/RaymondzyLei',
+    );
+    expect(screen.getByRole('link', { name: 'https://x.com/RaymondzyLei' })).toHaveAttribute(
+      'href',
+      'https://x.com/RaymondzyLei',
+    );
     expect(screen.getByRole('link', { name: 'raymond.lei@mail.ustc.edu.cn' })).toHaveAttribute(
       'href',
       'mailto:raymond.lei@mail.ustc.edu.cn',

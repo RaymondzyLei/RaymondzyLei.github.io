@@ -7,6 +7,7 @@ import { Navbar } from './layout/Navbar';
 import { BackToTopButton } from './layout/BackToTopButton';
 import { ScrollHint } from './layout/ScrollHint';
 import { useHashScroll } from '../hooks/useHashScroll';
+import { focusVisibleRing } from '../theme';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -70,7 +71,17 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
       <BackToTopButton />
       <Box
         component="footer"
-        sx={{ px: 2, py: 3, textAlign: 'center', '@media print': { display: 'none' } }}
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', sm: 'row' },
+          alignItems: 'center',
+          justifyContent: 'center',
+          columnGap: 2,
+          px: 2,
+          py: 3,
+          textAlign: 'center',
+          '@media print': { display: 'none' },
+        }}
       >
         <Link
           href="https://beian.miit.gov.cn/"
@@ -79,8 +90,39 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
           variant="body2"
           color="text.secondary"
           underline="hover"
+          sx={{
+            ...focusVisibleRing(2),
+            display: 'inline-flex',
+            alignItems: 'center',
+            minHeight: 44,
+          }}
         >
           {t('layout.icpFiling')}
+        </Link>
+        <Link
+          href="https://beian.mps.gov.cn/#/query/webSearch?code=44011202004418"
+          target="_blank"
+          rel="noopener noreferrer"
+          variant="body2"
+          color="text.secondary"
+          underline="hover"
+          sx={{
+            ...focusVisibleRing(2),
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 0.75,
+            minHeight: 44,
+          }}
+        >
+          <Box
+            component="img"
+            src="/public-security-filing.png"
+            alt=""
+            width={18}
+            height={20}
+            sx={{ flexShrink: 0 }}
+          />
+          {t('layout.publicSecurityFiling')}
         </Link>
       </Box>
     </Box>

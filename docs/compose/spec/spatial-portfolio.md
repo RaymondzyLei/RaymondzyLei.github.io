@@ -1,7 +1,7 @@
 ---
 feature: spatial-portfolio
 status: delivered
-updated: 2026-10-22
+updated: 2026-10-23
 branch: feat/spatial-portfolio
 commits:
   - a742bf9ef2c3a0067f54bef170811ad5474383d6
@@ -12,6 +12,13 @@ commits:
 
 ## Report
 
+### Public security filing and restored contacts — 2026-10-23
+
+- The shared footer now displays the supplied filing icon and `粤公网安备44011202004418号`, linked to `https://beian.mps.gov.cn/#/query/webSearch?code=44011202004418`. The existing ICP filing link remains. Both languages retain the official Chinese identifiers; desktop links sit side by side and mobile links stack. Both links open safely in a new tab and expose keyboard focus rings; the footer remains hidden from print and does not affect the standalone resume.
+- The original 36×40 icon was copied byte-for-byte into `public/public-security-filing.png` and renders at 18×20. No remote image dependency was added.
+- With review complete, Contact uses the shared `socialLinks` directly again: GitHub, X, and both email destinations are available. The temporary filter and its review-only comment were removed; friend and useful links remain unchanged.
+- Verification: four focused Contact/translation-key tests, TypeScript/Vite production build, and changed-component ESLint passed. Browser smoke checks at 1440×900 Chinese dark and 390×844 English light confirmed the restored destinations, both filing numbers and exact hrefs, local icon loading, responsive arrangement without horizontal overflow, visible keyboard focus, and a hidden footer under print emulation. Desktop contact/footer and mobile footer screenshots were inspected.
+
 ### Friend links in the contact column — 2026-10-22
 
 - A separate Friends / 友情链接 glass card sits below Connect With Me in the left desktop column. Mobile order is Connect With Me, Friends, Useful Links. The six homepage sections, navigation, useful-link destinations, review-time social filtering, Hero profiles, resume, and filing footer are unchanged.
@@ -21,7 +28,7 @@ commits:
 
 ### Temporary contact visibility during filing review — 2026-10-21
 
-- The `Contact` component locally filters GitHub and X out of the “Connect With Me” card while the site is under review. Both email links remain. Shared social data, Hero links, the Useful Links card, and resume links are unchanged. Remove the local `contactSocialLinks` filter after review to restore the two profiles.
+- During review, the `Contact` component locally filtered GitHub and X out of the “Connect With Me” card while retaining both email links. Shared social data, Hero links, the Useful Links card, and resume links were unchanged. The temporary filter was removed after approval on 2026-10-23.
 - Verification: 30 test files / 143 tests and the production build passed. A browser smoke check confirmed the card contains only the two email destinations; Hero profiles, the useful repository link, and the filing footer remain present.
 
 ### Shared filing footer — 2026-10-21
