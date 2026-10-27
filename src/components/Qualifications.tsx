@@ -2,116 +2,67 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import SchoolIcon from '@mui/icons-material/School';
 import { CertDownloadButton } from './CertDownloadButton';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { useTheme } from '@mui/material/styles';
-import { timelineData, type TimelineItem as TimelineDataItem } from '../data/timeline';
-import { useTilt } from '../hooks/useTilt';
-import { useReveal } from '../hooks/useReveal';
-import { revealSx } from '../styles/reveal';
-import { GlassCard } from './GlassCard';
+import { timelineData } from '../data/timeline';
+import { HomeCard } from './HomeCard';
 import { Section } from './Section';
-
-const TimelineItemCard: React.FC<{
-  item: TimelineDataItem;
-  index: number;
-  variant: 'desktop' | 'mobile';
-}> = ({ item, index, variant }) => {
-  const { t } = useTranslation();
-  const tiltRef = useTilt();
-  const { ref: revealRef, isVisible } = useReveal();
-  const isMobile = variant === 'mobile';
-  const p = `data.timeline.${item.id}`;
-  return (
-    <Box ref={revealRef} sx={revealSx(isVisible, index * 60)}>
-      <GlassCard accent={isMobile ? 'top' : 'left'} ref={tiltRef} sx={{ p: { xs: 3, md: 4 } }}>
-        {isMobile && (
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <SchoolIcon sx={{ color: 'primary.main', mr: 1, fontSize: 20 }} />
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {t(`${p}.date`)}
-            </Typography>
-          </Box>
-        )}
-        <Typography variant="h6" component="h3" sx={{ fontWeight: 600, color: 'primary.main' }}>
-          {t(`${p}.title`)}
-        </Typography>
-        <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}>
-          {t(`${p}.institution`)}
-        </Typography>
-        <Typography
-          variant="body2"
-          sx={{ mt: 2, color: 'text.secondary', lineHeight: 1.8, whiteSpace: 'pre-line' }}
-        >
-          {t(`${p}.description`)}
-        </Typography>
-        {item.file && (
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
-            <CertDownloadButton
-              file={item.file}
-              label={t(`${p}.certLabel`, '') || t('qualifications.download')}
-            />
-          </Box>
-        )}
-      </GlassCard>
-    </Box>
-  );
-};
 
 export const Qualifications: React.FC = () => {
   const { t } = useTranslation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <Section id="qualifications" title={t('qualifications.title')} maxWidth="lg">
-      {isMobile ? (
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-          {timelineData.map((item, index) => (
-            <TimelineItemCard key={item.id} item={item} index={index} variant="mobile" />
-          ))}
-        </Box>
-      ) : (
-        <Timeline position="right" sx={{ p: 0, m: 0 }}>
-          {timelineData.map((item, index) => (
-            <TimelineItem key={item.id}>
-              <TimelineOppositeContent
+    <Section id="qualifications" title={t('qualifications.title')}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {timelineData.map((item) => {
+          const p = `data.timeline.${item.id}`;
+          return (
+            <HomeCard key={item.id} sx={{ borderLeft: 4, borderLeftColor: 'primary.main' }}>
+              <Box
                 sx={{
-                  flex: '0 0 22%',
-                  pl: 0,
-                  pr: 3,
-                  pt: 3,
-                  color: 'primary.main',
-                  fontWeight: 600,
+                  display: 'flex',
+                  flexDirection: { xs: 'column', sm: 'row' },
+                  justifyContent: 'space-between',
+                  alignItems: { xs: 'flex-start', sm: 'baseline' },
+                  gap: 1,
                 }}
               >
-                {t('data.timeline.' + item.id + '.date')}
-              </TimelineOppositeContent>
-              <TimelineSeparator>
-                <TimelineDot
-                  sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', boxShadow: 1 }}
-                >
-                  <SchoolIcon />
-                </TimelineDot>
-                {index < timelineData.length - 1 && (
-                  <TimelineConnector sx={{ bgcolor: 'divider' }} />
-                )}
-              </TimelineSeparator>
-              <TimelineContent sx={{ pb: 4, pt: 0, pl: 3, pr: 0, minWidth: 0 }}>
-                <TimelineItemCard item={item} index={index} variant="desktop" />
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
-      )}
+                <Box>
+                  <Typography
+                    variant="h6"
+                    component="h3"
+                    sx={{ fontWeight: 600, color: 'primary.main' }}
+                  >
+                    {t(`${p}.title`)}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    sx={{ color: 'text.secondary', fontWeight: 500, mt: 0.5 }}
+                  >
+                    {t(`${p}.institution`)}
+                  </Typography>
+                </Box>
+                <Typography variant="body2" sx={{ color: 'text.secondary', flexShrink: 0 }}>
+                  {t(`${p}.date`)}
+                </Typography>
+              </Box>
+              <Typography
+                variant="body2"
+                sx={{ mt: 2, color: 'text.secondary', lineHeight: 1.8, whiteSpace: 'pre-line' }}
+              >
+                {t(`${p}.description`)}
+              </Typography>
+              {item.file && (
+                <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 1 }}>
+                  <CertDownloadButton
+                    file={item.file}
+                    label={t(`${p}.certLabel`, '') || t('qualifications.download')}
+                  />
+                </Box>
+              )}
+            </HomeCard>
+          );
+        })}
+      </Box>
     </Section>
   );
 };

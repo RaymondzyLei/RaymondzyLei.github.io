@@ -1,16 +1,7 @@
 import { useEffect } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLenis } from 'lenis/react';
-
-/**
- * The sticky AppBar's height as a negative scroll offset, measured live so it
- * stays correct across breakpoints/zoom. Keeps hash-targeted section headings
- * just below the bar instead of underneath it.
- */
-const appbarOffset = (): number => {
-  const appbar = document.querySelector('.MuiAppBar-root');
-  return appbar ? -appbar.getBoundingClientRect().height : 0;
-};
+import { sectionScrollTarget } from './sectionScrollTarget';
 
 /**
  * Resolve a URL hash to a DOM element, or null if it doesn't target a real
@@ -36,7 +27,7 @@ export const useHashScroll = (): void => {
   useEffect(() => {
     const scrollToHash = () => {
       const el = getHashTarget(window.location.hash);
-      if (el) lenis?.scrollTo(el, { duration, offset: appbarOffset() });
+      if (el) lenis?.scrollTo(sectionScrollTarget(el), { duration });
     };
     // Defer the initial scroll past two rAFs: on first paint the browser's own
     // anchor jump and the layout (images, fonts) haven't settled, so measuring

@@ -146,14 +146,18 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
       <AppBar
         position="sticky"
         elevation={0}
-        sx={(theme) => ({
-          ...glass(theme),
-          // apple §12: no hard divider -- the glass backdrop blur + rim border
-          // separate the bar from scrolling content. A 1px borderBottom reads as
-          // a hard cut; the material itself is the divider.
-        })}
+        sx={(theme) =>
+          isNotFound
+            ? glass(theme)
+            : {
+                bgcolor: 'background.paper',
+                borderBottom: '1px solid',
+                borderColor: 'divider',
+                boxShadow: theme.shadows[1],
+              }
+        }
       >
-        <Toolbar sx={{ px: { xs: 1, sm: 3 } }}>
+        <Toolbar sx={{ px: { xs: 1, sm: 2 }, width: '100%', maxWidth: '1184px', mx: 'auto' }}>
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
             <Button
               {...(isNotFound
@@ -194,6 +198,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
               <IconButton
                 onClick={handleMobileMenuToggle}
                 aria-label={t('layout.openMenu')}
+                aria-expanded={mobileMenuOpen}
                 title={t('layout.openMenu')}
               >
                 <MenuIcon />
@@ -208,7 +213,12 @@ export const Navbar: React.FC<NavbarProps> = ({ isNotFound = false }) => {
         anchor="top"
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
-        sx={{ display: { xs: 'block', lg: 'none' } }}
+        sx={{
+          display: { xs: 'block', lg: 'none' },
+          ...(!isNotFound && {
+            '& .MuiButtonBase-root': { fontFamily: 'Arial, "Microsoft YaHei", sans-serif' },
+          }),
+        }}
       >
         <Box sx={{ p: 2 }}>{navContent}</Box>
       </Drawer>

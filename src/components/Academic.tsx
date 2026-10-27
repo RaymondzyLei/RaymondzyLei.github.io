@@ -1,16 +1,8 @@
-// Achievement cards inside <Accordion> are intentionally NOT staggered via
-// useReveal: AccordionDetails stays mounted (height 0 when collapsed) so the
-// IntersectionObserver fires `inView: true` while the panel is hidden, and
-// the cards are already `isVisible` by the time the user expands the panel.
-// Staggering them on scroll would either re-fire on expansion (flash) or
-// never fire at all. Section-level reveal on the outer Box is enough.
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -19,23 +11,16 @@ import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import { CertDownloadButton } from './CertDownloadButton';
 import { styled } from '@mui/material/styles';
 import { achievementsData, type Achievement } from '../data/achievements';
-import { useTilt } from '../hooks/useTilt';
-import { glassHoverShadow } from '../theme';
-import { GlassCard } from './GlassCard';
 import { SoftChip } from './SoftChip';
+import { HomeCard } from './HomeCard';
 import { Section } from './Section';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
-  backgroundColor: 'transparent',
-  transition: theme.transitions.create(['boxShadow', 'backgroundColor'], {
-    duration: theme.transitions.duration.standard,
-  }),
-  '&:before': {
-    backgroundColor: 'transparent',
-  },
-  '&:hover': {
-    boxShadow: glassHoverShadow(theme),
-  },
+  backgroundColor: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  borderRadius: 8,
+  boxShadow: theme.shadows[1],
+  '&:before': { display: 'none' },
 }));
 
 const AchievementCardView: React.FC<{ achievement: Achievement; category: string }> = ({
@@ -43,7 +28,6 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
   category,
 }) => {
   const { t } = useTranslation();
-  const tiltRef = useTilt();
   const prefix = `data.achievements.${achievement.id}`;
   const title = t(`${prefix}.title`);
   const description = t(`${prefix}.description`);
@@ -52,50 +36,38 @@ const AchievementCardView: React.FC<{ achievement: Achievement; category: string
   const certLabel = t(`${prefix}.certLabel`, '');
 
   return (
-    <GlassCard
-      accent="left"
-      ref={tiltRef}
-      sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
-    >
-      <CardHeader
-        title={title}
-        subheader={date}
-        sx={{ px: 3, pt: 3, pb: 1 }}
-        slotProps={{
-          title: { variant: 'h6', component: 'h3', sx: { fontWeight: 600, lineHeight: 1.45 } },
-          subheader: { sx: { color: 'text.secondary' } },
-        }}
-      />
-      <CardContent sx={{ px: 3, pt: 1, flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
-          {description}
+    <HomeCard sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Typography variant="h6" component="h3" sx={{ fontWeight: 600, lineHeight: 1.45 }}>
+        {title}
+      </Typography>
+      <Typography variant="body2" sx={{ color: 'text.secondary', mb: 2 }}>
+        {date}
+      </Typography>
+      <Typography variant="body2" sx={{ mb: 1, color: 'text.secondary' }}>
+        {description}
+      </Typography>
+      {details && (
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+          {details}
         </Typography>
-        {details && (
-          <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-            {details}
-          </Typography>
+      )}
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
+          mt: 'auto',
+          pt: 3,
+          gap: 1,
+          flexWrap: 'wrap',
+        }}
+      >
+        <SoftChip label={t(`data.achievements.category.${category}`)} size="small" />
+        {achievement.file && (
+          <CertDownloadButton file={achievement.file} label={certLabel || t('academic.download')} />
         )}
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-end',
-            mt: 'auto',
-            pt: 3,
-            gap: 1,
-            flexWrap: 'wrap',
-          }}
-        >
-          <SoftChip label={t(`data.achievements.category.${category}`)} size="small" />
-          {achievement.file && (
-            <CertDownloadButton
-              file={achievement.file}
-              label={certLabel || t('academic.download')}
-            />
-          )}
-        </Box>
-      </CardContent>
-    </GlassCard>
+      </Box>
+    </HomeCard>
   );
 };
 
@@ -116,7 +88,7 @@ export const Academic: React.FC = () => {
   }, []);
 
   return (
-    <Section id="academic" title={t('academic.title')} maxWidth="lg">
+    <Section id="academic" title={t('academic.title')}>
       <Stack spacing={2}>
         {groupedByCategory.map(([category, achievements]) => (
           <StyledAccordion key={category} defaultExpanded={category === 'Competition'}>
@@ -124,14 +96,14 @@ export const Academic: React.FC = () => {
               expandIcon={<ExpandMoreIcon />}
               id={'academic-' + encodeURIComponent(category) + '-header'}
               aria-controls={'academic-' + encodeURIComponent(category) + '-content'}
-              sx={{ px: { xs: 1, md: 2 }, minHeight: 80 }}
+              sx={{ px: 3, minHeight: 80 }}
             >
               <EmojiEventsIcon sx={{ mr: 2, color: 'primary.main' }} />
               <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {t(`data.achievements.category.${category}`)}
               </Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{ px: { xs: 0, md: 2 }, pb: 3 }}>
+            <AccordionDetails sx={{ px: 3, pb: 3 }}>
               <Box
                 sx={{
                   display: 'grid',

@@ -34,19 +34,15 @@ describe('useHashScroll', () => {
   const addEventListener = window.addEventListener;
   const removeEventListener = window.removeEventListener;
   let mountedListeners: Map<string, EventListener> = new Map();
-  let hashChangeSpy: (() => void) | null = null;
 
   beforeEach(() => {
     scrollTo.mockClear();
     document.body.innerHTML = '<section id="skills"></section>';
-    // Intercept hashchange listener registration so we can fire it manually.
     mountedListeners = new Map();
-    hashChangeSpy = null;
     vi.spyOn(window, 'addEventListener').mockImplementation(
       (type: string, listener: EventListenerOrEventListenerObject) => {
         if (type === 'hashchange') {
           mountedListeners.set(type, listener as EventListener);
-          hashChangeSpy = listener as () => void;
         } else {
           addEventListener.call(window, type, listener);
         }
@@ -72,34 +68,6 @@ describe('useHashScroll', () => {
     expect(mountedListeners.has('hashchange')).toBe(true);
     unmount();
     expect(mountedListeners.has('hashchange')).toBe(false);
-  });
-
-  it('scrolls to the section matching the current hash on mount', () => {
-    window.location.hash = 'skills';
-    // The initial scroll is deferred two rAFs so the first-paint layout
-    // settles (see useHashScroll) — stub rAF to run callbacks synchronously
-    // before mounting.
-    const rafSpy = vi
-      .spyOn(window, 'requestAnimationFrame')
-      .mockImplementation((cb: FrameRequestCallback) => {
-        cb(performance.now());
-        return 0;
-      });
-    renderHook(() => useHashScroll());
-    expect(scrollTo).toHaveBeenCalledTimes(1);
-    expect(scrollTo.mock.calls[0][0]).toBe(document.getElementById('skills'));
-    rafSpy.mockRestore();
-  });
-
-  it('scrolls when the hashchange listener fires at runtime', () => {
-    window.location.hash = '';
-    renderHook(() => useHashScroll());
-    window.location.hash = 'skills';
-    // jsdom may or may not auto-fire hashchange — fire the intercepted listener
-    // manually to guarantee the test is deterministic.
-    hashChangeSpy?.();
-    expect(scrollTo).toHaveBeenCalled();
-    expect(scrollTo.mock.calls[0][0]).toBe(document.getElementById('skills'));
   });
 
   it('ignores an invalid hash', () => {

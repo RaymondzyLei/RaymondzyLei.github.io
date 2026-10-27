@@ -12,6 +12,34 @@ commits:
 
 ## Report
 
+### Slower entrance and dark startup
+
+- The homepage entrance now takes three times its previous duration and staggers, with the existing two-nudge scroll cue delayed until after the entrance. Reduced-motion behavior remains unchanged.
+- The pre-paint color scheme also controls the body background; the client-only MUI provider resolves the saved/system scheme on its first render, and the attribute synchronizer no longer overwrites the pre-paint choice while mode is unresolved. This prevents a light body or navigation bar appearing during dark startup.
+- Verification: browser frame samples showed dark html/body/navigation from their first appearance for saved dark mode in development and production, and for system dark mode in development. A saved light preference on a dark system, theme switching and reduced motion were also checked. The suite, production build and ESLint passed.
+
+### One-time hero entrance and scroll cue
+
+- On homepage load, the greeting, name, role, introduction, actions and social links appear in reading order with a 6px rise and a subtle blur/fade; the portrait fades in after the text begins. The existing layout and background stay unchanged. The scroll arrow nudges downward twice after the entrance, then rests; scrolling away before or after the cue prevents it replaying on return.
+- Reduced motion shows the settled frame immediately, with no entrance or arrow animation. Browser checks covered desktop and a 320px Chinese viewport, the scroll cue's click target, early scrolling, return to top and reduced motion. The settled desktop screenshot matched the reduced-motion frame; tests, build and ESLint passed.
+
+### Compact homepage footer
+
+- The homepage ends with a black footer containing the existing profile, social destinations and classmates' links. Friend links moved out of Contact; their names, descriptions and destinations remain unchanged. Both filing links remain centered at the bottom with smaller text. The shared auxiliary-page footer retains its filing links, and the footer remains hidden when printing.
+- Verification: browser checks at 1440×900 and 320×844 covered Chinese and English, light and dark modes, the friend and social destinations, filing links, keyboard focus, print hiding and the 404 footer; no horizontal overflow was observed. The test suite and production build passed.
+
+### Section alignment correction
+
+- Wheel snap points, navigation actions and hash links now align each section's top edge with the measured bottom of the sticky navigation bar. Lenis element scrolling previously combined `scroll-margin-top` with an additional AppBar offset, while snap points used the viewport top without the AppBar offset.
+- Snap points are recomputed when sections, the document, the AppBar or the viewport resize, including accordion-driven layout changes. Reduced-motion and coarse-pointer snap gating remain unchanged; native anchor fallback retains `scroll-margin-top`.
+- Verification: desktop wheel snaps and navigation aligned all five content sections within one pixel of the AppBar; hash navigation, mobile navigation and an accordion expansion were also exercised. The test suite, production build and ESLint passed.
+
+### Template-inspired homepage redesign
+
+- The homepage now uses alternating light/dark section surfaces, centered headings, solid cards, a circular portrait and a restrained purple accent. Homepage typography is scoped to the layout; the standalone resume retains its own typography. The older spatial design and acceptance records below are historical.
+- The six section IDs, bilingual content, research projects, education and achievement certificates, social and friend links, filings, navigation, Lenis and scroll snap remain. Background orbs and glass cards remain on auxiliary pages, not the homepage. The homepage no longer uses card tilt or scroll-reveal.
+- Verification: 29 test files / 135 tests, production build and ESLint passed. Browser checks covered the English/Chinese and light/dark matrix at 1440×900, 390×844 and 320×844 without horizontal overflow; navigation, language/hash preservation, theme, accordion, reduced motion, links, resume print styles, 404 and the intercepted redirect were exercised.
+
 ### Public security filing and restored contacts — 2026-10-23
 
 - The shared footer now displays the supplied filing icon and `粤公网安备44011202004418号`, linked to `https://beian.mps.gov.cn/#/query/webSearch?code=44011202004418`. The existing ICP filing link remains. Both languages retain the official Chinese identifiers; desktop links sit side by side and mobile links stack. Both links open safely in a new tab and expose keyboard focus rings; the footer remains hidden from print and does not affect the standalone resume.

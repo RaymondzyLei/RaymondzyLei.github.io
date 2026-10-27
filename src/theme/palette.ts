@@ -36,9 +36,7 @@ let theme = createTheme({
     },
     dark: {
       palette: {
-        // Blue-teal accent — same family as orb2 but NOT the same value (orb2
-        // is the framework-default info blue, pinned above as INFO.main).
-        // Orb1 keeps its violet via ACCENT.orbDark in BackgroundOrbs.
+        // The dark scheme shares the template's violet accent.
         primary: {
           main: ACCENT.dark,
         },

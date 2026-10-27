@@ -1,54 +1,35 @@
 import React from 'react';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import { useReveal } from '../hooks/useReveal';
-import { revealSx } from '../styles/reveal';
+import { HOME } from '../styles/colors';
 import { SectionHeading } from './SectionHeading';
-import { SECTIONS } from '../sections';
 
 export interface SectionProps {
   id: string;
   title: string;
-  maxWidth?: 'md' | 'lg' | 'sm';
-  /** Scroll-reveal delay in ms (default 0). */
-  revealDelay?: number;
   children: React.ReactNode;
 }
 
-/**
- * Shared homepage section shell: scroll-reveal Box[component=section] +
- * Container + SectionHeading. DRYs the 5 homepage sections. NotFound /
- * RedirectPage keep their own full-height centered shells.
- */
-export const Section: React.FC<SectionProps> = ({
-  id,
-  title,
-  maxWidth = 'md',
-  revealDelay = 0,
-  children,
-}) => {
-  const { ref, isVisible } = useReveal();
-  const sectionIndex = SECTIONS.findIndex((section) => section.id === id);
+/** Shared shell for the five content sections of the homepage. */
+export const Section: React.FC<SectionProps> = ({ id, title, children }) => {
+  const alternate = id === 'skills' || id === 'academic' || id === 'contact';
   return (
     <Box
       id={id}
-      ref={ref}
       component="section"
       sx={{
         py: 8,
-        // Browser-native anchor jumps (initial-load deep links) reserve the
-        // sticky AppBar's height; runtime scrolls go through lenis offsets.
+        px: 2,
         scrollMarginTop: { xs: '56px', md: '64px' },
-        ...revealSx(isVisible, revealDelay),
+        backgroundColor: alternate ? HOME.light.alternate : HOME.light.plain,
+        '[data-mui-color-scheme="dark"] &': {
+          backgroundColor: alternate ? HOME.dark.alternate : HOME.dark.plain,
+        },
       }}
     >
-      <Container maxWidth={maxWidth}>
-        <SectionHeading
-          title={title}
-          number={sectionIndex < 0 ? undefined : String(sectionIndex + 1).padStart(2, '0')}
-        />
+      <Box sx={{ maxWidth: '1152px', mx: 'auto' }}>
+        <SectionHeading title={title} />
         {children}
-      </Container>
+      </Box>
     </Box>
   );
 };

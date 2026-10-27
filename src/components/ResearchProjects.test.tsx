@@ -1,14 +1,10 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it } from 'vitest';
 import { cleanup, screen, within } from '@testing-library/react';
 import i18n from '../i18n/i18n';
 import { projectsData, researchProjects } from '../data/projects';
 import { renderWithTheme } from '../test/render';
 import { Portfolio } from './Portfolio';
 import { ResumePage } from './ResumePage';
-
-vi.mock('react-intersection-observer', () => ({
-  useInView: () => ({ ref: { current: null }, inView: true }),
-}));
 
 afterEach(async () => {
   cleanup();

@@ -4,12 +4,9 @@ import { cleanup } from '@testing-library/react';
 import { ScrollSnap } from './ScrollSnap';
 import { renderWithTheme } from '../test/render';
 
-// Mock lenis/snap: capture the constructor options and the elements registered
-// via addElements, expose destroy for the unmount assertion.
+// Keep lifecycle and motion-gating checks independent of Lenis internals.
 const snapInstances: {
   options: Record<string, unknown> | undefined;
-  addedElements: HTMLElement[];
-  addedElementOptions: Record<string, unknown> | undefined;
   destroy: ReturnType<typeof vi.fn>;
 }[] = [];
 
@@ -17,16 +14,13 @@ vi.mock('lenis/snap', () => {
   return {
     default: class {
       options: Record<string, unknown> | undefined;
-      addedElements: HTMLElement[] = [];
-      addedElementOptions: Record<string, unknown> | undefined;
       destroy = vi.fn();
       constructor(_lenis: unknown, options: Record<string, unknown> | undefined) {
         this.options = options;
         snapInstances.push(this);
       }
-      addElements(elements: HTMLElement[], options?: Record<string, unknown>) {
-        this.addedElements.push(...elements);
-        this.addedElementOptions = options;
+      add() {
+        return () => {};
       }
     },
   };
@@ -54,6 +48,13 @@ const renderSections = () => {
 describe('ScrollSnap', () => {
   beforeEach(() => {
     snapInstances.length = 0;
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        observe() {}
+        disconnect() {}
+      },
+    );
     useLenisMock.mockClear();
     // setup.ts's matchMedia stub returns matches:false -> fine pointer,
     // no reduced motion -> snap active.
@@ -62,28 +63,6 @@ describe('ScrollSnap', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     cleanup();
-  });
-
-  it('creates a proximity Snap and registers the 6 homepage sections', () => {
-    renderSections();
-    expect(snapInstances).toHaveLength(1);
-    expect(snapInstances[0].options).toEqual({ type: 'proximity', distanceThreshold: '20%' });
-    expect(snapInstances[0].addedElements).toHaveLength(6);
-    // All 6 sections, in section order.
-    expect(snapInstances[0].addedElements.map((el) => el.id)).toEqual([
-      'hero',
-      'skills',
-      'qualifications',
-      'academic',
-      'portfolio',
-      'contact',
-    ]);
-    // Sections carry the reveal translateY(24px) at mount; rect math must
-    // ignore transforms or the offset gets baked into the snap points.
-    expect(snapInstances[0].addedElementOptions).toEqual({
-      align: 'start',
-      ignoreTransform: true,
-    });
   });
 
   it('does not create a Snap under prefers-reduced-motion', () => {

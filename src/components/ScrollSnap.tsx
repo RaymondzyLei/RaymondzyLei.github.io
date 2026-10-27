@@ -3,6 +3,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLenis } from 'lenis/react';
 import Snap from 'lenis/snap';
 import { SECTION_IDS } from '../sections';
+import { sectionScrollTarget } from '../hooks/sectionScrollTarget';
 
 /**
  * Proximity scroll snap for the homepage: after the user stops scrolling,
@@ -35,16 +36,24 @@ export const ScrollSnap: React.FC = () => {
     const elements = SECTION_IDS.map((id) => document.getElementById(id)).filter(
       (el): el is HTMLElement => el !== null,
     );
-    if (elements.length > 0) {
-      // ignoreTransform: sections mount with the reveal effect's
-      // translateY(24px) (see revealSx); SnapElement's default rect math uses
-      // getBoundingClientRect() and would bake that offset into the snap
-      // point permanently (transforms don't fire its ResizeObserver).
-      // offsetTop chain ignores transforms, so points stay at true layout
-      // positions.
-      snap.addElements(elements, { align: 'start', ignoreTransform: true });
-    }
+    // lenis/snap has no element offset option. Numeric points let the section
+    // edge align with the same live AppBar offset as navigation and hashes.
+    let removePoints: Array<() => void> = [];
+    const updatePoints = () => {
+      removePoints.forEach((remove) => remove());
+      removePoints = elements.map((element) => snap.add(sectionScrollTarget(element)));
+    };
+    updatePoints();
+    const observer = new ResizeObserver(updatePoints);
+    observer.observe(document.body);
+    elements.forEach((element) => observer.observe(element));
+    const appbar = document.querySelector('.MuiAppBar-root');
+    if (appbar) observer.observe(appbar);
+    window.addEventListener('resize', updatePoints);
     return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updatePoints);
+      removePoints.forEach((remove) => remove());
       snap.destroy();
     };
   }, [lenis, reducedMotion, coarsePointer]);

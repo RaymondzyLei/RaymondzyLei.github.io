@@ -14,23 +14,24 @@
       content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; base-uri 'self'; form-action 'none'"
     />
     <!--
-      Anti-FOUC: MUI's <InitColorSchemeScript> runs post-mount in this CSR SPA
-      (no SSR), so it can't paint the correct background before first paint.
-      This inline <style> maps the data-mui-color-scheme attribute -> background
-      (plus a prefers-color-scheme fallback for no-JS / pre-attribute), and the
-      inline <script> sets that attribute synchronously in <head> pre-paint from
-      localStorage('mui-color-scheme') or the system preference. CSP allows both
-      via 'unsafe-inline' (static GitHub Pages has no server for nonce issuance).
+      Anti-FOUC: the head script selects the saved MUI mode before first paint.
+      Match both html and body to that choice: MUI CssBaseline may initially
+      render its light body background while the saved mode is still resolving.
+      The system-color fallback also covers unavailable localStorage / no JS.
+      CSP allows the inline style and script via 'unsafe-inline'.
     -->
     <style>
-      html[data-mui-color-scheme='light'] {
+      html[data-mui-color-scheme='light'],
+      html[data-mui-color-scheme='light'] body {
         background-color: __COLOR_LIGHT__;
       }
-      html[data-mui-color-scheme='dark'] {
+      html[data-mui-color-scheme='dark'],
+      html[data-mui-color-scheme='dark'] body {
         background-color: __COLOR_DARK__;
       }
       @media (prefers-color-scheme: dark) {
-        html:not([data-mui-color-scheme='light']) {
+        html:not([data-mui-color-scheme='light']),
+        html:not([data-mui-color-scheme='light']) body {
           background-color: __COLOR_DARK__;
         }
       }

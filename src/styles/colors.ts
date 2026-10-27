@@ -14,8 +14,8 @@
 export const ACCENT = {
   /** Violet — light mode. Also orb1's light-mode color. */
   light: '#7c3aed',
-  /** Blue-teal — dark mode. Same family as orb2, deliberately not identical. */
-  dark: '#29b6f6',
+  /** Violet — dark mode. */
+  dark: '#a78bfa',
   /** Lightened violet — orb1 in dark mode only (decoupled from text accent). */
   orbDark: '#a78bfa',
 } as const;
@@ -24,6 +24,13 @@ export const ACCENT = {
 export const SURFACE = {
   light: { default: '#ffffff', paper: '#ffffff' },
   dark: { default: '#0d0d0d', paper: '#1a1a1a' },
+} as const;
+
+/** Alternating homepage surfaces and the hero gradient endpoint. */
+export const HOME = {
+  light: { plain: '#ffffff', alternate: '#f9fafb' },
+  dark: { plain: '#1f2937', alternate: '#111827' },
+  gradientEnd: '#2563eb',
 } as const;
 
 /** Body text hierarchy per mode (palette.text). */

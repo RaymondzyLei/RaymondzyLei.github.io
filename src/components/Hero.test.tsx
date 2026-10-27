@@ -6,19 +6,9 @@ import { Hero } from './Hero';
 
 const { scroll } = vi.hoisted(() => ({ scroll: vi.fn() }));
 vi.mock('../hooks/useScrollToSection', () => ({ useScrollToSection: () => scroll }));
-vi.mock('../hooks/useReveal', () => ({ useReveal: () => ({ ref: null, isVisible: true }) }));
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
-});
-
-it('shows a non-interactive decorative section number without adding a heading', () => {
-  renderWithTheme(<Hero />);
-  const number = screen.getByText('01');
-  expect(number).toHaveAttribute('aria-hidden', 'true');
-  expect(number).toHaveStyle({ pointerEvents: 'none' });
-  expect(screen.getAllByRole('heading')).toHaveLength(1);
-  expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
 });
 
 it('links to the resume in the current language', async () => {

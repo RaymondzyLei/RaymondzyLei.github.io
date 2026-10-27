@@ -1,21 +1,10 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { screen, cleanup } from '@testing-library/react';
-
-// Same react-intersection-observer mock rationale as Qualifications.test.tsx
-// (useReveal runs inside Section + the contact cards).
-const { useInViewMock } = vi.hoisted(() => ({ useInViewMock: vi.fn() }));
-vi.mock('react-intersection-observer', () => ({
-  useInView: (opts: unknown) => useInViewMock(opts),
-}));
 
 // Side-effect: initialize the real i18n instance (localStorage empty -> 'en').
 import '../i18n/i18n';
 import { Contact } from './Contact';
 import { renderWithTheme } from '../test/render';
-
-beforeEach(() => {
-  useInViewMock.mockReturnValue({ ref: { current: null }, inView: true });
-});
 
 afterEach(cleanup);
 

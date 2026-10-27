@@ -1,260 +1,163 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Avatar from '@mui/material/Avatar';
-import { styled } from '@mui/material/styles';
+import { keyframes } from '@mui/material/styles';
 import { socialLinks } from '../data/social';
-import { useTilt } from '../hooks/useTilt';
-import { useReveal } from '../hooks/useReveal';
 import { useScrollToSection } from '../hooks/useScrollToSection';
-import { revealSx } from '../styles/reveal';
-import { DISPLAY_FONT, glass } from '../theme';
-import { LiquidGlassButton } from './LiquidGlassButton';
+import { focusVisibleRing } from '../theme';
+import { HOME } from '../styles/colors';
 import { resumeLangUrl } from '../routing';
 import { isSupportedLanguage } from '../i18n/languages';
 
-const AnimatedAvatar = styled(Avatar)(({ theme }) => ({
-  transition: theme.transitions.create(['transform', 'boxShadow'], {
-    duration: theme.transitions.duration.standard,
-  }),
-  '&:hover': {
-    transform: 'scale(1.06)',
-    boxShadow: theme.shadows[12],
-  },
-  // H3: respect reduced-motion -- keep hover amplitude, drop the transform.
-  '@media (prefers-reduced-motion: reduce)': {
-    transition: 'none',
-    '&:hover': {
-      transform: 'none',
-    },
-  },
-}));
+const rise = keyframes`
+  from { transform: translateY(6px); }
+  to { transform: translateY(0); }
+`;
+const appear = keyframes`
+  from { opacity: 0; filter: blur(2px); }
+  to { opacity: 1; filter: blur(0); }
+`;
 
-const StyledButton = styled(Button)(({ theme }) => ({
-  // H4: removed hand-rolled ::before ripple (animated width/height -- a layout
-  // property, GPU-violating per emil/review-animations). MUI Button ships its
-  // own TouchRipple which is GPU-friendly and interruptible; rely on that.
-  // Hover keeps the elevation bump; :active scale is handled globally in theme.
-  transition: theme.transitions.create(['boxShadow'], {
-    duration: theme.transitions.duration.standard,
-  }),
-  '&:hover': {
-    boxShadow: theme.shadows[8],
+const entrance = (delay: number, move = true) => ({
+  '@media (prefers-reduced-motion: no-preference)': {
+    animation: `${move ? `${rise} 2400ms cubic-bezier(0.16, 1, 0.3, 1) ${delay * 3}ms backwards, ` : ''}${appear} 1800ms cubic-bezier(0.33, 1, 0.68, 1) ${delay * 3}ms backwards`,
   },
-}));
+});
 
 export const Hero: React.FC = () => {
   const { t, i18n } = useTranslation();
   const resumeLang = isSupportedLanguage(i18n.language) ? i18n.language : 'en';
-  const ctaTiltRef = useTilt<HTMLButtonElement>();
-  const { ref: heroRef, isVisible: heroVisible } = useReveal();
   const scrollToSection = useScrollToSection();
   const handleContactClick = () => {
     const element = document.getElementById('contact');
-    if (element) {
-      scrollToSection(element);
-    }
+    if (element) scrollToSection(element);
   };
 
   return (
     <Box
       id="hero"
-      ref={heroRef}
       component="section"
-      sx={{
-        py: 8,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '90vh',
-        ...revealSx(heroVisible),
-      }}
+      sx={{ py: 8, px: 2, minHeight: '90vh', display: 'flex', alignItems: 'center' }}
     >
-      <Container maxWidth="lg">
-        <Stack
-          direction={{ xs: 'column', md: 'row' }}
-          spacing={{ xs: 6, md: 8 }}
-          sx={{
-            alignItems: 'center',
-            justifyContent: { xs: 'center', md: 'flex-start' },
-            width: '100%',
-          }}
-        >
-          <Stack
-            spacing={2}
+      <Box
+        sx={{
+          maxWidth: '1152px',
+          mx: 'auto',
+          width: '100%',
+          display: 'grid',
+          gridTemplateColumns: { xs: 'minmax(0, 1fr)', md: 'repeat(2, minmax(0, 1fr))' },
+          alignItems: 'center',
+          gap: { xs: 4, md: 8 },
+        }}
+      >
+        <Box sx={{ minWidth: 0 }}>
+          <Typography
+            component="p"
+            sx={{ ...entrance(0), fontSize: '20px', fontWeight: 600, mb: 1 }}
+          >
+            {t('hero.title')}
+          </Typography>
+          <Typography
+            component="h1"
             sx={{
-              alignItems: 'flex-start',
-              textAlign: 'left',
-              minWidth: 0,
-              flex: 1.5,
-              width: '100%',
-              order: 1,
+              ...entrance(60),
+              fontSize: { xs: '40px', md: '48px' },
+              lineHeight: 1.15,
+              fontWeight: 700,
+              overflowWrap: 'anywhere',
+              mb: 1,
             }}
           >
-            <Typography
-              component="span"
-              aria-hidden="true"
-              sx={{
-                fontSize: { xs: '2.5rem', md: '3.5rem' },
-                fontWeight: 300,
-                lineHeight: 1,
-                letterSpacing: '-0.06em',
-                color: 'primary.main',
-                opacity: 0.55,
-                pointerEvents: 'none',
-                fontVariantNumeric: 'tabular-nums',
-              }}
-            >
-              01
-            </Typography>
-            <Typography
-              variant="h5"
-              component="p"
-              sx={{
-                fontWeight: 'bold',
-                color: 'text.primary',
-              }}
-            >
-              {t('hero.title')}
-            </Typography>
-            <Typography
-              variant="h2"
-              component="h1"
-              sx={{
-                fontFamily: DISPLAY_FONT,
-                fontWeight: 'bold',
-                fontStyle: 'italic',
-                fontSize: { xs: 'clamp(1.8rem, 8vw, 3rem)', md: 'clamp(2.5rem, 4.6vw, 3.6rem)' },
-                lineHeight: 1.12,
-                letterSpacing: '-0.04em',
-                overflowWrap: 'anywhere',
-                color: 'primary.main',
-              }}
-            >
-              {t('hero.name')}
-            </Typography>
-            <Typography
-              variant="h5"
-              component="p"
-              sx={{
-                color: 'primary.main',
-                fontWeight: 600,
-                mb: 2,
-              }}
-            >
-              {t('hero.subtitle')}
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{
-                color: 'text.secondary',
-                maxWidth: '36ch',
-                fontSize: '1.1rem',
-                lineHeight: 1.8,
-              }}
-            >
-              {t('hero.bio')}
-            </Typography>
-            <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', mt: 2 }}>
-              {socialLinks.map((link) => {
-                const Icon = link.icon;
-                return (
-                  <LiquidGlassButton
-                    key={link.id}
-                    icon={<Icon />}
-                    label={t(`data.social.${link.id}.label`)}
-                    href={link.url}
-                  />
-                );
-              })}
-            </Stack>
-            <Stack
-              direction={{ xs: 'column', sm: 'row' }}
-              spacing={2}
-              sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
-            >
-              <StyledButton variant="contained" size="large" href={resumeLangUrl(resumeLang)}>
-                {t('hero.resumeCta')}
-              </StyledButton>
-              <StyledButton
-                ref={ctaTiltRef}
-                variant="outlined"
-                size="large"
-                onClick={handleContactClick}
-                sx={{
-                  mt: 2,
-                  px: 4,
-                  py: 1.5,
-                  textTransform: 'none',
-                  fontSize: '1rem',
-                }}
-              >
-                {t('hero.cta')}
-              </StyledButton>
-            </Stack>
-          </Stack>
-          <Box
+            {t('hero.name')}
+          </Typography>
+          <Typography
+            component="p"
+            sx={(theme) => ({
+              ...entrance(120),
+              fontSize: { xs: '24px', md: '30px' },
+              fontWeight: 600,
+              color: 'primary.main',
+              mb: 3,
+              '@supports (background-clip: text)': {
+                backgroundImage: `linear-gradient(to right, ${theme.palette.primary.main}, ${HOME.gradientEnd})`,
+                backgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+              },
+            })}
+          >
+            {t('hero.subtitle')}
+          </Typography>
+          <Typography
             sx={{
-              position: 'relative',
-              width: { xs: 'calc(100% - 32px)', md: '100%' },
-              maxWidth: { xs: 280, md: 380 },
-              flex: 1,
-              order: 2,
-              p: 2,
+              ...entrance(180),
+              color: 'text.secondary',
+              fontSize: '18px',
+              lineHeight: 1.7,
+              mb: 3,
             }}
           >
-            <Box
-              aria-hidden="true"
-              sx={(theme) => ({
-                ...glass(theme),
-                position: 'absolute',
-                inset: 0,
-                borderRadius: 3,
-                transform: 'rotate(-6deg)',
-                pointerEvents: 'none',
-              })}
-            />
-            <Box
-              sx={(theme) => ({
-                position: 'relative',
-                p: 2,
-                borderRadius: 3,
-                bgcolor: 'background.paper',
-                border: '1px solid',
-                borderColor: 'divider',
-                boxShadow: theme.shadows[8],
-              })}
-            >
-              <AnimatedAvatar
-                src="/avatar.webp"
-                srcSet="/avatar.webp 1x, /avatar-2x.webp 2x"
-                alt={t('hero.avatarAlt')}
-                slotProps={{ img: { decoding: 'async' } }}
-                sx={{
-                  width: '100%',
-                  height: 'auto',
-                  aspectRatio: '1',
-                  borderRadius: 2,
-                  fontSize: '3rem',
-                  fontWeight: 'bold',
-                  order: { xs: 1, md: 2 },
-                }}
-              />
-              <Typography
-                component="p"
-                variant="overline"
-                sx={{ mt: 2, textAlign: 'center', color: 'text.secondary' }}
-              >
-                {t('hero.subtitle')}
-              </Typography>
-            </Box>
+            {t('hero.bio')}
+          </Typography>
+          <Box sx={{ ...entrance(240), display: 'flex', flexWrap: 'wrap', gap: 2, mb: 2 }}>
+            <Button variant="contained" size="large" href={resumeLangUrl(resumeLang)}>
+              {t('hero.resumeCta')}
+            </Button>
+            <Button variant="outlined" size="large" onClick={handleContactClick}>
+              {t('hero.cta')}
+            </Button>
           </Box>
-        </Stack>
-      </Container>
+          <Box sx={{ ...entrance(300), display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            {socialLinks.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Box
+                  key={link.id}
+                  component="a"
+                  href={link.url}
+                  aria-label={t(`data.social.${link.id}.label`)}
+                  {...(link.url.startsWith('http')
+                    ? { target: '_blank', rel: 'noopener noreferrer' }
+                    : {})}
+                  sx={{
+                    ...focusVisibleRing(2),
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: 44,
+                    height: 44,
+                    color: 'text.secondary',
+                    '&:hover': { color: 'primary.main' },
+                  }}
+                >
+                  <Icon />
+                </Box>
+              );
+            })}
+          </Box>
+        </Box>
+        <Box
+          sx={{ ...entrance(360, false), display: 'flex', justifyContent: 'center', minWidth: 0 }}
+        >
+          <Avatar
+            src="/avatar.webp"
+            srcSet="/avatar.webp 1x, /avatar-2x.webp 2x"
+            alt={t('hero.avatarAlt')}
+            slotProps={{ img: { decoding: 'async' } }}
+            sx={{
+              width: { xs: 256, md: 320 },
+              maxWidth: '100%',
+              height: 'auto',
+              aspectRatio: '1',
+              border: '4px solid',
+              borderColor: 'background.paper',
+              boxShadow: 3,
+            }}
+          />
+        </Box>
+      </Box>
     </Box>
   );
 };

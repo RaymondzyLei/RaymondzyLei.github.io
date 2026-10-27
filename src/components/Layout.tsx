@@ -1,13 +1,12 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import { useTranslation } from 'react-i18next';
 import { BackgroundOrbs } from './BackgroundOrbs';
 import { Navbar } from './layout/Navbar';
 import { BackToTopButton } from './layout/BackToTopButton';
 import { ScrollHint } from './layout/ScrollHint';
 import { useHashScroll } from '../hooks/useHashScroll';
-import { focusVisibleRing } from '../theme';
+import { Footer } from './layout/Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,7 +22,19 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
   const { t } = useTranslation();
   useHashScroll();
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        ...(!isNotFound && {
+          fontFamily: 'Arial, "Microsoft YaHei", sans-serif',
+          '& .MuiTypography-root, & .MuiButtonBase-root, & .MuiChip-root': {
+            fontFamily: 'Arial, "Microsoft YaHei", sans-serif',
+          },
+        }),
+      }}
+    >
       {/* a11y: keyboard users can skip the nav bar straight to content */}
       <Box
         component="a"
@@ -63,68 +74,13 @@ export const Layout: React.FC<LayoutProps> = ({ children, isNotFound = false }) 
         {t('layout.skipToContent')}
       </Box>
       <Navbar isNotFound={isNotFound} />
-      <BackgroundOrbs />
+      {isNotFound && <BackgroundOrbs />}
       <Box component="main" id="main-content" sx={{ flex: 1, width: '100%' }}>
         {children}
       </Box>
       {!isNotFound && <ScrollHint />}
       <BackToTopButton />
-      <Box
-        component="footer"
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', sm: 'row' },
-          alignItems: 'center',
-          justifyContent: 'center',
-          columnGap: 2,
-          px: 2,
-          py: 3,
-          textAlign: 'center',
-          '@media print': { display: 'none' },
-        }}
-      >
-        <Link
-          href="https://beian.miit.gov.cn/"
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="body2"
-          color="text.secondary"
-          underline="hover"
-          sx={{
-            ...focusVisibleRing(2),
-            display: 'inline-flex',
-            alignItems: 'center',
-            minHeight: 44,
-          }}
-        >
-          {t('layout.icpFiling')}
-        </Link>
-        <Link
-          href="https://beian.mps.gov.cn/#/query/webSearch?code=44011202004418"
-          target="_blank"
-          rel="noopener noreferrer"
-          variant="body2"
-          color="text.secondary"
-          underline="hover"
-          sx={{
-            ...focusVisibleRing(2),
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 0.75,
-            minHeight: 44,
-          }}
-        >
-          <Box
-            component="img"
-            src="/public-security-filing.png"
-            alt=""
-            width={18}
-            height={20}
-            sx={{ flexShrink: 0 }}
-          />
-          {t('layout.publicSecurityFiling')}
-        </Link>
-      </Box>
+      <Footer isHome={!isNotFound} />
     </Box>
   );
 };

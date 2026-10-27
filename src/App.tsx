@@ -27,6 +27,9 @@ const ResumePage = lazy(() =>
 function ColorSchemeAttrSync() {
   const { mode } = useColorScheme();
   useEffect(() => {
+    // Until MUI resolves its stored mode, keep the pre-paint choice from
+    // index.html instead of briefly replacing it with the system preference.
+    if (!mode) return undefined;
     const el = document.documentElement;
     if (mode === 'light' || mode === 'dark') {
       el.setAttribute('data-mui-color-scheme', mode);
@@ -61,7 +64,7 @@ function App() {
   return (
     <>
       <InitColorSchemeScript defaultMode="system" />
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme} noSsr>
         <CssBaseline />
         {/* Theme light<->dark transitions use the View Transitions API (see
             Navbar handleModeChange). The previous body background-color
